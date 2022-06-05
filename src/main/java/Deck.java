@@ -7,9 +7,9 @@ import java.util.Stack;
 @Getter
 @Setter
 public class Deck {
-    private static Stack<Card> cards;
-    private static Suit trump;
-    static{
+    private Stack<Card> cards;
+    private Suit trump;
+    {
         cards = new Stack<>();
         for(Rank rank: Rank.values()){
             for(Suit suit: Suit.values()){
@@ -20,7 +20,7 @@ public class Deck {
         trump = cards.firstElement().getSuit();
     }
 
-    public static Card getCard(){
+    public Card getCard(){
         return cards.pop();
     }
 }

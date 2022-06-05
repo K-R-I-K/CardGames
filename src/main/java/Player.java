@@ -21,7 +21,18 @@ public class Player {
         this.cards.addAll(cards);
     }
 
-    public void attackTurn(Card card){
-        Field.setAttackList(card);
+    public Card getCard(int index){
+        if(index < 0 || index >= cards.size()){
+            System.out.println("invalid argument");
+            return null;
+        }
+        return cards.get(index);
+    }
+    public Card removeCard(int index){
+        if(index < 0 || index >= cards.size()){
+            System.out.println("invalid argument");
+            return null;
+        }
+        return cards.remove(index);
     }
 }

@@ -2,9 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Durak {
-    List<Player> players = new ArrayList<>();
-
+    private List<Player> players;
+    private Deck deck;
+    private Field field;
     public Durak(){
+        players = new ArrayList<>();
+        deck = new Deck();
+        field = new Field(deck.getTrump());
         addPlayers();
         game();
     }
@@ -18,12 +22,22 @@ public class Durak {
         }
         for(int i = 0; i < 6; ++i){
             for (Player player : players) {
-                player.setCard(Deck.getCard());
+                player.setCard(deck.getCard());
             }
         }
     }
-
+    private void attackMove(Player player, int indexOfCardPlayer){
+        if(field.setAttackList(player.getCard(indexOfCardPlayer)))
+            player.removeCard(indexOfCardPlayer);
+    }
+    private void defenseMove(Player player, int indexOfCardPlayer, int indexOfCardField){
+        if(field.setDefendList(player.getCard(indexOfCardPlayer), indexOfCardField))
+            player.removeCard(indexOfCardPlayer);
+    }
     public void game(){
-        players.get(0).attackTurn(players.get(0).getCards().get(0));
+        int indexOfPlayer = 0;
+        int indexOfCardPlayer = 1;
+        attackMove(players.get(indexOfPlayer),indexOfCardPlayer);
+        defenseMove(players.get(++indexOfPlayer),indexOfCardPlayer,0);
     }
 }
