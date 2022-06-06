@@ -3,6 +3,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Locale;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,4 +12,9 @@ import lombok.Setter;
 public class Card {
     private Rank rank;
     private Suit suit;
+
+    @Override
+    public String toString() {
+        return suit.toString().toLowerCase(Locale.ROOT) + "_" + rank.toString().toLowerCase(Locale.ROOT);
+    }
 }

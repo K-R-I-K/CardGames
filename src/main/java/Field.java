@@ -5,7 +5,7 @@ public class Field {
     private List<Card> attackList;
     private List<Card> defendList;
     private int attackListSize;
-    private Suit trump;
+    private final Suit trump;
     public Field(Suit trump){
         attackList = new ArrayList<>(6);
         defendList = new ArrayList<>(6);
@@ -45,6 +45,7 @@ public class Field {
         }
         return false;
     }
+
     private boolean attackCheck(Card card){
         //attackListSize must be > 0
         for (Card element: attackList) {
@@ -55,6 +56,7 @@ public class Field {
         }
         return false;
     }
+
     private boolean defendCheck(Card attackCard, Card defendCard){
         if(attackCard == null || defendCard == null){
             System.out.println("invalid argument");
@@ -65,6 +67,7 @@ public class Field {
                 || attackCard.getSuit().equals(trump)
                 && !defendCard.getSuit().equals(trump);
     }
+
     public List<Card> clearField(){
         List<Card> res = new ArrayList<>();
         for(Card card:attackList)

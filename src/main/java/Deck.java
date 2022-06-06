@@ -23,4 +23,5 @@ public class Deck {
     public Card getCard(){
         return cards.pop();
     }
+    public int getSize(){return cards.size();}
 }
