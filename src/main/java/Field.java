@@ -65,4 +65,15 @@ public class Field {
                 || attackCard.getSuit().equals(trump)
                 && !defendCard.getSuit().equals(trump);
     }
+    public List<Card> clearField(){
+        List<Card> res = new ArrayList<>();
+        for(Card card:attackList)
+            if(card!=null)
+                res.add(card);
+        for(Card card:defendList)
+            if(card!=null)
+                res.add(card);
+        attackListSize=0;
+        return res;
+    }
 }

@@ -39,5 +39,7 @@ public class Durak {
         int indexOfCardPlayer = 1;
         attackMove(players.get(indexOfPlayer),indexOfCardPlayer);
         defenseMove(players.get(++indexOfPlayer),indexOfCardPlayer,0);
+        players.get(1).setCard(field.clearField());//the player takes the cards
+        field.clearField();//
     }
 }
