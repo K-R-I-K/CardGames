@@ -10,7 +10,7 @@ public class Durak {
         deck = new Deck();
         field = new Field(deck.getTrump());
         addPlayers();
-        game();
+        startGame();
     }
 
     private void addPlayers(){
@@ -34,12 +34,16 @@ public class Durak {
         if(field.setDefendList(player.getCard(indexOfCardPlayer), indexOfCardField))
             player.removeCard(indexOfCardPlayer);
     }
-    public void game(){
+    public void startGame(){
         int indexOfPlayer = 0;
         int indexOfCardPlayer = 1;
         attackMove(players.get(indexOfPlayer), indexOfCardPlayer);
         defenseMove(players.get(++indexOfPlayer), indexOfCardPlayer,0);
         players.get(1).setCard(field.clearField());//the player takes the cards
         field.clearField();//
+    }
+
+    public static void main(String[] args) {
+        MyGraphics window = new MyGraphics();
     }
 }
