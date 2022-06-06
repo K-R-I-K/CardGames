@@ -73,6 +73,8 @@ public class Field {
         for(Card card:defendList)
             if(card!=null)
                 res.add(card);
+        attackList = new ArrayList<>(6);
+        defendList = new ArrayList<>(6);
         attackListSize=0;
         return res;
     }
