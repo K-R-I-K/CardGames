@@ -12,25 +12,22 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
     Timer timer;
     int cardWidth;
     int cardHeight;
-    static int panelWidth;
-    static int panelHeight;
+    int panelWidth;
+    int panelHeight;
     Color bgColor = Color.red;
-    Panel emptyPanel;
-    Panel playerPanel;
-    Panel firstEnemyPanel;
-    Panel secondEnemyPanel;
-    Panel thirdEnemyPanel;
-    Panel centerPanel;
-    static {
-        panelWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-        panelHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-    }
+    JPanel emptyPanel;
+    JPanel playerPanel;
+    JPanel firstEnemyPanel;
+    JPanel secondEnemyPanel;
+    JPanel thirdEnemyPanel;
+    JPanel centerPanel;
     MyPanel(){
         pathFronts = "src/main/resources/png/fronts/";
         pathBacks = "src/main/resources/png/backs/";
         cardWidth = 234 / 2;
         cardHeight = 333 / 2;
-
+        panelWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+        panelHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         this.setBounds(0, 0, panelWidth, panelHeight);
         //this.setBackground(bgColor);
         myLayout();
@@ -38,56 +35,42 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
         this.setVisible(true);
         //timer = new Timer(10, this);
     }
-    private static GridBagConstraints constraint = new GridBagConstraints();
 
-    private static GridBagConstraints constraints(int gx, int gy, double wx, double wy){
-        //constraint.weightx = (double)wx/32;
-        //constraint.weighty = (double)wy/18;
-        constraint.ipadx = (int) (panelWidth * wx);
-        constraint.ipady = (int) (panelHeight * wy);
-        constraint.fill = GridBagConstraints.BOTH;
-        constraint.gridx = gx;
-        constraint.gridy = gy;
-        //constraint.gridheight = wx;
-        //constraint.gridwidth = wy;
-        return constraint;
-    }
-
-    private static Panel createPanel(int w, int h){
-        Panel panel = new Panel();
+    private static JPanel createPanel(int x, int y, int w, int h){
+        JPanel panel = new JPanel();
         panel.setBackground(Color.red);
-        panel.setSize(w, h);
+        panel.setBounds(x, y, w, h);
         panel.setVisible(true);
         return panel;
     }
 
     public void myLayout(){
-        this.setLayout(new GridBagLayout());
-        firstEnemyPanel = new Panel();
+        this.setLayout(null);
+        firstEnemyPanel = new JPanel();
         firstEnemyPanel.setBackground(Color.green);
-        firstEnemyPanel.setSize(22, 4);
-        secondEnemyPanel = new Panel();
+        firstEnemyPanel.setBounds(panelWidth * 5 / 32, 0, panelWidth * 22 / 32, panelHeight * 4 / 18);
+        secondEnemyPanel = new JPanel();
         secondEnemyPanel.setBackground(Color.blue);
-        secondEnemyPanel.setSize(5, 10);
-        thirdEnemyPanel = new Panel();
+        secondEnemyPanel.setBounds(0, panelHeight * 4 / 18, panelWidth * 5 / 32, panelHeight * 10 / 18);
+        thirdEnemyPanel = new JPanel();
         thirdEnemyPanel.setBackground(Color.pink);
-        thirdEnemyPanel.setSize(5, 10);
-        centerPanel = new Panel();
+        thirdEnemyPanel.setBounds(panelWidth * 27 / 32, panelWidth * 4 / 32, panelWidth * 5 / 32, panelHeight * 10 / 18);
+        centerPanel = new JPanel();
         centerPanel.setBackground(Color.orange);
-        centerPanel.setSize(22, 10);
+        centerPanel.setBounds(panelWidth * 5 / 32, panelHeight * 4 / 18, panelWidth * 22 / 32, panelHeight * 10 / 18);
         centerPanel.setVisible(true);
-        playerPanel = new Panel();
+        playerPanel = new JPanel();
         playerPanel.setBackground(Color.yellow);
-        playerPanel.setSize(22, 4);
-        this.add(createPanel(5,4),      constraints(0, 0, (double) 5/32, (double) 1/5));
-        this.add(firstEnemyPanel,             constraints(1, 0, (double) 22/32, (double) 1/5));
-        this.add(createPanel(5,4),      constraints(2, 0, (double) 5/32, (double) 1/5));
-        this.add(secondEnemyPanel,            constraints(0, 1, (double) 5/32, (double) 3/5));
-        this.add(centerPanel,                 constraints(1, 1, (double) 22/32, (double) 3/5));
-        this.add(thirdEnemyPanel,             constraints(2, 1, (double) 5/32, (double) 3/5));
-        this.add(createPanel(5,4),      constraints(0, 2, (double) 5/32, (double) 1/5));
-        this.add(playerPanel,                 constraints(1, 2, (double) 22/32, (double) 1/5));
-        this.add(createPanel(5,4),      constraints(2, 2, (double) 5/32, (double) 1/5));
+        playerPanel.setBounds(panelWidth * 5 / 32, panelHeight * 14 / 18, panelWidth * 22 / 32, panelHeight * 4 / 18);
+        this.add(createPanel(0,0,panelWidth * 5 / 32,panelHeight*4/18));
+        this.add(firstEnemyPanel);
+        this.add(createPanel(panelWidth - panelWidth * 5 / 32,0,panelWidth*5/32,panelHeight*4/18));
+        this.add(secondEnemyPanel);
+        this.add(centerPanel);
+        this.add(thirdEnemyPanel);
+        this.add(createPanel(0,panelHeight * 14 / 18,panelWidth * 5 / 32,panelHeight*4/18));
+        this.add(playerPanel);
+        this.add(createPanel(panelWidth * 27 / 32, panelHeight * 14 / 18,panelWidth * 5 / 32,panelHeight*4/18));
         this.revalidate();
     }
 
@@ -97,12 +80,18 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
     }*/
 
     public void cardDeck(){
+        firstEnemyPanel.setLayout(new FlowLayout());
         JLabel label = new JLabel(new ImageIcon(new ImageIcon(pathBacks + "blue.png")
                 .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
-        label.setBackground(bgColor);
+        //label.setBackground(bgColor);
         //label.setBounds(panelWidth/3, (panelHeight - cardHeight)/2, cardWidth, cardHeight);
         //label.addMouseListener(this);
-        //firstEnemyPanel.add(label);
+        JLabel label1 = new JLabel(new ImageIcon(new ImageIcon(pathBacks + "blue.png")
+                .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
+        JLabel label2 = new JLabel(new ImageIcon(new ImageIcon(pathBacks + "blue.png")
+                .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
+        firstEnemyPanel.add(label);
+        firstEnemyPanel.add(label);
     }
 
     @Override
