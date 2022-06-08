@@ -12,8 +12,8 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
     Timer timer;
     int cardWidth;
     int cardHeight;
-    int panelWidth;
-    int panelHeight;
+    static int panelWidth;
+    static int panelHeight;
     Color bgColor = Color.red;
     Panel emptyPanel;
     Panel playerPanel;
@@ -21,13 +21,16 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
     Panel secondEnemyPanel;
     Panel thirdEnemyPanel;
     Panel centerPanel;
+    static {
+        panelWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+        panelHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+    }
     MyPanel(){
         pathFronts = "src/main/resources/png/fronts/";
         pathBacks = "src/main/resources/png/backs/";
         cardWidth = 234 / 2;
         cardHeight = 333 / 2;
-        panelWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-        panelHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+
         this.setBounds(0, 0, panelWidth, panelHeight);
         //this.setBackground(bgColor);
         myLayout();
@@ -37,16 +40,16 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
     }
     private static GridBagConstraints constraint = new GridBagConstraints();
 
-    private static GridBagConstraints constraints(int gx, int gy, int wx, int wy){
-        constraint.weightx = (double)wx/32;
-        constraint.weighty = (double)wy/18;
-        //constraint.ipadx = wx;
-        //constraint.ipady = wy;
+    private static GridBagConstraints constraints(int gx, int gy, double wx, double wy){
+        //constraint.weightx = (double)wx/32;
+        //constraint.weighty = (double)wy/18;
+        constraint.ipadx = (int) (panelWidth * wx);
+        constraint.ipady = (int) (panelHeight * wy);
         constraint.fill = GridBagConstraints.BOTH;
         constraint.gridx = gx;
         constraint.gridy = gy;
-        constraint.gridheight = wx;
-        constraint.gridwidth = wy;
+        //constraint.gridheight = wx;
+        //constraint.gridwidth = wy;
         return constraint;
     }
 
@@ -76,15 +79,15 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
         playerPanel = new Panel();
         playerPanel.setBackground(Color.yellow);
         playerPanel.setSize(22, 4);
-        this.add(createPanel(5,4),      constraints(0, 0, 5, 4));
-        /*this.add(firstEnemyPanel,             constraints(5, 0, 22, 4));
-        this.add(createPanel(5,4),      constraints(27, 0, 5, 4));
-        this.add(secondEnemyPanel,            constraints(0, 4, 5, 10));
-        this.add(centerPanel,                 constraints(5, 4, 22, 10));
-        this.add(thirdEnemyPanel,             constraints(27, 4, 5, 10));
-        this.add(createPanel(5,4),      constraints(0, 14, 5, 4));
-        this.add(playerPanel,                 constraints(5, 14, 22, 4));
-        this.add(createPanel(5,4),      constraints(27, 14, 5, 4));*/
+        this.add(createPanel(5,4),      constraints(0, 0, (double) 5/32, (double) 1/5));
+        this.add(firstEnemyPanel,             constraints(1, 0, (double) 22/32, (double) 1/5));
+        this.add(createPanel(5,4),      constraints(2, 0, (double) 5/32, (double) 1/5));
+        this.add(secondEnemyPanel,            constraints(0, 1, (double) 5/32, (double) 3/5));
+        this.add(centerPanel,                 constraints(1, 1, (double) 22/32, (double) 3/5));
+        this.add(thirdEnemyPanel,             constraints(2, 1, (double) 5/32, (double) 3/5));
+        this.add(createPanel(5,4),      constraints(0, 2, (double) 5/32, (double) 1/5));
+        this.add(playerPanel,                 constraints(1, 2, (double) 22/32, (double) 1/5));
+        this.add(createPanel(5,4),      constraints(2, 2, (double) 5/32, (double) 1/5));
         this.revalidate();
     }
 
