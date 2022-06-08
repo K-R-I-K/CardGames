@@ -1,6 +1,7 @@
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -11,6 +12,7 @@ public class Player {
 
     public Player(String name){
         this.name = name;
+        this.cards = new ArrayList<>();
     }
 
     public void setCard(Card card){
