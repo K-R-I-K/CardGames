@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Field {
@@ -7,8 +8,8 @@ public class Field {
     private int attackListSize;
     private final Suit trump;
     public Field(Suit trump){
-        attackList = new ArrayList<>(6);
-        defendList = new ArrayList<>(6);
+        attackList = new ArrayList<>(Arrays.asList(null, null, null, null, null, null));
+        defendList = new ArrayList<>(Arrays.asList(null, null, null, null, null, null));
         attackListSize = 0;
         this.trump = trump;
     }
@@ -76,8 +77,8 @@ public class Field {
         for(Card card:defendList)
             if(card!=null)
                 res.add(card);
-        attackList = new ArrayList<>(6);
-        defendList = new ArrayList<>(6);
+        attackList = new ArrayList<>(Arrays.asList(null, null, null, null, null, null));
+        defendList = new ArrayList<>(Arrays.asList(null, null, null, null, null, null));
         attackListSize=0;
         return res;
     }
