@@ -7,7 +7,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyPanel extends JPanel implements ActionListener, MouseListener {
+public class MyPanel extends JLayeredPane implements ActionListener, MouseListener {
     private String pathFronts;
     private String pathBacks;
     private String backName;
@@ -17,11 +17,11 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
     private int panelWidth;
     private int panelHeight;
     private Color bgColor = Color.red;
-    private List<JPanel> playersPanelList;
-    private List<JPanel> battleCardsPanel;
-    private JPanel centerPanel;
-    private JPanel deckPanel;
-    private JPanel discardedPanel;
+    private List<JLayeredPane> playersPanelList;
+    private List<JLayeredPane> battleCardsPanel;
+    private JLayeredPane centerPanel;
+    private JLayeredPane deckPanel;
+    private JLayeredPane discardedPanel;
     private List<JLabel> firstEnemyCards;
     private List<JLabel> playerCards;
 
@@ -38,8 +38,8 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
         //fillListCardsBacks();
         //fillListCardsFronts(deck);
         myLayout();
-        //cardsDeal(players);
-        cardDeck();
+        cardsDeal(players);
+        //cardDeck();
 
         //timer = new Timer(10, this);
     }
@@ -49,19 +49,23 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
         int currentPosition = 10;
         int stepLength;
 
-        playersPanelList.get(0).setLayout(null);
-        if(players.get(0).getCards().size() < 9)
-            for(int i = 0; i < players.get(0).getCards().size(); ++i){
+        if(players.get(0).getCards().size() < 9) {
+            playersPanelList.get(0).setLayout(new FlowLayout());
+            for (int i = 0; i < players.get(0).getCards().size(); ++i) {
                 playerCards.add(new JLabel(new ImageIcon(new ImageIcon(pathFronts + players.get(0).getCards().get(i).toString() + ".png")
                         .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH))));
                 playersPanelList.get(0).add(playerCards.get(i));
             }
+        }
         else {
-            stepLength = (playersPanelList.get(0).getWidth() - 20) / players.get(0).getCards().size();
+            playersPanelList.get(0).setLayout(null);
+            playersPanelList.get(0).setBackground(Color.green);
+            stepLength = (playersPanelList.get(0).getWidth() - 20 - cardWidth) / (players.get(0).getCards().size() - 1);
             for (int i = 0; i < players.get(0).getCards().size(); ++i) {
-                playerCards.add(createFrontCards(currentPosition, 10, players.get(0).getCards().get(i).toString()));
+                JLabel label = createFrontCards(currentPosition, 10, players.get(0).getCards().get(i).toString());
+                playersPanelList.get(0).add(label);
+                playersPanelList.get(0).setLayer(label, i);
                 currentPosition += stepLength;
-                playersPanelList.get(0).add(playerCards.get(i));
             }
         }
 
@@ -89,11 +93,12 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
         }
     }*/
 
-    private static JPanel createPanel(int x, int y, int w, int h){
-        JPanel panel = new JPanel();
+    private static JLayeredPane createPanel(int x, int y, int w, int h){
+        JLayeredPane panel = new JLayeredPane();
         panel.setBackground(Color.red);
         panel.setBounds(x, y, w, h);
         panel.setVisible(true);
+        panel.setOpaque(true);
         return panel;
     }
 
@@ -135,17 +140,20 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
         playersPanelList.add(createPanel(0, panelHeight * 4 / 18, panelWidth * 5 / 32, panelHeight * 10 / 18));
         playersPanelList.add(createPanel(panelWidth * 27 / 32, panelWidth * 4 / 32, panelWidth * 5 / 32, panelHeight * 10 / 18));
 
-        centerPanel = new JPanel();
+        centerPanel = new JLayeredPane();
         centerPanel.setBackground(Color.orange);
         centerPanel.setBounds(panelWidth * 5 / 32, panelHeight * 4 / 18, panelWidth * 22 / 32, panelHeight * 10 / 18);
+        centerPanel.setOpaque(true);
 
-        deckPanel = new JPanel();
+        deckPanel = new JLayeredPane();
         deckPanel.setBackground(Color.black);
         deckPanel.setBounds(0,0,panelWidth * 5 / 32,panelHeight * 4 / 18);
+        deckPanel.setOpaque(true);
 
-        discardedPanel = new JPanel();
+        discardedPanel = new JLayeredPane();
         discardedPanel.setBackground(Color.black);
         discardedPanel.setBounds(panelWidth * 27 / 32,0,panelWidth * 5 / 32,panelHeight * 4 / 18);
+        discardedPanel.setOpaque(true);
 
         battleCardsPanel = new ArrayList<>();
         //battleCardsPanel.add();
@@ -155,7 +163,7 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
         this.add(playersPanelList.get(1));
         this.add(discardedPanel);
         this.add(playersPanelList.get(2));
-        //this.add(centerPanel);
+        this.add(centerPanel);
         this.add(playersPanelList.get(3));
         this.add(createPanel(0,panelHeight * 14 / 18,panelWidth * 5 / 32,panelHeight * 4 / 18));
         this.add(playersPanelList.get(0));
@@ -173,17 +181,13 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener {
         int currentPosition = 10;
         int stepLength;
 
-        for(int i = 0; i < 10; ++i){
-            playerss.add(new Card(Rank.ACE, Suit.SPADES));
-        }
-
         playersPanelList.get(0).setLayout(null);
-        //playersPanelList.get(0).setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         playersPanelList.get(0).setBackground(Color.green);
-        stepLength = (playersPanelList.get(0).getWidth() - 30) / playerss.size();
-        for (int i = playerss.size() - 1; i >= 0; --i) {
+        stepLength = (playersPanelList.get(0).getWidth() - 20 - cardWidth) / (playerss.size() - 1);
+        for (int i = 0; i < playerss.size(); ++i) {
             JLabel label = createFrontCards(currentPosition, 10, playerss.get(i).toString());
             playersPanelList.get(0).add(label);
+            playersPanelList.get(0).setLayer(label, i);
             currentPosition += stepLength;
         }
        /* playersPanelList.get(0).add(new JLabel(new ImageIcon(new ImageIcon(pathFronts + "spades_ace.png")

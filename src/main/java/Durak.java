@@ -10,7 +10,7 @@ public class Durak {
         deck = new Deck();
         field = new Field(deck.getTrump());
         addPlayers();
-        startGame();
+        //startGame();
     }
 
     private void addPlayers(){
@@ -20,7 +20,7 @@ public class Durak {
             System.out.println("So many players");
             return;
         }
-        for(int i = 0; i < 6; ++i){
+        for(int i = 0; i < 10; ++i){
             for (Player player : players) {
                 player.setCard(deck.getCard());
             }
