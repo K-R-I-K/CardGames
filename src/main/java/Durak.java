@@ -10,7 +10,7 @@ public class Durak {
         deck = new Deck();
         field = new Field(deck.getTrump());
         addPlayers();
-        startGame();
+        //startGame();
     }
 
     private void addPlayers(){
@@ -44,6 +44,7 @@ public class Durak {
     }
 
     public static void main(String[] args) {
-        MyGraphics window = new MyGraphics();
+        Durak game = new Durak();
+        MyGraphics window = new MyGraphics(game.deck, game.players);
     }
 }
