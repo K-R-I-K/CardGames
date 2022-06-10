@@ -22,8 +22,7 @@ public class MyPanel extends JLayeredPane implements ActionListener, MouseListen
     private JLayeredPane centerPanel;
     private JLayeredPane deckPanel;
     private JLayeredPane discardedPanel;
-    private List<JLabel> firstEnemyCards;
-    private List<JLabel> playerCards;
+    private List<List<JLabel>> labelsList;
 
     MyPanel(List<Player> players){
         this.setBounds(0, 0, panelWidth, panelHeight);
@@ -45,53 +44,45 @@ public class MyPanel extends JLayeredPane implements ActionListener, MouseListen
     }
 
     private void cardsDeal(List<Player> players){
-        playerCards = new ArrayList<>();
-        int currentPosition = 10;
-        int stepLength;
+        labelsList = new ArrayList<>();
+        labelsList.add(new ArrayList<>());
+        cardsGraphic(players, labelsList, 0);
+        labelsList.add(new ArrayList<>());
+        cardsGraphic(players, labelsList, 1);
+    }
 
-        if(players.get(0).getCards().size() < 9) {
-            playersPanelList.get(0).setLayout(new FlowLayout());
-            for (int i = 0; i < players.get(0).getCards().size(); ++i) {
-                playerCards.add(new JLabel(new ImageIcon(new ImageIcon(pathFronts + players.get(0).getCards().get(i).toString() + ".png")
+    private void cardsGraphic(List<Player> players, List<List<JLabel>> labelsList, int numberOfPlayer) {
+        String path = (numberOfPlayer == 0) ? pathFronts : pathBacks;
+
+
+        if (players.get(numberOfPlayer).getCards().size() < 9) {
+            playersPanelList.get(numberOfPlayer).setLayout(new FlowLayout());
+            for (int i = 0; i < players.get(numberOfPlayer).getCards().size(); ++i) {
+                labelsList.get(numberOfPlayer).add(new JLabel(new ImageIcon(
+                        new ImageIcon(getPath(numberOfPlayer == 0, players.get(numberOfPlayer).getCards().get(i)))
                         .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH))));
-                playersPanelList.get(0).add(playerCards.get(i));
+                playersPanelList.get(numberOfPlayer).add(labelsList.get(numberOfPlayer).get(i));
             }
-        }
-        else {
-            playersPanelList.get(0).setLayout(null);
-            playersPanelList.get(0).setBackground(Color.green);
-            stepLength = (playersPanelList.get(0).getWidth() - 20 - cardWidth) / (players.get(0).getCards().size() - 1);
-            for (int i = 0; i < players.get(0).getCards().size(); ++i) {
-                JLabel label = createFrontCards(currentPosition, 10, players.get(0).getCards().get(i).toString());
-                playersPanelList.get(0).add(label);
-                playersPanelList.get(0).setLayer(label, i);
+        } else {
+            int currentPosition = 10;
+            int stepLength;
+            playersPanelList.get(numberOfPlayer).setLayout(null);
+            stepLength = (playersPanelList.get(numberOfPlayer).getWidth() - 20 - cardWidth) / (players.get(0).getCards().size() - 1);
+            for (int i = 0; i < players.get(numberOfPlayer).getCards().size(); ++i) {
+                JLabel label = new JLabel(new ImageIcon(new ImageIcon(getPath(numberOfPlayer == 0, players.get(numberOfPlayer).getCards().get(i)))
+                        .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
+                label.setBounds(currentPosition, 10, cardWidth, cardHeight);
+                labelsList.get(numberOfPlayer).add(label);
+                playersPanelList.get(numberOfPlayer).add(label);
+                playersPanelList.get(numberOfPlayer).setLayer(label, i);
                 currentPosition += stepLength;
             }
         }
-
-        firstEnemyCards = new ArrayList<>();
-        for(int i = 0; i < players.get(1).getCards().size(); ++i){
-            firstEnemyCards.add(new JLabel(new ImageIcon(new ImageIcon(pathBacks + backName + ".png")
-                    .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH))));
-            playersPanelList.get(1).add(firstEnemyCards.get(i));
-        }
     }
 
-    /*private void fillListCardsBacks(){
-        cardsBacks = new ArrayList<>();
-        for(int i = 0; i < 36; ++i){
-            firstEnemyPanel.add(new JLabel(new ImageIcon(new ImageIcon(pathBacks + "blue.png")
-                    .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH))));
-        }
-    }*/
-
-    /*private void fillListCardsFronts(Deck deck){
-        cardsFronts = new ArrayList<>();
-        for(int i = 0; i < 36; ++i){
-            cardsFronts.add(new JLabel(new ImageIcon(new ImageIcon(pathFronts + deck.getCard().toString() +".png")
-                    .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH))));
-        }
-    }*/
+    private String getPath(boolean isPlayer, Card card){
+        return isPlayer ? pathFronts + card.toString() + ".png" : pathBacks + backName + ".png";
+    }
 
     private static JLayeredPane createPanel(int x, int y, int w, int h){
         JLayeredPane panel = new JLayeredPane();
