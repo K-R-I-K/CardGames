@@ -4,8 +4,8 @@ import java.util.List;
 public class MyGraphics extends JFrame /*JWindow*/{
     MyPanel panel;
 
-    MyGraphics(Deck deck, List<Player> players){
-        panel = new MyPanel(deck, players);
+    MyGraphics(List<Player> players){
+        panel = new MyPanel(players);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
         this.add(panel);
