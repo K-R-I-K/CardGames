@@ -8,7 +8,7 @@ public class Durak {
     public Durak(){
         players = new ArrayList<>();
         deck = new Deck();
-        field = new Field(deck.getTrump());
+        field = new Field(deck.getTrump().getSuit());
         addPlayers();
         startGame();
     }

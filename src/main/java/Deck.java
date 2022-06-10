@@ -9,7 +9,7 @@ import java.util.Stack;
 @Setter
 public class Deck {
     private Stack<Card> cards;
-    private Suit trump;
+    private Card trump;
     {
         cards = new Stack<>();
         for(Rank rank: Rank.values()){
@@ -18,7 +18,7 @@ public class Deck {
             }
         }
         Collections.shuffle(cards);
-        trump = cards.firstElement().getSuit();
+        trump = cards.firstElement();
     }
 
     public Card getCard(){
