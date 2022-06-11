@@ -103,6 +103,11 @@ public class MyPanel extends JLayeredPane implements ActionListener{
                 label.addMouseListener(new MouseListener() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
+
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
                         label.setLocation((battlePanels.get(0).getWidth() - cardWidth) / 2, 0);
                         label.removeMouseListener(this);
                         playersPanelList.get(numberOfPlayer).setLayer(label, 0);
@@ -110,14 +115,7 @@ public class MyPanel extends JLayeredPane implements ActionListener{
                     }
 
                     @Override
-                    public void mousePressed(MouseEvent e) {
-
-                    }
-
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-
-                    }
+                    public void mouseReleased(MouseEvent e) {}
 
                     @Override
                     public void mouseEntered(MouseEvent e) {

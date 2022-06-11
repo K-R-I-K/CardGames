@@ -60,13 +60,13 @@ public class Field {
         for (Card element: attackList) {
             if(element == null)
                 continue;
-            if(element.getRank() == card.getRank())
+            if(element.getRank().equals(card.getRank()))
                 return true;
         }
         for (Card element: defendList) {
             if(element == null)
                 continue;
-            if(element.getRank() == card.getRank())
+            if(element.getRank().equals(card.getRank()))
                 return true;
         }
         return false;

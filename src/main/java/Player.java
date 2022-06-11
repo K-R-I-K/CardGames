@@ -1,7 +1,10 @@
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -17,10 +20,12 @@ public class Player {
 
     public void setCard(Card card){
         this.cards.add(card);
+        this.cards.sort(Comparator.naturalOrder());
     }
 
     public void setCard(List<Card> cards){
         this.cards.addAll(cards);
+        this.cards.sort(Comparator.naturalOrder());
     }
 
     public Card getCard(int index){

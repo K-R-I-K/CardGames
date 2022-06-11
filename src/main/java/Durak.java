@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Durak {
     private List<Player> players;
@@ -26,19 +27,28 @@ public class Durak {
             }
         }
     }
-    private void attackMove(Player player, int indexOfCardPlayer){
-        if(field.setAttackList(player.getCard(indexOfCardPlayer)))
+    private boolean attackMove(Player player, int indexOfCardPlayer){
+        boolean res = field.setAttackList(player.getCard(indexOfCardPlayer));
+        if(res)
             player.removeCard(indexOfCardPlayer);
+        return res;
     }
-    private void defenseMove(Player player, int indexOfCardPlayer, int indexOfCardField){
-        if(field.setDefendList(player.getCard(indexOfCardPlayer), indexOfCardField))
+    private boolean defenseMove(Player player, int indexOfCardPlayer, int indexOfCardField){
+        boolean res = field.setDefendList(player.getCard(indexOfCardPlayer), indexOfCardField);
+        if(res)
             player.removeCard(indexOfCardPlayer);
+        return res;
     }
     public void startGame(){
         int indexOfPlayer = 0;
-        int indexOfCardPlayer = 1;
+        Scanner scanner = new Scanner(System.in);
+        int indexOfCardPlayer = scanner.nextInt();
         attackMove(players.get(indexOfPlayer), indexOfCardPlayer);
-        defenseMove(players.get(++indexOfPlayer), indexOfCardPlayer,0);
+        for(int i=0;i<players.get(indexOfPlayer+1).getCards().size();++i){
+            if(defenseMove(players.get(indexOfPlayer+1), i, 0))
+                break;
+        }
+
         players.get(1).setCard(field.clearField());//the player takes the cards
         field.clearField();//
     }
