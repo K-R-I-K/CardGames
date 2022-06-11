@@ -16,16 +16,11 @@ public class Field {
     }
 
     public boolean setAttackList(Card card) {
-        if(attackListSize >=6){
-            System.out.println("so many attack cards");
-            return false;
-        }
-        if(attackListSize == 0 || attackCheck(card)){
+        if(attackCheck(card)) {
             attackList.add(card);
             ++attackListSize;
-            return true;
         }
-        return false;
+        return attackCheck(card);
     }
 
     public boolean setDefendList(Card card, int i) {
@@ -47,10 +42,28 @@ public class Field {
         }
         return false;
     }
-
-    private boolean attackCheck(Card card){
-        //attackListSize must be > 0
+    public boolean defendCheck(Card card) {
+        for(Card attackCard: attackList){
+            if(defendCheck(attackCard, card))
+                return true;
+        }
+        return false;
+    }
+    public boolean attackCheck(Card card){
+        if(attackListSize >=6){
+            System.out.println("so many attack cards");
+            return false;
+        }
+        if(attackListSize == 0){
+            return true;
+        }
         for (Card element: attackList) {
+            if(element == null)
+                continue;
+            if(element.getRank() == card.getRank())
+                return true;
+        }
+        for (Card element: defendList) {
             if(element == null)
                 continue;
             if(element.getRank() == card.getRank())
