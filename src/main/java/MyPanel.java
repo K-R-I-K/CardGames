@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MyPanel extends JLayeredPane implements ActionListener{
@@ -19,10 +20,10 @@ public class MyPanel extends JLayeredPane implements ActionListener{
     private Color bgColor = Color.red;
     private List<JLayeredPane> playersPanelList;
     private List<JLayeredPane> battlePanels;
-    private JLayeredPane centerPanel;
     private JLayeredPane deckPanel;
     private JLayeredPane discardedPanel;
     private List<List<JLabel>> labelsLists;
+    private List<Boolean> playerChoose;
     private List<JLabel> deckLabels;
     private int discardedCount;
 
@@ -47,6 +48,7 @@ public class MyPanel extends JLayeredPane implements ActionListener{
 
     private void cardsDeal(List<Player> players){
         labelsLists = new ArrayList<>();
+        playerChoose = new ArrayList<>(Collections.nCopies(players.get(0).getCards().size(), false));
         labelsLists.add(new ArrayList<>());
         cardsGraphic(players, labelsLists, 0);
         labelsLists.add(new ArrayList<>());
@@ -108,28 +110,54 @@ public class MyPanel extends JLayeredPane implements ActionListener{
 
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        label.setLocation((battlePanels.get(0).getWidth() - cardWidth) / 2, 0);
+                         /*label.setLocation((battlePanels.get(0).getWidth() - cardWidth) / 2, 0);
                         label.removeMouseListener(this);
                         playersPanelList.get(numberOfPlayer).setLayer(label, 0);
-                        battlePanels.get(0).add(label);
+                        battlePanels.get(0).add(label);*/
+                        mousePress(playersPanelList.get(0).getLayer(label));
+                        //System.out.println("press");
                     }
 
                     @Override
-                    public void mouseReleased(MouseEvent e) {}
+                    public void mousePressed(MouseEvent e) {
+                        /*label.setLocation((battlePanels.get(0).getWidth() - cardWidth) / 2, 0);
+                        label.removeMouseListener(this);
+                        playersPanelList.get(numberOfPlayer).setLayer(label, 0);
+                        battlePanels.get(0).add(label);*/
+                        mousePress(playersPanelList.get(0).getLayer(label));
+                        //System.out.println("press");
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        //System.out.println("release");
+                    }
 
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        label.setLocation(label.getX(), label.getY() - 40);
+                        if(!playerChoose.get(playersPanelList.get(0).getLayer(label)))
+                            label.setLocation(label.getX(), label.getY() - 40);
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        label.setLocation(label.getX(), label.getY() + 40);
+                        if(!playerChoose.get(playersPanelList.get(0).getLayer(label)))
+                            label.setLocation(label.getX(), label.getY() + 40);
                     }
                 });
             }
             currentPosition += stepLength;
         }
+    }
+
+    private void mousePress(int index){
+        for (int i = 0; i < playerChoose.size(); ++i) {
+            if(playerChoose.get(i)){
+                playerChoose.set(i, false);
+                labelsLists.get(0).get(i).setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + 40);
+            }
+        }
+        playerChoose.set(index, true);
     }
 
     private String getPath(boolean isPlayer, Card card){
