@@ -17,7 +17,7 @@ public class Field {
 
     public boolean setAttackList(Card card) {
         if(attackCheck(card)) {
-            attackList.add(card);
+            attackList.add(attackListSize, card);
             ++attackListSize;
         }
         return attackCheck(card);
