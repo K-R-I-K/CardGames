@@ -260,4 +260,20 @@ public class MyGraphics extends JLayeredPane{
         }
         discardedCount += number;
     }
+
+    public void drawBeatCard(Player player, int PlayerIndex, int cardIndex, int battleFieldIndex){
+        drawCard(player, PlayerIndex, cardIndex, battleFieldIndex, 100);
+    }
+
+    public void drawAttackCard(Player player, int PlayerIndex, int cardIndex, int battleFieldIndex){
+        drawCard(player, PlayerIndex, cardIndex, battleFieldIndex, 40);
+    }
+
+    private void drawCard(Player player, int PlayerIndex, int cardIndex, int battleFieldIndex, int y){
+        JLabel label = labelsLists.get(PlayerIndex).get(cardIndex);
+        label.setIcon(new ImageIcon(new ImageIcon(pathFronts + player.getCard(cardIndex).toString() + ".png")
+                .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
+        label.setLocation((battlePanels.get(battleFieldIndex).getWidth() - cardWidth) / 2, y);
+        battlePanels.get(battleFieldIndex).add(label);
+    }
 }
