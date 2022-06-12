@@ -17,7 +17,7 @@ public class Field {
 
     public boolean setAttackList(Card card) {
         if(attackCheck(card)) {
-            attackList.add(attackListSize, card);
+            attackList.set(attackListSize, card);
             ++attackListSize;
         }
         return attackCheck(card);
@@ -36,7 +36,7 @@ public class Field {
             System.out.println("you can`t beat non-existent attack card");
             return false;
         }
-        if(defendCheck(card, defendList.get(i))){
+        if(defendCheck(attackList.get(i),card)){
             defendList.set(i, card);
             return true;
         }
@@ -78,9 +78,9 @@ public class Field {
             return false;
         }
         return attackCard.getSuit().equals(defendCard.getSuit())
-                && attackCard.getRank().compareTo(defendCard.getRank()) > 0
-                || attackCard.getSuit().equals(trump)
-                && !defendCard.getSuit().equals(trump);
+                && attackCard.getRank().compareTo(defendCard.getRank()) < 0
+                || !attackCard.getSuit().equals(trump)
+                && defendCard.getSuit().equals(trump);
     }
 
     public List<Card> clearField(){

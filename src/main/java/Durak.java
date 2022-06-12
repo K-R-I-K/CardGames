@@ -21,12 +21,21 @@ public class Durak {
             System.out.println("So many players");
             return;
         }
-        for(int i = 0; i < 6; ++i){
-            for (Player player : players) {
-                player.setCard(deck.getCard());
-            }
+        for (Player player : players) {
+            givePlayerCardsFromDeck(player);
         }
     }
+    private boolean givePlayerCardsFromDeck(Player player){
+        if(deck.getSize()==0)
+            return false;
+        for(int i = player.getCards().size(); i < 6; ++i){
+            player.setCard(deck.getCard());
+            if(deck.getSize()==0)
+                return false;
+        }
+        return true;
+    }
+
     private boolean attackMove(Player player, int indexOfCardPlayer){
         boolean res = field.setAttackList(player.getCard(indexOfCardPlayer));
         if(res)
