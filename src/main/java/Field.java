@@ -16,7 +16,15 @@ public class Field {
         this.trump = trump;
     }
 
-    public boolean setAttackList(Card card) {
+    public boolean setAttackList(Card card, int i) {
+        if(i<0 || i > 5) {
+            System.out.println("incorrect index");
+            return false;
+        }
+        else if(attackList.get(i) != null){
+            System.out.println("card was already there");
+            return false;
+        }
         if(attackCheck(card)) {
             attackList.set(attackListSize, card);
             ++attackListSize;

@@ -76,8 +76,7 @@ public class MyPanel extends JLayeredPane{
             if(numberOfPlayer == 0) {
                 playerMouseListeners.add(new MouseListener() {
                     @Override
-                    public void mouseClicked(MouseEvent e) {
-                    }
+                    public void mouseClicked(MouseEvent e) {}
 
                     @Override
                     public void mousePressed(MouseEvent e) {
@@ -85,8 +84,7 @@ public class MyPanel extends JLayeredPane{
                     }
 
                     @Override
-                    public void mouseReleased(MouseEvent e) {
-                    }
+                    public void mouseReleased(MouseEvent e) {}
 
                     @Override
                     public void mouseEntered(MouseEvent e) {
@@ -126,9 +124,7 @@ public class MyPanel extends JLayeredPane{
         panel.setBounds(x, y, w, h);
         panel.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
+            public void mouseClicked(MouseEvent e) {}
 
             @Override
             public void mousePressed(MouseEvent e) {
@@ -147,19 +143,13 @@ public class MyPanel extends JLayeredPane{
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
+            public void mouseReleased(MouseEvent e) {}
 
             @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
+            public void mouseEntered(MouseEvent e) {}
 
             @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
+            public void mouseExited(MouseEvent e) {}
         });
         panel.setVisible(true);
         panel.setOpaque(true);

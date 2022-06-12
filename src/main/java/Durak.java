@@ -36,8 +36,8 @@ public class Durak {
         return true;
     }
 
-    private boolean attackMove(Player player, int indexOfCardPlayer){
-        boolean res = field.setAttackList(player.getCard(indexOfCardPlayer));
+    private boolean attackMove(Player player, int indexOfCardPlayer, int indexOfCardField){
+        boolean res = field.setAttackList(player.getCard(indexOfCardPlayer), indexOfCardField);
         if(res)
             player.removeCard(indexOfCardPlayer);
         return res;
@@ -52,7 +52,7 @@ public class Durak {
         int indexOfPlayer = 0;
         Scanner scanner = new Scanner(System.in);
         int indexOfCardPlayer = scanner.nextInt();
-        attackMove(players.get(indexOfPlayer), indexOfCardPlayer);
+        attackMove(players.get(indexOfPlayer), indexOfCardPlayer, 0);
         for(int i=0;i<players.get(indexOfPlayer+1).getCards().size();++i){
             if(defenseMove(players.get(indexOfPlayer+1), i, 0))
                 break;

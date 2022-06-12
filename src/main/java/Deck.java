@@ -19,24 +19,12 @@ public class Deck {
         }
         Collections.shuffle(cards);
         trump = cards.firstElement();
+        Card.setTrump(trump.getSuit());
     }
 
     public Card getCard(){
         return cards.pop();
     }
     public int getSize(){return cards.size();}
-    //where to put this impl
-    //this comparator need to sort player cards
-    public Comparator<Card> getComparator(){
-        return (o1, o2) -> {
-            if (o1.getSuit() == trump.getSuit() && o2.getSuit() != trump.getSuit()) {
-                return 1;
-            } else if (o1.getSuit() != trump.getSuit() && o2.getSuit() == trump.getSuit()) {
-                return -1;
-            } else {
-                return o1.compareTo(o2);
-            }
-        };
-    }
 
 }
