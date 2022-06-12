@@ -72,6 +72,7 @@ public class Durak {
                 game.field.setAttackList(game.players.get(0).getCard(window.getCardIndex()), window.getFieldIndex());
                 window.setFieldIndex(-1);
                 window.setCardIndex(-1);
+                window.drawAttackCard(game.players.get(1), 1, 1,  1);
             }
         }
         //window.drawDiscarded(10);
