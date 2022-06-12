@@ -1,17 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class MyPanel extends JLayeredPane implements ActionListener{
+public class MyPanel extends JLayeredPane{
     private String pathFronts;
     private String pathBacks;
     private String backName;
-    private Timer timer;
     private int cardWidth;
     private int cardHeight;
     private int panelWidth;
@@ -19,10 +17,11 @@ public class MyPanel extends JLayeredPane implements ActionListener{
     private Color bgColor = Color.red;
     private List<JLayeredPane> playersPanelList;
     private List<JLayeredPane> battlePanels;
-    private JLayeredPane centerPanel;
     private JLayeredPane deckPanel;
     private JLayeredPane discardedPanel;
     private List<List<JLabel>> labelsLists;
+    private List<Boolean> playerChoose;
+    private List<MouseListener> playerMouseListeners;
     private List<JLabel> deckLabels;
     private int discardedCount;
 
@@ -37,16 +36,16 @@ public class MyPanel extends JLayeredPane implements ActionListener{
         panelWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         panelHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         discardedCount = 0;
-        //fillListCardsBacks();
-        //fillListCardsFronts(deck);
         setLayout();
         cardsDeal(players);
         drawDeck(deck);
-        //timer = new Timer(10, this);
+        //drawDiscarded(10);
     }
 
     private void cardsDeal(List<Player> players){
         labelsLists = new ArrayList<>();
+        playerChoose = new ArrayList<>(Collections.nCopies(players.get(0).getCards().size(), false));
+        playerMouseListeners = new ArrayList<>();
         labelsLists.add(new ArrayList<>());
         cardsGraphic(players, labelsLists, 0);
         labelsLists.add(new ArrayList<>());
@@ -54,31 +53,6 @@ public class MyPanel extends JLayeredPane implements ActionListener{
     }
 
     private void cardsGraphic(List<Player> players, List<List<JLabel>> labelsList, int numberOfPlayer) {
-       /* if (players.get(numberOfPlayer).getCards().size() < 9) {
-            playersPanelList.get(numberOfPlayer).setLayout(new FlowLayout());
-            for (int i = 0; i < players.get(numberOfPlayer).getCards().size(); ++i) {
-                labelsList.get(numberOfPlayer).add(new JLabel(new ImageIcon(
-                        new ImageIcon(getPath(numberOfPlayer == 0, players.get(numberOfPlayer).getCards().get(i)))
-                        .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH))));
-                playersPanelList.get(numberOfPlayer).add(labelsList.get(numberOfPlayer).get(i));
-                labelsList.get(numberOfPlayer).get(i).addMouseListener(this);
-            }
-        } else {
-            int currentPosition = 10;
-            int stepLength;
-            playersPanelList.get(numberOfPlayer).setLayout(null);
-            stepLength = (playersPanelList.get(numberOfPlayer).getWidth() - 20 - cardWidth) / (players.get(0).getCards().size() - 1);
-            for (int i = 0; i < players.get(numberOfPlayer).getCards().size(); ++i) {
-                JLabel label = new JLabel(new ImageIcon(new ImageIcon(getPath(numberOfPlayer == 0, players.get(numberOfPlayer).getCards().get(i)))
-                        .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
-                label.setBounds(currentPosition, 10, cardWidth, cardHeight);
-                labelsList.get(numberOfPlayer).add(label);
-                playersPanelList.get(numberOfPlayer).add(label);
-                playersPanelList.get(numberOfPlayer).setLayer(label, i);
-                currentPosition += stepLength;
-            }
-        }*/
-
         int currentPosition;
         int stepLength;
         playersPanelList.get(numberOfPlayer).setLayout(null);
@@ -100,58 +74,97 @@ public class MyPanel extends JLayeredPane implements ActionListener{
             playersPanelList.get(numberOfPlayer).add(label);
             playersPanelList.get(numberOfPlayer).setLayer(label, i);
             if(numberOfPlayer == 0) {
-                label.addMouseListener(new MouseListener() {
+                playerMouseListeners.add(new MouseListener() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-
                     }
 
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        label.setLocation((battlePanels.get(0).getWidth() - cardWidth) / 2, 0);
-                        label.removeMouseListener(this);
-                        playersPanelList.get(numberOfPlayer).setLayer(label, 0);
-                        battlePanels.get(0).add(label);
+                        mousePress(playersPanelList.get(0).getLayer(label));
                     }
 
                     @Override
-                    public void mouseReleased(MouseEvent e) {}
+                    public void mouseReleased(MouseEvent e) {
+                    }
 
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        label.setLocation(label.getX(), label.getY() - 40);
+                        if(!playerChoose.get(playersPanelList.get(0).getLayer(label)))
+                            label.setLocation(label.getX(), label.getY() - 40);
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        label.setLocation(label.getX(), label.getY() + 40);
+                        if(!playerChoose.get(playersPanelList.get(0).getLayer(label)))
+                            label.setLocation(label.getX(), label.getY() + 40);
                     }
                 });
+                label.addMouseListener(playerMouseListeners.get(i));
             }
             currentPosition += stepLength;
         }
+    }
+
+    private void mousePress(int index){
+        for (int i = 0; i < playerChoose.size(); ++i) {
+            if(playerChoose.get(i) && i != index){
+                playerChoose.set(i, false);
+                labelsLists.get(0).get(i).setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + 40);
+            }
+        }
+        playerChoose.set(index, true);
     }
 
     private String getPath(boolean isPlayer, Card card){
         return isPlayer ? pathFronts + card.toString() + ".png" : pathBacks + backName + ".png";
     }
 
-    private static JLayeredPane createPanel(int x, int y, int w, int h){
+    private JLayeredPane createPanel(int x, int y, int w, int h){
         JLayeredPane panel = new JLayeredPane();
         panel.setBackground(Color.red);
         panel.setBounds(x, y, w, h);
+        panel.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                for (int i = 0; i < playerChoose.size(); ++i) {
+                    if(playerChoose.get(i)){
+                        JLabel label= labelsLists.get(0).get(i);
+                        label.setLocation((panel.getWidth() - cardWidth) / 2, 0);
+                        label.removeMouseListener(playerMouseListeners.get(i));
+                        panel.removeMouseListener(this);
+                        playersPanelList.get(0).setLayer(label, 0);
+                        playerChoose.set(i, false);
+                        label.setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + 40);
+                        panel.add(label);
+                    }
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
         panel.setVisible(true);
         panel.setOpaque(true);
         return panel;
     }
-
-   /* private JLabel createFrontCards(int x, int y, String cardsName){
-        JLabel label = new JLabel(new ImageIcon(new ImageIcon(pathFronts + cardsName + ".png")
-                .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
-        label.setBounds(x, y, cardWidth, cardHeight);
-        label.setVisible(true);
-        return label;
-    }*/
 
     public void setLayout(){
         this.setLayout(null);
@@ -171,11 +184,6 @@ public class MyPanel extends JLayeredPane implements ActionListener{
         discardedPanel.setBackground(Color.black);
         discardedPanel.setBounds(panelWidth * 27 / 32,0,panelWidth * 5 / 32,panelHeight * 4 / 18);
         discardedPanel.setOpaque(true);
-
-        /*centerPanel = new JLayeredPane();
-        centerPanel.setBackground(Color.orange);
-        centerPanel.setBounds(panelWidth * 5 / 32, panelHeight * 4 / 18, panelWidth * 22 / 32, panelHeight * 10 / 18);
-        centerPanel.setOpaque(true);*/
 
         battlePanels = new ArrayList<>();
         battlePanels.add(createPanel(panelWidth * 27 / 32 / 3, panelHeight * 4 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18));
@@ -228,14 +236,7 @@ public class MyPanel extends JLayeredPane implements ActionListener{
             label.setBounds((discardedPanel.getWidth() - cardHeight) / 2, (discardedPanel.getHeight() - cardHeight) / 2 - i * 3 / 2 - upDiscarded, cardHeight, cardWidth);
             discardedPanel.add(label);
             discardedPanel.setLayer(label, i);
-            ++discardedCount;
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-       /* x += xVelocity;
-        y += yVelocity;
-        repaint();*/
+        discardedCount += number;
     }
 }

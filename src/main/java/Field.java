@@ -8,6 +8,7 @@ public class Field {
     private List<Card> defendList;
     private int attackListSize;
     private final Suit trump;
+
     public Field(Suit trump){
         attackList = new ArrayList<>(Collections.nCopies(6, (Card) null));
         defendList = new ArrayList<>(Collections.nCopies(6, (Card) null));
