@@ -64,6 +64,16 @@ public class Durak {
 
     public static void main(String[] args) {
         Durak game = new Durak();
-        MyGraphics window = new MyGraphics(game.players, game.deck);
+        MyGraphics window = new MyGraphics();
+        window.drawDeck(game.deck);
+        window.cardsDeal(game.players, game.field);
+        while(true) {
+            if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
+                game.field.setAttackList(game.players.get(0).getCard(window.getCardIndex()), window.getFieldIndex());
+                window.setFieldIndex(-1);
+                window.setCardIndex(-1);
+            }
+        }
+        //window.drawDiscarded(10);
     }
 }
