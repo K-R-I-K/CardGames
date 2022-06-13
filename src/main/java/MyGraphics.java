@@ -1,3 +1,6 @@
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -35,8 +38,11 @@ public class MyGraphics extends JLayeredPane{
     private volatile int fieldIndex;
     private volatile boolean isTake;
     private volatile boolean isPass;
-
+    @Getter
+    @Setter
+    private boolean isAttack;
     MyGraphics(){
+        isAttack = false;
         pathFronts = "src/main/resources/png/fronts/";
         pathBacks = "src/main/resources/png/backs/";
         backName = "blue2";
@@ -204,8 +210,10 @@ public class MyGraphics extends JLayeredPane{
                         panel.removeMouseListener(this);
                         playersPanelList.get(0).setLayer(label, 0);
                         playerChoose.set(i, false);
-                        label.setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + 40);
-                        panel.setLayer(label,0);
+                        int y = (isAttack)?40:100;
+                        label.setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + y);
+
+                        panel.setLayer(label, isAttack?0:1);
                         panel.add(label);
 
                         fieldIndex = battleFieldIndex;

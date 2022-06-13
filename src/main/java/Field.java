@@ -52,7 +52,7 @@ public class Field {
     public boolean moveCheck(boolean isDefend, Card card){
         if(isDefend){
             for(Card attackCard: attackList){
-                if(defendCheck(attackCard, card))
+                if(attackCard!=null && defendCheck(attackCard, card))
                     return true;
             }
         }else {

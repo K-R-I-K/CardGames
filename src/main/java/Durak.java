@@ -90,6 +90,7 @@ public class Durak {
         while(true) {
             //player attack case
             if(game.players.get(1).getIsDefend()){
+                window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     game.move(game.players.get(0), window.getCardIndex(), window.getFieldIndex());
                     int card = game.moveBot(game.players.get(1), window.getFieldIndex());
@@ -115,7 +116,7 @@ public class Durak {
                     game.players.get(0).setIsDefend(true);
                 }
             }else{
-
+                window.setAttack(false);
                 if(!isBotMoved){
                     int card = game.moveBot(game.players.get(1), window.getFieldIndex()+1);
                     if(card != -1){
