@@ -205,7 +205,9 @@ public class MyGraphics extends JLayeredPane{
                         playersPanelList.get(0).setLayer(label, 0);
                         playerChoose.set(i, false);
                         label.setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + 40);
+                        panel.setLayer(label,0);
                         panel.add(label);
+
                         fieldIndex = battleFieldIndex;
                     }
                 }
@@ -301,10 +303,13 @@ public class MyGraphics extends JLayeredPane{
         label.setIcon(new ImageIcon(new ImageIcon(pathFronts + player.getCard(cardIndex).toString() + ".png")
                 .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
         label.setLocation((battlePanels.get(battleFieldIndex).getWidth() - cardWidth) / 2, y);
-        if(y == 40)
+        if(y == 40) {
             battlePanels.get(battleFieldIndex).add(label, 0);
-        else
+            battlePanels.get(battleFieldIndex).setLayer(label, 0);
+        }else {
             battlePanels.get(battleFieldIndex).add(label, 1);
+            battlePanels.get(battleFieldIndex).setLayer(label, 1);
+        }
     }
 
     private void drawExitButton(){
