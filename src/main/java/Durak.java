@@ -37,13 +37,13 @@ public class Durak {
     }
 
     private boolean attackMove(Player player, int indexOfCardPlayer, int indexOfCardField){
-        boolean res = field.setList(player, player.getCard(indexOfCardPlayer), indexOfCardField);
+        boolean res = field.setList(player, indexOfCardPlayer, indexOfCardField);
         if(res)
             player.removeCard(indexOfCardPlayer);
         return res;
     }
     private boolean defenseMove(Player player, int indexOfCardPlayer, int indexOfCardField){
-        boolean res = field.setList(player, player.getCard(indexOfCardPlayer), indexOfCardField);
+        boolean res = field.setList(player, indexOfCardPlayer, indexOfCardField);
         if(res)
             player.removeCard(indexOfCardPlayer);
         return res;
@@ -69,7 +69,7 @@ public class Durak {
         window.cardsDeal(game.players, game.field);
         while(true) {
             if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
-                game.field.setList(game.players.get(0), game.players.get(0).getCard(window.getCardIndex()), window.getFieldIndex());
+                game.field.setList(game.players.get(0), window.getCardIndex(), window.getFieldIndex());
                 window.setFieldIndex(-1);
                 window.setCardIndex(-1);
                 window.drawAttackCard(game.players.get(1), 1, 1,  1);

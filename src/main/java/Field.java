@@ -16,27 +16,28 @@ public class Field {
         this.trump = trump;
     }
 
-    public boolean setList(Player player, Card card, int i) {
-        if(i<0 || i > 5) {
+    public boolean setList(Player player, int indexOfCard, int indexOfFieldEdge) {
+        Card card = player.getCard(indexOfCard);
+        if(indexOfFieldEdge <0 || indexOfFieldEdge > 5) {
             System.out.println("incorrect index");
             return false;
         }
         if(player.getIsDefend()){
-            if(defendList.get(i) != null){
+            if(defendList.get(indexOfFieldEdge) != null){
                 System.out.println("card was beaten");
                 return false;
             }
-            else if(attackList.get(i) == null){
+            else if(attackList.get(indexOfFieldEdge) == null){
                 System.out.println("you can`t beat non-existent attack card");
                 return false;
             }
-            if(defendCheck(attackList.get(i),card)){
-                defendList.set(i, card);
+            if(defendCheck(attackList.get(indexOfFieldEdge),card)){
+                defendList.set(indexOfFieldEdge, card);
                 return true;
             }
             return false;
         }else{
-            if(attackList.get(i) != null){
+            if(attackList.get(indexOfFieldEdge) != null){
                 System.out.println("card was already there");
                 return false;
             }
