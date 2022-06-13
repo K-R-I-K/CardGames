@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -15,11 +17,15 @@ public class MyGraphics extends JLayeredPane{
     private int cardHeight;
     private int panelWidth;
     private int panelHeight;
+    private int buttonWidth;
+    private int buttonHeight;
     private Color bgColor = Color.red;
     private List<JLayeredPane> playersPanelList;
     private List<JLayeredPane> battlePanels;
     private JLayeredPane deckPanel;
     private JLayeredPane discardedPanel;
+    private JLayeredPane exitPanel;
+    private JLayeredPane buttonPanel;
     private List<List<JLabel>> labelsLists;
     private List<Boolean> playerChoose;
     private List<MouseListener> playerMouseListeners;
@@ -34,12 +40,16 @@ public class MyGraphics extends JLayeredPane{
         backName = "blue2";
         cardWidth = 234 * 6 / 10;
         cardHeight = 333 * 6 / 10;
+        buttonWidth = 100;
+        buttonHeight = 50;
         panelWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         panelHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         discardedCount = 0;
         cardIndex = -1;
         fieldIndex = -1;
         setLayout();
+        drawExitButton();
+        drawActionButton();
         //drawDeck(deck);
         //cardsDeal(players, field);
         //drawDiscarded(10);
@@ -205,6 +215,8 @@ public class MyGraphics extends JLayeredPane{
 
         deckPanel = createPanel(0,0,panelWidth * 5 / 32,panelHeight * 4 / 18, -1);
         discardedPanel = createPanel(panelWidth * 27 / 32,0,panelWidth * 5 / 32,panelHeight * 4 / 18, -1);
+        exitPanel = createPanel(0,panelHeight * 14 / 18,panelWidth * 5 / 32,panelHeight * 4 / 18, -1);
+        buttonPanel = createPanel(panelWidth * 27 / 32, panelHeight * 14 / 18,panelWidth * 5 / 32,panelHeight * 4 / 18, -1);
 
         battlePanels = new ArrayList<>();
         battlePanels.add(createPanel(panelWidth * 27 / 32 / 3, panelHeight * 4 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 0));
@@ -220,9 +232,9 @@ public class MyGraphics extends JLayeredPane{
         this.add(playersPanelList.get(2));
         //this.add(centerPanel);
         this.add(playersPanelList.get(3));
-        this.add(createPanel(0,panelHeight * 14 / 18,panelWidth * 5 / 32,panelHeight * 4 / 18, -1));
+        this.add(exitPanel);
         this.add(playersPanelList.get(0));
-        this.add(createPanel(panelWidth * 27 / 32, panelHeight * 14 / 18,panelWidth * 5 / 32,panelHeight * 4 / 18, -1));
+        this.add(buttonPanel);
         for(int i = 0; i < battlePanels.size(); ++i){
             this.add(battlePanels.get(i));
         }
@@ -274,6 +286,32 @@ public class MyGraphics extends JLayeredPane{
         label.setIcon(new ImageIcon(new ImageIcon(pathFronts + player.getCard(cardIndex).toString() + ".png")
                 .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
         label.setLocation((battlePanels.get(battleFieldIndex).getWidth() - cardWidth) / 2, y);
-        battlePanels.get(battleFieldIndex).add(label);
+        if(y == 40)
+            battlePanels.get(battleFieldIndex).add(label, 0);
+        else
+            battlePanels.get(battleFieldIndex).add(label, 1);
+    }
+
+    private void drawExitButton(){
+        JButton exitButton = createButton("Close", "blue", (exitPanel.getWidth() - buttonWidth) / 2,
+        (exitPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
+        exitButton.addActionListener(e -> System.exit(0));
+        exitPanel.add(exitButton);
+    }
+
+    private void drawActionButton(){
+        JButton actionButton = createButton("Pass", "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
+                (buttonPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
+        //actionButton.addActionListener();
+        buttonPanel.add(actionButton);
+    }
+
+    private JButton createButton(String name, String textColor, int x, int y, int w, int h, int r, int g, int b){
+        JButton button = new JButton("<html><h2><font color=\"" + textColor +"\">" + name);
+        button.setBounds(x, y, w, h);
+        button.setBorderPainted(false);
+        button.setBackground(new Color(r, g, b));
+        button.setFocusPainted(false);
+        return button;
     }
 }

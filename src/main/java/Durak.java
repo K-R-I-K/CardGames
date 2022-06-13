@@ -67,31 +67,14 @@ public class Durak {
         MyGraphics window = new MyGraphics();
         window.drawDeck(game.deck);
         window.cardsDeal(game.players, game.field);
-
-        /*for(int i=0;i<game.players.get(1).getCards().size();++i){
-            int j=0;
-            if(game.attackMove(game.players.get(1), i, j)){
-                window.drawAttackCard(game.players.get(1),1,i, j++);
-            }
-        }*/
-
-        int j=0;
         while(true) {
             if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                 game.field.setList(game.players.get(0), game.players.get(0).getCard(window.getCardIndex()), window.getFieldIndex());
                 window.setFieldIndex(-1);
                 window.setCardIndex(-1);
-
-                for(int i=0;i<game.players.get(1).getCards().size();++i){
-
-                    if(game.defenseMove(game.players.get(1), i, j)){
-                        window.drawBeatCard(game.players.get(1),1,i, j++);
-                        break;
-                    }
-                }
+                window.drawAttackCard(game.players.get(1), 1, 1,  1);
             }
         }
-
         //window.drawDiscarded(10);
     }
 }
