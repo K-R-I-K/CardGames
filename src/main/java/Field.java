@@ -48,11 +48,12 @@ public class Field {
             return moveCheck(player.getIsDefend(), card);
         }
     }
-
     public boolean moveCheck(boolean isDefend, Card card){
         if(isDefend){
-            for(Card attackCard: attackList){
-                if(attackCard!=null && defendCheck(attackCard, card))
+            for (int i = 0; i < attackList.size(); i++) {
+                Card attackCard = attackList.get(i);
+                Card defendCard = defendList.get(i);
+                if (attackCard != null && defendCard == null && defendCheck(attackCard, card))
                     return true;
             }
         }else {
@@ -78,6 +79,7 @@ public class Field {
         }
         return false;
     }
+
     private boolean defendCheck(Card attackCard, Card defendCard){
         if(attackCard == null || defendCard == null){
             System.out.println("invalid argument");

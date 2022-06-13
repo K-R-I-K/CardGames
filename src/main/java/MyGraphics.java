@@ -116,7 +116,6 @@ public class MyGraphics extends JLayeredPane{
         playersPanelList.get(1).removeAll();
         playersPanelList.get(1).repaint();
         cardsGraphic(players, labelsLists, 1, field);
-
     }
 
     private void cardsGraphic(List<Player> players, List<List<JLabel>> labelsList, int numberOfPlayer, Field field) {
@@ -128,7 +127,7 @@ public class MyGraphics extends JLayeredPane{
             currentPosition = (playersPanelList.get(numberOfPlayer).getWidth() - (players.get(numberOfPlayer).getCards().size() * stepLength)) / 2;
         } else {
             currentPosition = 10;
-            stepLength = (playersPanelList.get(numberOfPlayer).getWidth() - 20 - cardWidth) / (players.get(0).getCards().size() - 1);
+            stepLength = (playersPanelList.get(numberOfPlayer).getWidth() - 20 - cardWidth) / (players.get(numberOfPlayer).getCards().size() - 1);
         }
 
         int y = (numberOfPlayer == 0) ? 40 : 10;
@@ -207,7 +206,7 @@ public class MyGraphics extends JLayeredPane{
                         JLabel label= labelsLists.get(0).get(i);
                         label.setLocation((panel.getWidth() - cardWidth) / 2, 0);
                         label.removeMouseListener(playerMouseListeners.get(i));
-                        panel.removeMouseListener(this);
+                        //panel.removeMouseListener(this);
                         playersPanelList.get(0).setLayer(label, 0);
                         playerChoose.set(i, false);
                         int y = (isAttack)?40:100;
@@ -328,19 +327,18 @@ public class MyGraphics extends JLayeredPane{
     }
 
     public void drawActionButton(Player player){
-        JButton actionButton = createButton("Pass", "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
+        String name = isAttack?"Pass":"Take";
+        JButton actionButton = createButton(name, "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
                 (buttonPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
-        actionButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(player.getIsDefend()){
-                    actionButton.setText("<html><h3><font color=\"blue\">Take");
-                    isTake = true;
-                }else{
-                    actionButton.setText("<html><h3><font color=\"blue\">Pass");
-                    isPass = true;
-                }
+        actionButton.addActionListener(e -> {
+            if(isAttack){
+                actionButton.setText("<html><h3><font color=\"blue\">Pass");
+                isPass = true;
+            }else{
+                actionButton.setText("<html><h3><font color=\"blue\">Take");
+                isTake = true;
             }
+            buttonPanel.repaint();
         });
         buttonPanel.add(actionButton);
     }
