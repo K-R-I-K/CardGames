@@ -56,12 +56,13 @@ public class Player {
         }
         return cards.get(index);
     }
-    public void removeCard(int index){
+    public Card removeCard(int index){
         if(index < 0 || index >= cards.size()){
             System.out.println("invalid argument");
+            return null;
         }
-        cards.remove(index);
+        Card res = cards.remove(index);
         cards.add(index, null);
-        return;
+        return res;
     }
 }

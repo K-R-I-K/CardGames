@@ -37,6 +37,7 @@ public class MyGraphics extends JLayeredPane{
     private volatile boolean isPass;
 
     MyGraphics(){
+
         pathFronts = "src/main/resources/png/fronts/";
         pathBacks = "src/main/resources/png/backs/";
         backName = "blue2";
@@ -64,6 +65,7 @@ public class MyGraphics extends JLayeredPane{
         frame.setVisible(true);
         frame.setBounds(0, 0, panelWidth, panelHeight);
         frame.setVisible(true);
+
     }
 
     public boolean isTake() {
@@ -109,7 +111,6 @@ public class MyGraphics extends JLayeredPane{
         playersPanelList.get(1).removeAll();
         cardsGraphic(players, labelsLists, 1, field);
     }
-
     private void cardsGraphic(List<Player> players, List<List<JLabel>> labelsList, int numberOfPlayer, Field field) {
         int currentPosition;
         int stepLength;
@@ -292,10 +293,9 @@ public class MyGraphics extends JLayeredPane{
         discardedCount += number;
     }
 
-    public void drawCard(Player player, int PlayerIndex, int cardIndex, int battleFieldIndex){
+    public void drawCard(Player player, int PlayerIndex, Card card, int battleFieldIndex){
         int y = player.getIsDefend()?100:40;
-        JLabel label = labelsLists.get(PlayerIndex).get(cardIndex);
-        label.setIcon(new ImageIcon(new ImageIcon(pathFronts + player.getCard(cardIndex).toString() + ".png")
+        JLabel label = new JLabel(new ImageIcon(new ImageIcon(pathFronts + card.toString() + ".png")
                 .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
         label.setLocation((battlePanels.get(battleFieldIndex).getWidth() - cardWidth) / 2, y);
         if(y == 40)
