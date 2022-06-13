@@ -31,22 +31,13 @@ public class Player {
     }
 
     public void setCard(Card card){
-        for (int i = 0; i < cards.size(); i++) {
-            Card el = cards.get(i);
-            if (el == null) {
-                this.cards.add(i, card);
-                this.cards.sort(Comparator.naturalOrder());
-                return;
-            }
-        }
         this.cards.add(card);
         this.cards.sort(Comparator.naturalOrder());
     }
 
     public void setCard(List<Card> cards){
-        for(Card el:cards){
-            setCard(el);
-        }
+        this.cards.addAll(cards);
+        this.cards.sort(Comparator.naturalOrder());
     }
 
     public Card getCard(int index){
@@ -61,8 +52,6 @@ public class Player {
             System.out.println("invalid argument");
             return null;
         }
-        Card res = cards.remove(index);
-        cards.add(index, null);
-        return res;
+        return cards.remove(index);
     }
 }
