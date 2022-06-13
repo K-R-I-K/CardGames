@@ -41,6 +41,9 @@ public class MyGraphics extends JLayeredPane{
     @Getter
     @Setter
     private boolean isAttack;
+    @Getter
+    @Setter
+    private List<Boolean> isCardOnField;
     MyGraphics(){
         isAttack = false;
         pathFronts = "src/main/resources/png/fronts/";
@@ -128,7 +131,7 @@ public class MyGraphics extends JLayeredPane{
             currentPosition = (playersPanelList.get(numberOfPlayer).getWidth() - (players.get(numberOfPlayer).getCards().size() * stepLength)) / 2;
         } else {
             currentPosition = 10;
-            stepLength = (playersPanelList.get(numberOfPlayer).getWidth() - 20 - cardWidth) / (players.get(0).getCards().size() - 1);
+            stepLength = (playersPanelList.get(numberOfPlayer).getWidth() - 20 - cardWidth) / (players.get(numberOfPlayer).getCards().size() - 1);
         }
 
         int y = (numberOfPlayer == 0) ? 40 : 10;
@@ -203,7 +206,8 @@ public class MyGraphics extends JLayeredPane{
             @Override
             public void mousePressed(MouseEvent e) {
                 for (int i = 0; i < playerChoose.size(); ++i) {
-                    if(playerChoose.get(i)){
+                    if(playerChoose.get(i) && !isCardOnField.get(battlePanels.indexOf(panel))){
+                        isCardOnField.set(battlePanels.indexOf(panel), true);
                         JLabel label= labelsLists.get(0).get(i);
                         label.setLocation((panel.getWidth() - cardWidth) / 2, 0);
                         label.removeMouseListener(playerMouseListeners.get(i));
@@ -212,10 +216,8 @@ public class MyGraphics extends JLayeredPane{
                         playerChoose.set(i, false);
                         int y = (isAttack)?40:100;
                         label.setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + y);
-
                         panel.setLayer(label, isAttack?0:1);
                         panel.add(label);
-
                         fieldIndex = battleFieldIndex;
                     }
                 }
@@ -249,6 +251,7 @@ public class MyGraphics extends JLayeredPane{
         exitPanel = createPanel(0,panelHeight * 14 / 18,panelWidth * 5 / 32,panelHeight * 4 / 18, -1);
         buttonPanel = createPanel(panelWidth * 27 / 32, panelHeight * 14 / 18,panelWidth * 5 / 32,panelHeight * 4 / 18, -1);
 
+        isCardOnField = new ArrayList<>(Collections.nCopies(6, false));
         battlePanels = new ArrayList<>();
         battlePanels.add(createPanel(panelWidth * 27 / 32 / 3, panelHeight * 4 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 0));
         battlePanels.add(createPanel(panelWidth * 41 / 32 / 3, panelHeight * 4 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 1));
@@ -328,17 +331,18 @@ public class MyGraphics extends JLayeredPane{
     }
 
     public void drawActionButton(Player player){
-        JButton actionButton = createButton("Pass", "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
+        String name = isAttack?"Pass":"Take";
+        JButton actionButton = createButton(name, "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
                 (buttonPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
         actionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(player.getIsDefend()){
-                    actionButton.setText("<html><h3><font color=\"blue\">Take");
-                    isTake = true;
-                }else{
+                if(isAttack){
                     actionButton.setText("<html><h3><font color=\"blue\">Pass");
                     isPass = true;
+                }else{
+                    actionButton.setText("<html><h3><font color=\"blue\">Take");
+                    isTake = true;
                 }
             }
         });
@@ -366,6 +370,7 @@ public class MyGraphics extends JLayeredPane{
         for(int i = 0; i < battlePanels.size(); ++i){
             battlePanels.get(i).removeAll();
             battlePanels.get(i).repaint();
+            isCardOnField.set(i, false);
         }
     }
 }
