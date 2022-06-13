@@ -110,7 +110,7 @@ public class MyGraphics extends JLayeredPane{
 
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        if(field.attackCheck(players.get(0).getCard(playersPanelList.get(0).getLayer(label)))) {
+                        if(field.moveCheck(players.get(0).getIsDefend(),players.get(0).getCard(playersPanelList.get(0).getLayer(label)))) {
                             mousePress(playersPanelList.get(0).getLayer(label), field, players.get(0));
                             cardIndex = playersPanelList.get(0).getLayer(label);
                         }
@@ -122,14 +122,14 @@ public class MyGraphics extends JLayeredPane{
                     @Override
                     public void mouseEntered(MouseEvent e) {
                         if(!playerChoose.get(playersPanelList.get(0).getLayer(label)) &&
-                                field.attackCheck(players.get(0).getCard(playersPanelList.get(0).getLayer(label))))
+                                field.moveCheck(players.get(0).getIsDefend(), players.get(0).getCard(playersPanelList.get(0).getLayer(label))))
                             label.setLocation(label.getX(), label.getY() - 40);
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
                         if(!playerChoose.get(playersPanelList.get(0).getLayer(label))&&
-                                field.attackCheck(players.get(0).getCard(playersPanelList.get(0).getLayer(label))))
+                                field.moveCheck(players.get(0).getIsDefend(), players.get(0).getCard(playersPanelList.get(0).getLayer(label))))
                             label.setLocation(label.getX(), label.getY() + 40);
                     }
                 });
@@ -143,7 +143,7 @@ public class MyGraphics extends JLayeredPane{
         for (int i = 0; i < playerChoose.size(); ++i) {
             if(playerChoose.get(i) && i != index){
                 playerChoose.set(i, false);
-                if(field.attackCheck(player.getCard(i)))
+                if(field.moveCheck(player.getIsDefend(),player.getCard(i)))
                     labelsLists.get(0).get(i).setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + 40);
             }
         }

@@ -16,71 +16,67 @@ public class Field {
         this.trump = trump;
     }
 
-    public boolean setAttackList(Card card, int i) {
+    public boolean setList(Player player, Card card, int i) {
         if(i<0 || i > 5) {
             System.out.println("incorrect index");
             return false;
         }
-        else if(attackList.get(i) != null){
-            System.out.println("card was already there");
+        if(player.getIsDefend()){
+            if(defendList.get(i) != null){
+                System.out.println("card was beaten");
+                return false;
+            }
+            else if(attackList.get(i) == null){
+                System.out.println("you can`t beat non-existent attack card");
+                return false;
+            }
+            if(defendCheck(attackList.get(i),card)){
+                defendList.set(i, card);
+                return true;
+            }
             return false;
+        }else{
+            if(attackList.get(i) != null){
+                System.out.println("card was already there");
+                return false;
+            }
+            if(moveCheck(player.getIsDefend(), card)) {
+                attackList.set(attackListSize, card);
+                ++attackListSize;
+            }
+            return moveCheck(player.getIsDefend(), card);
         }
-        if(attackCheck(card)) {
-            attackList.set(attackListSize, card);
-            ++attackListSize;
-        }
-        return attackCheck(card);
     }
 
-    public boolean setDefendList(Card card, int i) {
-        if(i<0 || i > 5) {
-            System.out.println("incorrect index");
-            return false;
-        }
-        else if(defendList.get(i) != null){
-            System.out.println("card was beaten");
-            return false;
-        }
-        else if(attackList.get(i) == null){
-            System.out.println("you can`t beat non-existent attack card");
-            return false;
-        }
-        if(defendCheck(attackList.get(i),card)){
-            defendList.set(i, card);
-            return true;
+    public boolean moveCheck(boolean isDefend, Card card){
+        if(isDefend){
+            for(Card attackCard: attackList){
+                if(defendCheck(attackCard, card))
+                    return true;
+            }
+        }else {
+            if(attackListSize >=6){
+                System.out.println("so many attack cards");
+                return false;
+            }
+            if(attackListSize == 0){
+                return true;
+            }
+            for (Card element: attackList) {
+                if(element == null)
+                    continue;
+                if(element.getRank().equals(card.getRank()))
+                    return true;
+            }
+            for (Card element: defendList) {
+                if(element == null)
+                    continue;
+                if(element.getRank().equals(card.getRank()))
+                    return true;
+            }
         }
         return false;
     }
-    public boolean defendCheck(Card card) {
-        for(Card attackCard: attackList){
-            if(defendCheck(attackCard, card))
-                return true;
-        }
-        return false;
-    }
-    public boolean attackCheck(Card card){
-        if(attackListSize >=6){
-            System.out.println("so many attack cards");
-            return false;
-        }
-        if(attackListSize == 0){
-            return true;
-        }
-        for (Card element: attackList) {
-            if(element == null)
-                continue;
-            if(element.getRank().equals(card.getRank()))
-                return true;
-        }
-        for (Card element: defendList) {
-            if(element == null)
-                continue;
-            if(element.getRank().equals(card.getRank()))
-                return true;
-        }
-        return false;
-    }
-
     private boolean defendCheck(Card attackCard, Card defendCard){
         if(attackCard == null || defendCard == null){
             System.out.println("invalid argument");

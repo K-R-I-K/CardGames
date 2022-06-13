@@ -12,10 +12,22 @@ import java.util.List;
 public class Player {
     private List<Card> cards;
     private String name;
+    private boolean isDefend;
+
+    public boolean getIsDefend() {
+        return isDefend;
+    }
+
+    public void setIsDefend(boolean defend) {
+        isDefend = defend;
+    }
+
+
 
     public Player(String name){
         this.name = name;
         this.cards = new ArrayList<>();
+        this.isDefend = false;
     }
 
     public void setCard(Card card){
