@@ -104,10 +104,13 @@ public class MyGraphics extends JLayeredPane{
         playerMouseListeners = new ArrayList<>();
         labelsLists.add(new ArrayList<>());
         playersPanelList.get(0).removeAll();
+        playersPanelList.get(0).repaint();
         cardsGraphic(players, labelsLists, 0, field);
         labelsLists.add(new ArrayList<>());
         playersPanelList.get(1).removeAll();
+        playersPanelList.get(1).repaint();
         cardsGraphic(players, labelsLists, 1, field);
+
     }
 
     private void cardsGraphic(List<Player> players, List<List<JLabel>> labelsList, int numberOfPlayer, Field field) {
@@ -293,7 +296,7 @@ public class MyGraphics extends JLayeredPane{
     }
 
     public void drawCard(Player player, int PlayerIndex, int cardIndex, int battleFieldIndex){
-        int y = player.getIsDefend()?40:100;
+        int y = player.getIsDefend()?100:40;
         JLabel label = labelsLists.get(PlayerIndex).get(cardIndex);
         label.setIcon(new ImageIcon(new ImageIcon(pathFronts + player.getCard(cardIndex).toString() + ".png")
                 .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
@@ -349,6 +352,7 @@ public class MyGraphics extends JLayeredPane{
     public void clearField(){
         for(int i = 0; i < battlePanels.size(); ++i){
             battlePanels.get(i).removeAll();
+            battlePanels.get(i).repaint();
         }
     }
 }
