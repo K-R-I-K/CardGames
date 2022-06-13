@@ -11,7 +11,6 @@ public class Durak {
         deck = new Deck();
         field = new Field(deck.getTrump().getSuit());
         addPlayers();
-        //startGame();
     }
 
     private void addPlayers(){
@@ -36,35 +35,46 @@ public class Durak {
         return true;
     }
 
-    private boolean attackMove(Player player, int indexOfCardPlayer, int indexOfCardField){
+    private boolean move(Player player, int indexOfCardPlayer, int indexOfCardField){
         boolean res = field.setList(player, indexOfCardPlayer, indexOfCardField);
         if(res)
             player.removeCard(indexOfCardPlayer);
         return res;
     }
-    private boolean defenseMove(Player player, int indexOfCardPlayer, int indexOfCardField){
-        boolean res = field.setList(player, indexOfCardPlayer, indexOfCardField);
-        if(res)
-            player.removeCard(indexOfCardPlayer);
-        return res;
-    }
-    public void startGame(){
-        int indexOfPlayer = 0;
-        Scanner scanner = new Scanner(System.in);
-        int indexOfCardPlayer = scanner.nextInt();
-        attackMove(players.get(indexOfPlayer), indexOfCardPlayer, 0);
-        for(int i=0;i<players.get(indexOfPlayer+1).getCards().size();++i){
-            if(defenseMove(players.get(indexOfPlayer+1), i, 0))
+    private void moveBot(Player player, int indexOfCardField){
+        for(int i=0;i<player.getCards().size();++i){
+            if(move(player, i, indexOfCardField))
                 break;
         }
+    }
+    public void startGame(MyGraphics window){
 
-        players.get(1).setCard(field.clearField());//the player takes the cards
-        field.clearField();//
+        window.drawDeck(this.deck);
+        window.cardsDeal(this.players, this.field);
+
+        int indexOfPlayer = 0;
+        players.get(indexOfPlayer).setIsDefend(true);
+        //move(players.get(indexOfPlayer), indexOfCardPlayer, 0);
+        while (true){
+            if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
+                this.field.setList(this.players.get(indexOfPlayer), window.getCardIndex(), window.getFieldIndex());
+                moveBot(this.players.get(indexOfPlayer), window.getFieldIndex());
+                window.setFieldIndex(-1);
+                window.setCardIndex(-1);
+
+                //window.drawAttackCard(this.players.get(1), 1, 1,  1);
+            }
+            //field.clearField();//
+        }
+
+
     }
 
     public static void main(String[] args) {
         Durak game = new Durak();
+
         MyGraphics window = new MyGraphics();
+        //game.startGame(window);
         window.drawDeck(game.deck);
         window.cardsDeal(game.players, game.field);
         while(true) {
@@ -72,7 +82,7 @@ public class Durak {
                 game.field.setList(game.players.get(0), window.getCardIndex(), window.getFieldIndex());
                 window.setFieldIndex(-1);
                 window.setCardIndex(-1);
-                window.drawAttackCard(game.players.get(1), 1, 1,  1);
+                window.drawCard(game.players.get(1), 1, 1,  1);
             }
         }
         //window.drawDiscarded(10);
