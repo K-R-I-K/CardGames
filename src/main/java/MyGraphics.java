@@ -33,6 +33,8 @@ public class MyGraphics extends JLayeredPane{
     private int discardedCount;
     private volatile int cardIndex;
     private volatile int fieldIndex;
+    private volatile boolean isTake;
+    private volatile boolean isPass;
 
     MyGraphics(){
         pathFronts = "src/main/resources/png/fronts/";
@@ -47,12 +49,12 @@ public class MyGraphics extends JLayeredPane{
         discardedCount = 0;
         cardIndex = -1;
         fieldIndex = -1;
+        isTake = false;
+        isPass = false;
         setLayout();
         drawExitButton();
-        drawActionButton();
-        //drawDeck(deck);
-        //cardsDeal(players, field);
-        //drawDiscarded(10);
+        this.setBounds(0, 0, panelWidth, panelHeight);
+        this.setBackground(new Color(204, 204, 204));
         frame = new JFrame();
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
@@ -62,6 +64,22 @@ public class MyGraphics extends JLayeredPane{
         frame.setVisible(true);
         frame.setBounds(0, 0, panelWidth, panelHeight);
         frame.setVisible(true);
+    }
+
+    public boolean isTake() {
+        return isTake;
+    }
+
+    public void setTake(boolean take) {
+        isTake = take;
+    }
+
+    public boolean isPass() {
+        return isPass;
+    }
+
+    public void setPass(boolean pass) {
+        isPass = pass;
     }
 
     public int getCardIndex() {
@@ -166,7 +184,7 @@ public class MyGraphics extends JLayeredPane{
 
     private JLayeredPane createPanel(int x, int y, int w, int h, int battleFieldIndex){
         JLayeredPane panel = new JLayeredPane();
-        panel.setBackground(Color.red);
+        //panel.setBackground(Color.red);
         panel.setBounds(x, y, w, h);
         if(battleFieldIndex != -1)
             panel.addMouseListener(new MouseListener() {
@@ -230,7 +248,7 @@ public class MyGraphics extends JLayeredPane{
         this.add(playersPanelList.get(1));
         this.add(discardedPanel);
         this.add(playersPanelList.get(2));
-        //this.add(centerPanel);
+        this.add(createPanel(panelWidth * 5 / 32, panelHeight * 2 / 9, panelWidth * 22 / 32, panelHeight * 5 / 9, -1));
         this.add(playersPanelList.get(3));
         this.add(exitPanel);
         this.add(playersPanelList.get(0));
@@ -252,10 +270,11 @@ public class MyGraphics extends JLayeredPane{
         deckLabels.add(label);
         deckPanel.add(label);
         deckPanel.setLayer(label, 0);
-        for(int i = 0; i < deck.getSize(); ++i) {
+        for(int i = 0; i < deck.getSize() - 1; ++i) {
             label = new JLabel(new ImageIcon(new ImageIcon(pathBacks +  backName + "_h.png")
                     .getImage().getScaledInstance(cardHeight, cardWidth, Image.SCALE_SMOOTH)));
             label.setBounds((deckPanel.getWidth() - cardHeight) / 2, (deckPanel.getHeight() - cardHeight) / 2 +  - i * 3/ 2 - upDeck, cardHeight, cardWidth);
+            deckLabels.add(label);
             deckPanel.add(label);
             deckPanel.setLayer(label, i + 1);
         }
@@ -292,19 +311,44 @@ public class MyGraphics extends JLayeredPane{
         exitPanel.add(exitButton);
     }
 
-    private void drawActionButton(){
+    public void drawActionButton(Player player){
         JButton actionButton = createButton("Pass", "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
                 (buttonPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
-        //actionButton.addActionListener();
+        actionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(player.getIsDefend()){
+                    actionButton.setText("<html><h3><font color=\"blue\">Take");
+                    isTake = true;
+                }else{
+                    actionButton.setText("<html><h3><font color=\"blue\">Pass");
+                    isPass = true;
+                }
+            }
+        });
         buttonPanel.add(actionButton);
     }
 
     private JButton createButton(String name, String textColor, int x, int y, int w, int h, int r, int g, int b){
-        JButton button = new JButton("<html><h2><font color=\"" + textColor +"\">" + name);
+        JButton button = new JButton("<html><h3><font color=\"" + textColor +"\">" + name);
         button.setBounds(x, y, w, h);
         button.setBorderPainted(false);
         button.setBackground(new Color(r, g, b));
         button.setFocusPainted(false);
         return button;
+    }
+
+    public void getCardsFromDeck(int number){
+        for(int i = 0; i < number; ++i){
+            deckPanel.remove(deckLabels.get(deckLabels.size() - 1));
+            deckLabels.remove(deckLabels.size() - 1);
+            deckPanel.repaint();
+        }
+    }
+
+    public void clearField(){
+        for(int i = 0; i < battlePanels.size(); ++i){
+            battlePanels.get(i).removeAll();
+        }
     }
 }

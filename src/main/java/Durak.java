@@ -77,6 +77,8 @@ public class Durak {
         //game.startGame(window);
         window.drawDeck(game.deck);
         window.cardsDeal(game.players, game.field);
+        window.drawActionButton(game.players.get(0));
+        //window.getCardsFromDeck(24);
         while(true) {
             if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                 game.field.setList(game.players.get(0), window.getCardIndex(), window.getFieldIndex());
