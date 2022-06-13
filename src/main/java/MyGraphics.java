@@ -293,7 +293,7 @@ public class MyGraphics extends JLayeredPane{
     }
 
     public void drawCard(Player player, int PlayerIndex, int cardIndex, int battleFieldIndex){
-        int y = player.getIsDefend()?40:100;
+        int y = player.getIsDefend()?100:40;
         JLabel label = labelsLists.get(PlayerIndex).get(cardIndex);
         label.setIcon(new ImageIcon(new ImageIcon(pathFronts + player.getCard(cardIndex).toString() + ".png")
                 .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
@@ -349,6 +349,7 @@ public class MyGraphics extends JLayeredPane{
     public void clearField(){
         for(int i = 0; i < battlePanels.size(); ++i){
             battlePanels.get(i).removeAll();
+            battlePanels.get(i).repaint();
         }
     }
 }
