@@ -211,7 +211,7 @@ public class MyGraphics extends JLayeredPane{
                         JLabel label= labelsLists.get(0).get(i);
                         label.setLocation((panel.getWidth() - cardWidth) / 2, 0);
                         label.removeMouseListener(playerMouseListeners.get(i));
-                        panel.removeMouseListener(this);
+                        //panel.removeMouseListener(this);
                         playersPanelList.get(0).setLayer(label, 0);
                         playerChoose.set(i, false);
                         int y = (isAttack)?40:100;
@@ -334,17 +334,15 @@ public class MyGraphics extends JLayeredPane{
         String name = isAttack?"Pass":"Take";
         JButton actionButton = createButton(name, "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
                 (buttonPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
-        actionButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(isAttack){
-                    actionButton.setText("<html><h3><font color=\"blue\">Pass");
-                    isPass = true;
-                }else{
-                    actionButton.setText("<html><h3><font color=\"blue\">Take");
-                    isTake = true;
-                }
+        actionButton.addActionListener(e -> {
+            if(isAttack){
+                actionButton.setText("<html><h3><font color=\"blue\">Pass");
+                isPass = true;
+            }else{
+                actionButton.setText("<html><h3><font color=\"blue\">Take");
+                isTake = true;
             }
+            buttonPanel.repaint();
         });
         buttonPanel.add(actionButton);
     }
