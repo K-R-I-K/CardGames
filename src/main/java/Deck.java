@@ -26,5 +26,5 @@ public class Deck {
         return cards.pop();
     }
     public int getSize(){return cards.size();}
-
+    public boolean isEmpty(){return cards.size()==0;}
 }

@@ -75,24 +75,26 @@ public class Durak {
             }
             //field.clearField();//
         }
-
-
     }
 
     public static void main(String[] args) {
         Durak game = new Durak();
-
         MyGraphics window = new MyGraphics();
         //game.startGame(window);
         window.drawDeck(game.deck);
         window.cardsDeal(game.players, game.field);
         window.drawActionButton(game.players.get(0));
-        //window.getCardsFromDeck(24);
         game.players.get(1).setIsDefend(true);
         boolean isBotMoved = false;
         while(true) {
-            //player attack case
-            if(game.players.get(1).getIsDefend()){
+            if(game.deck.isEmpty()){//win case
+                for(Player pl: game.players){
+                    if(pl.isEmpty()){
+                        System.out.println(pl.getName()+" is win!");
+                        return;
+                    }
+                }
+            }if(game.players.get(1).getIsDefend()){//player attack case
                 window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     game.move(game.players.get(0), window.getCardIndex(), window.getFieldIndex());
@@ -112,14 +114,15 @@ public class Durak {
                     window.setFieldIndex(-1);
                     window.setCardIndex(-1);
                 }if(window.isPass()){
-                    window.drawDiscarded(game.field.clearField().size());
-                    window.clearField();
-                    window.getCardsFromDeck(game.giveCardsFromDeck());
-                    window.cardsDeal(game.players, game.field);
+                    if(game.field.getAttackListSize()!=0){
+                        window.drawDiscarded(game.field.clearField().size());
+                        window.clearField();
+                        window.getCardsFromDeck(game.giveCardsFromDeck());
+                        window.cardsDeal(game.players, game.field);game.players.get(1).setIsDefend(false);
+                        game.players.get(0).setIsDefend(true);
+                        isBotMoved = false;
+                    }
                     window.setPass(false);
-                    game.players.get(1).setIsDefend(false);
-                    game.players.get(0).setIsDefend(true);
-                    isBotMoved = false;
                 }
             }else{
                 window.setAttack(false);
@@ -161,8 +164,6 @@ public class Durak {
                     isBotMoved = false;
                 }
             }
-
         }
-
     }
 }
