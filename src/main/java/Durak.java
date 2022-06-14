@@ -81,8 +81,8 @@ public class Durak {
 
     public static void main(String[] args) {
         Durak game = new Durak();
-
-        MyGraphics window = new MyGraphics();
+        Menu menu = new Menu();
+       /* MyGraphics window = new MyGraphics();
         //game.startGame(window);
         window.drawDeck(game.deck);
         window.cardsDeal(game.players, game.field);
@@ -161,8 +161,6 @@ public class Durak {
                     isBotMoved = false;
                 }
             }
-
-        }
-
+        }*/
     }
 }
