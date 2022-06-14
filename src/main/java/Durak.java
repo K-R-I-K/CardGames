@@ -56,111 +56,102 @@ public class Durak {
         }
         return -1;
     }
-    public void startGame(MyGraphics window){
-
+    public void gameVsBot(MyGraphics window){
         window.drawDeck(this.deck);
         window.cardsDeal(this.players, this.field);
-
-        int indexOfPlayer = 0;
-        players.get(indexOfPlayer).setIsDefend(true);
-        //move(players.get(indexOfPlayer), indexOfCardPlayer, 0);
-        while (true){
-            if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
-                this.field.setList(this.players.get(indexOfPlayer), window.getCardIndex(), window.getFieldIndex());
-                moveBot(this.players.get(indexOfPlayer), window.getFieldIndex());
-                window.setFieldIndex(-1);
-                window.setCardIndex(-1);
-
-                //window.drawAttackCard(this.players.get(1), 1, 1,  1);
-            }
-            //field.clearField();//
-        }
-
-
-    }
-
-    public static void main(String[] args) {
-        Durak game = new Durak();
-        Menu menu = new Menu();
-       /* MyGraphics window = new MyGraphics();
-        //game.startGame(window);
-        window.drawDeck(game.deck);
-        window.cardsDeal(game.players, game.field);
-        window.drawActionButton(game.players.get(0));
-        //window.getCardsFromDeck(24);
-        game.players.get(1).setIsDefend(true);
+        window.drawActionButton(this.players.get(0));
+        this.players.get(1).setIsDefend(true);
         boolean isBotMoved = false;
         while(true) {
-            //player attack case
-            if(game.players.get(1).getIsDefend()){
+            if (this.deck.isEmpty()) {//win case
+                for (Player pl : this.players) {
+                    if (pl.isEmpty()) {
+                        System.out.println(pl.getName() + " is win!");
+                        return;
+                    }
+                }
+            }
+            if (this.players.get(1).getIsDefend()) {//player attack case
                 window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
-                    game.move(game.players.get(0), window.getCardIndex(), window.getFieldIndex());
-                    int card = game.moveBot(game.players.get(1), window.getFieldIndex());
-                    if(card == -1){
-                        game.players.get(1).setCard(game.field.clearField());
-                        window.getCardsFromDeck(game.giveCardsFromDeck());
+                    this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
+                    int card = this.moveBot(this.players.get(1), window.getFieldIndex());
+                    if (card == -1) {
+                        this.players.get(1).setCard(this.field.clearField());
+                        window.getCardsFromDeck(this.giveCardsFromDeck());
                         window.clearField();
-                        game.players.get(1).setIsDefend(true);//the same
+                        this.players.get(1).setIsDefend(true);//the same
                         isBotMoved = false;
-                    }else{
-                        window.drawCard(game.players.get(1),1, card,  window.getFieldIndex());
-                        game.players.get(1).removeCard(card);
+                    } else {
+                        window.drawCard(this.players.get(1), 1, card, window.getFieldIndex());
+                        this.players.get(1).removeCard(card);
                     }
 
-                    window.cardsDeal(game.players, game.field);
+                    window.cardsDeal(this.players, this.field);
                     window.setFieldIndex(-1);
                     window.setCardIndex(-1);
-                }if(window.isPass()){
-                    window.drawDiscarded(game.field.clearField().size());
-                    window.clearField();
-                    window.getCardsFromDeck(game.giveCardsFromDeck());
-                    window.cardsDeal(game.players, game.field);
-                    window.setPass(false);
-                    game.players.get(1).setIsDefend(false);
-                    game.players.get(0).setIsDefend(true);
-                    isBotMoved = false;
                 }
-            }else{
+                if (window.isPass()) {
+                    if (this.field.getAttackListSize() != 0) {
+                        window.drawDiscarded(this.field.clearField().size());
+                        window.clearField();
+                        window.getCardsFromDeck(this.giveCardsFromDeck());
+                        window.cardsDeal(this.players, this.field);
+                        this.players.get(1).setIsDefend(false);
+                        this.players.get(0).setIsDefend(true);
+                        isBotMoved = false;
+                    }
+                    window.setPass(false);
+                }
+            } else {
                 window.setAttack(false);
-                if(!isBotMoved){
-                    int card = game.moveBot(game.players.get(1), window.getFieldIndex()+1);
-                    if(card != -1){
-                        window.drawCard(game.players.get(1),1, card,  window.getFieldIndex()+1);
-                        game.players.get(1).removeCard(card);
+                if (!isBotMoved) {
+                    int card = this.moveBot(this.players.get(1), window.getFieldIndex() + 1);
+                    if (card != -1) {
+                        window.drawCard(this.players.get(1), 1, card, window.getFieldIndex() + 1);
+                        this.players.get(1).removeCard(card);
                     }
                     isBotMoved = true;
                 }
 
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
-                    game.move(game.players.get(0), window.getCardIndex(), window.getFieldIndex());
-                    int card = game.moveBot(game.players.get(1), window.getFieldIndex()+1);
-                    if(card == -1){
-                        window.drawDiscarded(game.field.clearField().size());
+                    this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
+                    int card = this.moveBot(this.players.get(1), window.getFieldIndex() + 1);
+                    if (card == -1) {
+                        window.drawDiscarded(this.field.clearField().size());
                         window.clearField();
-                        window.getCardsFromDeck(game.giveCardsFromDeck());
-                        game.players.get(1).setIsDefend(true);
-                        game.players.get(0).setIsDefend(false);
+                        window.getCardsFromDeck(this.giveCardsFromDeck());
+                        this.players.get(1).setIsDefend(true);
+                        this.players.get(0).setIsDefend(false);
                         window.setTake(false);
                         isBotMoved = false;
-                    }else{
-                        window.drawCard(game.players.get(1),1, card,  window.getFieldIndex()+1);
-                        game.players.get(1).removeCard(card);
+                    } else {
+                        window.drawCard(this.players.get(1), 1, card, window.getFieldIndex() + 1);
+                        this.players.get(1).removeCard(card);
                     }
 
-                    window.cardsDeal(game.players, game.field);
+                    window.cardsDeal(this.players, this.field);
                     window.setFieldIndex(-1);
                     window.setCardIndex(-1);
-                }if(window.isTake()){
-                    game.players.get(0).setCard(game.field.clearField());
-                    window.getCardsFromDeck(game.giveCardsFromDeck());
-                    window.cardsDeal(game.players, game.field);
+                }
+                if (window.isTake()) {
+                    this.players.get(0).setCard(this.field.clearField());
+                    window.getCardsFromDeck(this.giveCardsFromDeck());
+                    window.cardsDeal(this.players, this.field);
                     window.clearField();
-                    game.players.get(0).setIsDefend(true);//the same
+                    this.players.get(0).setIsDefend(true);//the same
                     window.setTake(false);
                     isBotMoved = false;
                 }
             }
-        }*/
+        }
+    }
+
+    public static void main(String[] args) {
+        Durak game = new Durak();
+        MyGraphics window = new MyGraphics();
+        game.gameVsBot(window);
+
+
     }
 }

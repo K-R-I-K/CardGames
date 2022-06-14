@@ -22,6 +22,7 @@ public class Player {
         isDefend = defend;
     }
 
+    public boolean isEmpty(){return cards.size()==0;}
 
 
     public Player(String name){
