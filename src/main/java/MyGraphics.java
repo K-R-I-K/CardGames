@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class MyGraphics extends JLayeredPane{
-    private JFrame frame;
+    public static JFrame frame;
     private String pathFronts;
     private String pathBacks;
     private String backName;
@@ -27,6 +27,7 @@ public class MyGraphics extends JLayeredPane{
     private JLayeredPane discardedPanel;
     private JLayeredPane exitPanel;
     private JLayeredPane buttonPanel;
+    private JLayeredPane resultPanel;
     private JButton actionButton;
     private List<List<JLabel>> labelsLists;
     private List<Boolean> playerChoose;
@@ -73,14 +74,14 @@ public class MyGraphics extends JLayeredPane{
         setLayout();
         drawExitButton();
         this.setBounds(0, 0, panelWidth, panelHeight);
-        this.setBackground(new Color(204, 204, 204));
+        this.setBackground(new Color(100, 0, 204));
         frame = new JFrame();
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
         frame.add(this);
         //this.pack();
         frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        frame.setVisible(false);
         frame.setBounds(0, 0, panelWidth, panelHeight);
         frame.setVisible(true);
     }
@@ -270,11 +271,14 @@ public class MyGraphics extends JLayeredPane{
         battlePanels.add(createPanel(panelWidth * 41 / 32 / 3, panelHeight * 9 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 4));
         battlePanels.add(createPanel(panelWidth * 55 / 32 / 3, panelHeight * 9 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 5));
 
+        resultPanel = createPanel((panelWidth - 100) / 2, (panelHeight) / 2, 100, 100, -1);
+
         this.add(deckPanel);
         this.add(playersPanelList.get(1));
         this.add(discardedPanel);
         this.add(playersPanelList.get(2));
-        this.add(createPanel(panelWidth * 5 / 32, panelHeight * 2 / 9, panelWidth * 22 / 32, panelHeight * 5 / 9, -1));
+        this.add(createPanel(panelWidth * 5 / 32, panelHeight * 4 / 18, panelWidth * 4 / 32, panelHeight * 5 / 9, -1));
+        this.add(createPanel(panelWidth * 23 / 32, panelHeight * 4 / 18, panelWidth * 4 / 32, panelHeight * 5 / 9, -1));
         this.add(playersPanelList.get(3));
         this.add(exitPanel);
         this.add(playersPanelList.get(0));
@@ -282,7 +286,6 @@ public class MyGraphics extends JLayeredPane{
         for(int i = 0; i < battlePanels.size(); ++i){
             this.add(battlePanels.get(i));
         }
-
         this.revalidate();
     }
 
@@ -336,7 +339,10 @@ public class MyGraphics extends JLayeredPane{
     private void drawExitButton(){
         JButton exitButton = createButton("Close", "blue", (exitPanel.getWidth() - buttonWidth) / 2,
         (exitPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(e -> {
+            frame.setVisible(false);
+            Menu.frame.setVisible(true);
+        });
         exitPanel.add(exitButton);
     }
 
@@ -348,6 +354,7 @@ public class MyGraphics extends JLayeredPane{
             if(isAttack){
                 actionButton.setText("<html><h3><font color=\"blue\">Pass");
                 isPass = true;
+
             }else{
                 actionButton.setText("<html><h3><font color=\"blue\">Take");
                 isTake = true;
@@ -380,5 +387,20 @@ public class MyGraphics extends JLayeredPane{
             battlePanels.get(i).repaint();
             isCardOnField.set(i, false);
         }
+    }
+
+    public void drawResult(String text){
+        exitPanel.removeAll();
+        actionButton.removeAll();
+
+        resultPanel.add(new JLabel(text));
+        JButton button = createButton("Close", "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
+                (buttonPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
+        button.addActionListener(e -> {
+            //somecode
+        });
+        resultPanel.add(button);
+        this.add(resultPanel);
+        this.repaint();
     }
 }

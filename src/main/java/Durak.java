@@ -146,12 +146,4 @@ public class Durak {
             }
         }
     }
-
-    public static void main(String[] args) {
-        Durak game = new Durak();
-        MyGraphics window = new MyGraphics();
-        game.gameVsBot(window);
-
-
-    }
 }

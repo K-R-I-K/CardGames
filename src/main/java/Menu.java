@@ -1,10 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class Menu extends JLayeredPane {
-    JFrame frame;
+    public static JFrame frame;
     private int panelWidth;
     private int panelHeight;
     private int buttonWidth;
@@ -14,7 +14,6 @@ public class Menu extends JLayeredPane {
     private Game game;
 
     Menu() {
-        game = new Game();
         panelWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         panelHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         buttonWidth = 300;
@@ -36,12 +35,20 @@ public class Menu extends JLayeredPane {
 
     private void setButtons() {
         JButton newGameVsBot = createButton("Player vs Bot", "blue", (panelWidth - buttonWidth) / 2, (panelHeight - buttonHeight) / 2);
-        newGameVsBot.addActionListener(new ActionListener() {
+        newGameVsBot.addMouseListener(new MouseListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                game.setNewGameVsBot(true);
+            public void mouseClicked(MouseEvent e) {}
+            @Override
+            public void mousePressed(MouseEvent e) {
                 frame.setVisible(false);
+                MyGraphics.frame.setVisible(true);
             }
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+            @Override
+            public void mouseExited(MouseEvent e) {}
         });
         this.add(newGameVsBot);
     }
