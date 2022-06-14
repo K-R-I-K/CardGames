@@ -29,6 +29,7 @@ public class MyGraphics extends JLayeredPane{
     private JLayeredPane discardedPanel;
     private JLayeredPane exitPanel;
     private JLayeredPane buttonPanel;
+    private JButton actionButton;
     private List<List<JLabel>> labelsLists;
     private List<Boolean> playerChoose;
     private List<MouseListener> playerMouseListeners;
@@ -38,8 +39,19 @@ public class MyGraphics extends JLayeredPane{
     private volatile int fieldIndex;
     private volatile boolean isTake;
     private volatile boolean isPass;
-    @Getter
-    @Setter
+
+    public boolean isAttack() {
+        return isAttack;
+    }
+
+    public void setAttack(boolean attack) {
+        isAttack = attack;
+        if(isAttack)
+            actionButton.setText("<html><h3><font color=\"blue\">Pass");
+        else
+            actionButton.setText("<html><h3><font color=\"blue\">Take");
+    }
+
     private boolean isAttack;
     @Getter
     @Setter
@@ -332,7 +344,7 @@ public class MyGraphics extends JLayeredPane{
 
     public void drawActionButton(Player player){
         String name = isAttack?"Pass":"Take";
-        JButton actionButton = createButton(name, "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
+        actionButton = createButton(name, "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
                 (buttonPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
         actionButton.addActionListener(e -> {
             if(isAttack){
