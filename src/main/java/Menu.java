@@ -14,8 +14,10 @@ public class Menu extends JLayeredPane {
     private Color buttonColor;
     private int fontSize;
     private int buttonNumber;
+    private Durak durak;
 
     Menu() {
+        durak = new Durak();
         panelWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         panelHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         buttonWidth = 300;
@@ -41,20 +43,13 @@ public class Menu extends JLayeredPane {
 
     private void setButtons() {
         JButton newGameVsBot = createButton("Player vs Bot", "blue");
-        newGameVsBot.addMouseListener(new MouseListener() {
+        newGameVsBot.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {}
-            @Override
-            public void mousePressed(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
                 MyGraphics.frame.setVisible(true);
+                durak = new Durak();
             }
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-            @Override
-            public void mouseExited(MouseEvent e) {}
         });
         this.add(newGameVsBot);
         JButton exit = createButton("Exit", "blue");
@@ -73,5 +68,11 @@ public class Menu extends JLayeredPane {
         button.setBackground(buttonColor);
         button.setFocusPainted(false);
         return button;
+    }
+
+    public static void main(String[] args) {
+        MyGraphics window = new MyGraphics();
+        Menu menu = new Menu();
+        menu.durak.gameVsBot(window);
     }
 }
