@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -11,7 +13,7 @@ public class Menu extends JLayeredPane {
     private int buttonHeight;
     private Color buttonColor;
     private int fontSize;
-    private Game game;
+    private int buttonNumber;
 
     Menu() {
         panelWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
@@ -20,8 +22,12 @@ public class Menu extends JLayeredPane {
         buttonHeight = 150;
         buttonColor = new Color(0, 255, 255);
         fontSize = 24;
+        buttonNumber = 2;
         this.setBounds(0, 0, panelWidth, panelHeight);
         this.setBackground(new Color(204, 204, 204));
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBorder(BorderFactory.createEmptyBorder((panelHeight - buttonHeight * buttonNumber) / 2,
+                (panelWidth - buttonWidth) / 2, (panelHeight - buttonHeight * buttonNumber) / 2, (panelWidth - buttonWidth) / 2));
         setButtons();
         frame = new JFrame();
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -34,7 +40,7 @@ public class Menu extends JLayeredPane {
     }
 
     private void setButtons() {
-        JButton newGameVsBot = createButton("Player vs Bot", "blue", (panelWidth - buttonWidth) / 2, (panelHeight - buttonHeight) / 2);
+        JButton newGameVsBot = createButton("Player vs Bot", "blue");
         newGameVsBot.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {}
@@ -51,12 +57,19 @@ public class Menu extends JLayeredPane {
             public void mouseExited(MouseEvent e) {}
         });
         this.add(newGameVsBot);
+        JButton exit = createButton("Exit", "blue");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        this.add(exit);
     }
 
-    private JButton createButton(String name, String textColor, int x, int y) {
+    private JButton createButton(String name, String textColor) {
         JButton button = new JButton("<html><h3><font color=\"" + textColor + "\"><font size =" + fontSize + ">" + name);
-        button.setBounds(x, y, buttonWidth, buttonHeight);
-        button.setBorderPainted(false);
+        button.setBorderPainted(true);
         button.setBackground(buttonColor);
         button.setFocusPainted(false);
         return button;
