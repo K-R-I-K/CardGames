@@ -74,7 +74,7 @@ public class MyGraphics extends JLayeredPane{
         setLayout();
         drawExitButton();
         this.setBounds(0, 0, panelWidth, panelHeight);
-        this.setBackground(new Color(100, 0, 204));
+        this.setBackground(new Color(204, 204, 204));
         frame = new JFrame();
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
@@ -340,8 +340,7 @@ public class MyGraphics extends JLayeredPane{
         JButton exitButton = createButton("Close", "blue", (exitPanel.getWidth() - buttonWidth) / 2,
         (exitPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
         exitButton.addActionListener(e -> {
-            frame.setVisible(false);
-            Menu.frame.setVisible(true);
+            System.exit(0);
         });
         exitPanel.add(exitButton);
     }
