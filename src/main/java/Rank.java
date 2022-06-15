@@ -1,4 +1,4 @@
-public enum Rank {
+public enum Rank implements Comparable<Rank> {
     SIX,
     SEVEN,
     EIGHT,
@@ -7,5 +7,5 @@ public enum Rank {
     JACK,
     QUEEN,
     KING,
-    ACE
+    ACE;
 }
