@@ -271,7 +271,7 @@ public class MyGraphics extends JLayeredPane{
         battlePanels.add(createPanel(panelWidth * 41 / 32 / 3, panelHeight * 9 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 4));
         battlePanels.add(createPanel(panelWidth * 55 / 32 / 3, panelHeight * 9 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 5));
 
-        resultPanel = createPanel((panelWidth - 100) / 2, (panelHeight) / 2, 100, 100, -1);
+        resultPanel = createPanel(0, 0, panelWidth, panelHeight, -1);
 
         this.add(deckPanel);
         this.add(playersPanelList.get(1));
@@ -389,12 +389,14 @@ public class MyGraphics extends JLayeredPane{
     }
 
     public void drawResult(String text){
-        /*exitPanel.removeAll();
-        actionButton.removeAll();*/
         this.removeAll();
-        resultPanel.add(new JLabel(text));
-        JButton button = createButton("Close", "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
-                (buttonPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
+        resultPanel.setLayout(null);
+        int x = text.length() * 9;
+        JLabel label = new JLabel("<html><h3><font color=\"blue\">" + text);
+        label.setBounds((panelWidth - x) / 2, (panelHeight - 13) / 2 - buttonHeight, x, 13);
+        resultPanel.add(label);
+        JButton button = createButton("Close", "blue", (resultPanel.getWidth() - buttonWidth) / 2,
+                (resultPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
         button.addActionListener(e -> {
             System.exit(0);
         });
