@@ -19,6 +19,10 @@ public class Server implements Runnable{
     private boolean isClient;
     private boolean unableToCommunicateWithOpponent;
 
+    private boolean yourTurn = false;
+    private boolean won = false;
+    private boolean enemyWon = false;
+
     public Server(){
         ip = "";
         port = 22222;
@@ -71,7 +75,9 @@ public class Server implements Runnable{
 
         if (!yourTurn && !unableToCommunicateWithOpponent) {
             try {
-                int space = dis.readInt();
+                byte[] data = new byte[0];
+                dis.read(data);
+                Durak game = SerializationUtils.deserialize(data);
                 if (isClient) spaces[space] = "X";
                 else spaces[space] = "O";
                 checkForEnemyWin();
@@ -94,5 +100,34 @@ public class Server implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private void ttt(){
+        if (accepted) {
+            if (yourTurn && !unableToCommunicateWithOpponent && !won && !enemyWon) {
+                int x = e.getX() / lengthOfSpace;
+                int y = e.getY() / lengthOfSpace;
+                y *= 3;
+                int position = x + y;
+
+                if (spaces[position] == null) {
+                    if (!circle) spaces[position] = "X";
+                    else spaces[position] = "O";
+                    yourTurn = false;
+                    repaint();
+                    Toolkit.getDefaultToolkit().sync();
+
+                    try {
+                        dos.writeInt(position);
+                        dos.flush();
+                    } catch (IOException e1) {
+                        errors++;
+                        e1.printStackTrace();
+                    }
+
+                    System.out.println("DATA WAS SENT");
+                    checkForWin();
+                    checkForTie();
+
+                }
     }
 }
