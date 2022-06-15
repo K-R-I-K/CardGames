@@ -29,10 +29,10 @@ public class Menu extends JLayeredPane {
         panelWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         panelHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         buttonWidth = 300;
-        buttonHeight = 150;
+        buttonHeight = 100;
         buttonColor = new Color(0, 255, 255);
         fontSize = 24;
-        buttonNumber = 2;
+        buttonNumber = 4;
         this.setBounds(0, 0, panelWidth, panelHeight);
         this.setBackground(new Color(204, 204, 204));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -61,6 +61,22 @@ public class Menu extends JLayeredPane {
             }
         });
         this.add(newGameVsBot);
+        JButton host = createButton("Host Player", "blue");
+        host.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //
+            }
+        });
+        this.add(host);
+        JButton client = createButton("Client Player", "blue");
+        client.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //
+            }
+        });
+        this.add(client);
         JButton exit = createButton("Exit", "blue");
         exit.addActionListener(new ActionListener() {
             @Override
