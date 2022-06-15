@@ -1,3 +1,6 @@
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,9 +18,14 @@ public class Menu extends JLayeredPane {
     private int fontSize;
     private int buttonNumber;
     private Durak durak;
-
+    private MyGraphics window;
+    @Getter
+    @Setter
+    private boolean isNewGame;
     Menu() {
+        isNewGame = false;
         durak = new Durak();
+        window = new MyGraphics();
         panelWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         panelHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         buttonWidth = 300;
@@ -48,7 +56,8 @@ public class Menu extends JLayeredPane {
             public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
                 MyGraphics.frame.setVisible(true);
-                durak = new Durak();
+                //durak = new Durak();
+                isNewGame = true;
             }
         });
         this.add(newGameVsBot);
@@ -71,8 +80,14 @@ public class Menu extends JLayeredPane {
     }
 
     public static void main(String[] args) {
-        MyGraphics window = new MyGraphics();
         Menu menu = new Menu();
-        menu.durak.gameVsBot(window);
+/*        while (true){
+            if(menu.isNewGame){
+                menu.durak = new Durak();
+                menu.durak.gameVsBot(menu.window);
+                menu.setNewGame(false);
+            }
+        }*/
+        menu.durak.gameVsBot(menu.window);
     }
 }

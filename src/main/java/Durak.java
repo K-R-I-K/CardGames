@@ -66,7 +66,7 @@ public class Durak {
             if (this.deck.isEmpty()) {//win case
                 for (Player pl : this.players) {
                     if (pl.isEmpty()) {
-                        System.out.println(pl.getName() + " is win!");
+                        System.out.println(pl.getName() + " has won!");
                         return;
                     }
                 }
