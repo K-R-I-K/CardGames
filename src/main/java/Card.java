@@ -26,7 +26,9 @@ public class Card implements Comparable<Card>{
         if(trump!=null)
             Card.trump = trump;
     }
-
+    public boolean isTrump(){
+        return suit==trump;
+    }
     @Override
     public String toString() {
         return suit.toString().toLowerCase(Locale.ROOT) + "_" + rank.toString().toLowerCase(Locale.ROOT);
@@ -34,6 +36,8 @@ public class Card implements Comparable<Card>{
 
     @Override
     public int compareTo(Card o) {
+        if(o == null)
+            return -1000;
         if(trump !=null){
             if(this.getSuit() == trump && o.getSuit() != trump)
                 return 100;

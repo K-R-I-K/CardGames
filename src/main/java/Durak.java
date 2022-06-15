@@ -1,8 +1,11 @@
+import lombok.Getter;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Durak {
+public class Durak implements Serializable {
     private List<Player> players;
     private Deck deck;
     private Field field;
@@ -22,7 +25,7 @@ public class Durak {
         }
         giveCardsFromDeck();
     }
-    public int giveCardsFromDeck(){
+    private int giveCardsFromDeck(){
         int res = 0;
         for (Player player : players) {
             res += givePlayerCardsFromDeck(player);
@@ -56,18 +59,40 @@ public class Durak {
         }
         return -1;
     }
-    public void gameVsBot(MyGraphics window){
+    public void startGame(MyGraphics window){
         window.drawDeck(this.deck);
         window.cardsDeal(this.players, this.field);
         window.drawActionButton(this.players.get(0));
         this.players.get(1).setIsDefend(true);
+        int player = -1;
+        Card buf = null;
+        List<Player> playerList = this.players;
+        for (int i = 0; i < playerList.size(); i++) {
+            Player pl = playerList.get(i);
+            for (Card card : pl.getCards()) {
+               if(card.isTrump()) {
+                    player = (card.compareTo(buf) > 0) ?i:player;
+                    buf = (card.compareTo(buf) > 0) ?buf:card;
+                    break;
+                }
+            }
+        }
+        if(player!=-1){
+            this.players.get(1).setIsDefend(false);
+            this.players.get(1-player).setIsDefend(true);
+        }
+
+    }
+    public void gameVsBot(MyGraphics window){
+        startGame(window);
         boolean isBotMoved = false;
-        while(true) {
+        boolean isOver=false;
+        while(!isOver) {
             if (this.deck.isEmpty()) {//win case
                 for (Player pl : this.players) {
                     if (pl.isEmpty()) {
-                        System.out.println(pl.getName() + " has won!");
-                        return;
+                        window.drawResult(pl.getName() + " has won!");
+                        isOver = true;
                     }
                 }
             }
@@ -75,6 +100,8 @@ public class Durak {
                 window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
+
+                    //bot
                     int card = this.moveBot(this.players.get(1), window.getFieldIndex());
                     if (card == -1) {
                         this.players.get(1).setCard(this.field.clearField());
@@ -86,7 +113,7 @@ public class Durak {
                         window.drawCard(this.players.get(1), 1, card, window.getFieldIndex());
                         this.players.get(1).removeCard(card);
                     }
-
+                    ////
                     window.cardsDeal(this.players, this.field);
                     window.setFieldIndex(-1);
                     window.setCardIndex(-1);
@@ -116,6 +143,7 @@ public class Durak {
 
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
+                    //bot
                     int card = this.moveBot(this.players.get(1), window.getFieldIndex() + 1);
                     if (card == -1) {
                         window.drawDiscarded(this.field.clearField().size());
@@ -129,7 +157,7 @@ public class Durak {
                         window.drawCard(this.players.get(1), 1, card, window.getFieldIndex() + 1);
                         this.players.get(1).removeCard(card);
                     }
-
+                    ////
                     window.cardsDeal(this.players, this.field);
                     window.setFieldIndex(-1);
                     window.setCardIndex(-1);

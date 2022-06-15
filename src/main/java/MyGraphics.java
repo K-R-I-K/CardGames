@@ -389,14 +389,14 @@ public class MyGraphics extends JLayeredPane{
     }
 
     public void drawResult(String text){
-        exitPanel.removeAll();
-        actionButton.removeAll();
-
+        /*exitPanel.removeAll();
+        actionButton.removeAll();*/
+        this.removeAll();
         resultPanel.add(new JLabel(text));
         JButton button = createButton("Close", "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
                 (buttonPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
         button.addActionListener(e -> {
-            //somecode
+            System.exit(0);
         });
         resultPanel.add(button);
         this.add(resultPanel);
