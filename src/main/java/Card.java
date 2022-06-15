@@ -23,7 +23,8 @@ public class Card implements Comparable<Card>{
     }
 
     public static void setTrump(Suit trump) {
-        Card.trump = trump;
+        if(trump!=null)
+            Card.trump = trump;
     }
 
     @Override
@@ -35,9 +36,9 @@ public class Card implements Comparable<Card>{
     public int compareTo(Card o) {
         if(trump !=null){
             if(this.getSuit() == trump && o.getSuit() != trump)
-                return 1;
+                return 100;
             if(this.getSuit() != trump && o.getSuit() == trump)
-                return -1;
+                return -100;
         }
         return (this.getSuit().compareTo(o.getSuit())==0)?
                 (this.getRank().compareTo(o.getRank())):this.getSuit().compareTo(o.getSuit());
