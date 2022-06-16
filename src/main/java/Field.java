@@ -1,11 +1,12 @@
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Field {
+public class Field implements Serializable {
     private List<Card> attackList;
     private List<Card> defendList;
     @Getter

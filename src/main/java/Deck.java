@@ -1,13 +1,14 @@
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Stack;
 
 @Getter
 @Setter
-public class Deck {
+public class Deck implements Serializable {
     private Stack<Card> cards;
     private Card trump;
     {

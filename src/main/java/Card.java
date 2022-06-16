@@ -3,13 +3,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Locale;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class Card implements Comparable<Card>{
+public class Card implements Comparable<Card>, Serializable {
     private Rank rank;
     private Suit suit;
     private static Suit trump;//field for client and sorting card list
