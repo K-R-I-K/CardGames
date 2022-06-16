@@ -71,6 +71,7 @@ public class Menu extends JLayeredPane {
             public void actionPerformed(ActionEvent e) {
                 Server server = new Server(durak);
                 User.setUserId(0);
+                gameVsPlayer = true;
             }
         });
         this.add(host);
@@ -80,6 +81,7 @@ public class Menu extends JLayeredPane {
             public void actionPerformed(ActionEvent e) {
                 Server server = new Server(durak);
                 User.setUserId(1);
+                gameVsPlayer = true;
             }
         });
         this.add(client);
