@@ -1,5 +1,8 @@
 import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.lang3.SerializationUtils;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +67,7 @@ public class Durak implements Serializable {
         window.cardsDeal(this.players, this.field);
         window.drawActionButton(this.players.get(0));
         this.players.get(1).setIsDefend(true);
+        this.players.get(0).setPlayerTurn(true);
         int player = -1;
         Card buf = null;
         List<Player> playerList = this.players;
@@ -79,22 +83,31 @@ public class Durak implements Serializable {
         }
         if(player!=-1){
             this.players.get(1).setIsDefend(false);
+            this.players.get(0).setPlayerTurn(false);
+            this.players.get(player).setPlayerTurn(true);
             this.players.get(1-player).setIsDefend(true);
         }
-
+    }
+    private int isGameOver(){
+        if (this.deck.isEmpty()) {//win case
+            List<Player> playerList = this.players;
+            for (int i = 0; i < playerList.size(); i++) {
+                Player pl = playerList.get(i);
+                if (pl.isEmpty()) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
     public void gameVsBot(MyGraphics window){
         startGame(window);
         boolean isBotMoved = false;
         boolean isOver=false;
         while(!isOver) {
-            if (this.deck.isEmpty()) {//win case
-                for (Player pl : this.players) {
-                    if (pl.isEmpty()) {
-                        window.drawResult(pl.getName() + " has won!");
-                        isOver = true;
-                    }
-                }
+            if(isGameOver()>0){
+                window.drawResult(players.get(isGameOver()).getName() + " has won!");
+                isOver = true;
             }
             if (this.players.get(1).getIsDefend()) {//player attack case
                 window.setAttack(true);
@@ -170,6 +183,115 @@ public class Durak implements Serializable {
                     this.players.get(0).setIsDefend(true);//the same
                     window.setTake(false);
                     isBotMoved = false;
+                }
+            }
+        }
+    }
+    public void gameVsPlayer(MyGraphics window, Server server){
+        startGame(window);
+        boolean isOver=false;
+        while(!isOver) {
+            if(isGameOver()>0){
+                window.drawResult(players.get(isGameOver()).getName() + " has won!");
+                isOver = true;
+            }
+            if (this.players.get(1-User.getUserId()).getIsDefend()) {//player attack case
+                window.setAttack(true);
+                if(this.players.get(User.getUserId()).isPlayerTurn()){
+                    if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
+                        this.move(this.players.get(User.getUserId()), window.getCardIndex(), window.getFieldIndex());
+
+                        byte[] data = new byte[0];
+                        data = SerializationUtils.serialize(this);
+                        try {
+                            server.getDos().write(data);
+                            server.getDos().flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        players.get(User.getUserId()).setPlayerTurn(false);
+                        players.get(1-User.getUserId()).setPlayerTurn(true);
+                        ////
+                        window.cardsDeal(this.players, this.field);
+                        window.setFieldIndex(-1);
+                        window.setCardIndex(-1);
+                    }
+                    if (window.isPass()) {
+                        if (this.field.getAttackListSize() != 0) {
+                            window.drawDiscarded(this.field.clearField().size());
+                            window.clearField();
+                            window.getCardsFromDeck(this.giveCardsFromDeck());
+                            window.cardsDeal(this.players, this.field);
+                            this.players.get(1-User.getUserId()).setIsDefend(false);
+                            this.players.get(User.getUserId()).setIsDefend(true);
+                            players.get(User.getUserId()).setPlayerTurn(false);
+                            players.get(1-User.getUserId()).setPlayerTurn(true);
+                        }
+                        window.setPass(false);
+                    }
+                }else {
+                    byte[] data = new byte[0];
+                    try {
+                        if(server.getDis().read(data)>0){
+                            Durak buf = SerializationUtils.deserialize(data);
+                            this.players = buf.players;
+                            this.field = buf.field;
+                            this.deck = buf.deck;
+                            players.get(User.getUserId()).setPlayerTurn(true);
+                            players.get(1-User.getUserId()).setPlayerTurn(false);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } else {    //player defend case
+                window.setAttack(false);
+
+                if(this.players.get(User.getUserId()).isPlayerTurn()) {
+                    if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
+                        this.move(this.players.get(User.getUserId()), window.getCardIndex(), window.getFieldIndex());
+                        //bot
+                        byte[] data = new byte[0];
+                        try {
+                            if(server.getDis().read(data)>0){
+                                Durak buf = SerializationUtils.deserialize(data);
+                                this.players = buf.players;
+                                this.field = buf.field;
+                                this.deck = buf.deck;
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        ////
+                        window.cardsDeal(this.players, this.field);
+                        window.setFieldIndex(-1);
+                        window.setCardIndex(-1);
+                    }
+                    if (window.isTake()) {
+                        this.players.get(User.getUserId()).setCard(this.field.clearField());
+                        window.getCardsFromDeck(this.giveCardsFromDeck());
+                        window.cardsDeal(this.players, this.field);
+                        window.clearField();
+                        this.players.get(User.getUserId()).setIsDefend(true);//the same
+                        window.setTake(false);
+                        players.get(User.getUserId()).setPlayerTurn(false);
+                        players.get(1-User.getUserId()).setPlayerTurn(true);
+                    }
+                }else {
+                    byte[] data = new byte[0];
+                    try {
+                        if(server.getDis().read(data)>0){
+                            Durak buf = SerializationUtils.deserialize(data);
+                            this.players = buf.players;
+                            this.field = buf.field;
+                            this.deck = buf.deck;
+                            players.get(User.getUserId()).setPlayerTurn(true);
+                            players.get(1-User.getUserId()).setPlayerTurn(false);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

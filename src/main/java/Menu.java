@@ -5,8 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.io.IOException;
 
 public class Menu extends JLayeredPane {
     public static JFrame frame;
@@ -19,11 +18,16 @@ public class Menu extends JLayeredPane {
     private int buttonNumber;
     private Durak durak;
     private MyGraphics window;
+    private Server server;
     @Getter
     @Setter
-    private boolean isNewGame;
+    private boolean gameVsBot;
+    @Getter
+    @Setter
+    private boolean gameVsPlayer;
     Menu() {
-        isNewGame = false;
+        gameVsBot = false;
+        gameVsPlayer = false;
         durak = new Durak();
         window = new MyGraphics();
         panelWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
@@ -57,7 +61,7 @@ public class Menu extends JLayeredPane {
                 frame.setVisible(false);
                 MyGraphics.frame.setVisible(true);
                 //durak = new Durak();
-                isNewGame = true;
+                gameVsBot = true;
             }
         });
         this.add(newGameVsBot);
@@ -65,7 +69,8 @@ public class Menu extends JLayeredPane {
         host.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                Server server = new Server(durak);
+                User.setUserId(0);
             }
         });
         this.add(host);
@@ -73,7 +78,8 @@ public class Menu extends JLayeredPane {
         client.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                Server server = new Server(durak);
+                User.setUserId(1);
             }
         });
         this.add(client);
@@ -97,13 +103,16 @@ public class Menu extends JLayeredPane {
 
     public static void main(String[] args) {
         Menu menu = new Menu();
-/*        while (true){
-            if(menu.isNewGame){
-                menu.durak = new Durak();
+        while (true){
+            if(menu.gameVsBot){
+                //menu.durak = new Durak();
                 menu.durak.gameVsBot(menu.window);
-                menu.setNewGame(false);
+                menu.setGameVsBot(false);
+            }else if(menu.gameVsPlayer){
+                menu.durak.gameVsPlayer(menu.window, menu.server);
+                menu.setGameVsPlayer(false);
             }
-        }*/
-        menu.durak.gameVsBot(menu.window);
+        }
+        //menu.durak.gameVsBot(menu.window);
     }
 }

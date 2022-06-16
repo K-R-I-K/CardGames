@@ -13,7 +13,7 @@ public class Player {
     private List<Card> cards;
     private String name;
     private boolean isDefend;
-
+    private boolean isPlayerTurn;
     public boolean getIsDefend() {
         return isDefend;
     }
@@ -29,6 +29,7 @@ public class Player {
         this.name = name;
         this.cards = new ArrayList<>();
         this.isDefend = false;
+        this.isPlayerTurn =false;
     }
 
     public void setCard(Card card){

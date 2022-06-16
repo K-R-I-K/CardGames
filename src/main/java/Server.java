@@ -1,3 +1,4 @@
+import lombok.Getter;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.DataInputStream;
@@ -13,7 +14,9 @@ public class Server implements Runnable{
     private int errors;
     private Thread thread;
     private Socket socket;
+    @Getter
     private DataOutputStream dos;
+    @Getter
     private DataInputStream dis;
     private ServerSocket serverSocket;
     private boolean accepted;
@@ -21,13 +24,11 @@ public class Server implements Runnable{
     private boolean isClient;
     private boolean unableToCommunicateWithOpponent;
 
-    private boolean yourTurn = false;
-    private boolean won = false;
-    private boolean enemyWon = false;
+    //private int userId=0;
     private Durak durak;
     public Server(Durak durak){
         this.durak = durak;
-        ip = "";
+        ip = "26.248.220.2";
         port = 22222;
         errors = 0;
         accepted = false;
@@ -53,6 +54,8 @@ public class Server implements Runnable{
             socket = new Socket(ip, port);
             dos = new DataOutputStream(socket.getOutputStream());
             dis = new DataInputStream(socket.getInputStream());
+            //dos.writeInt(++userId);
+            //dos.flush();
             accepted = true;
         } catch (IOException e) {
             System.out.println("Unable to connect to the address: " + ip + ":" + port + " | Starting a server");
@@ -68,7 +71,6 @@ public class Server implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        yourTurn = true;
         isHost = true;
         isClient = false;
     }
@@ -76,12 +78,14 @@ public class Server implements Runnable{
     private void tick() {
         if (errors >= 10) unableToCommunicateWithOpponent = true;
 
-        if (!yourTurn && !unableToCommunicateWithOpponent) {
+        if (!unableToCommunicateWithOpponent) {
             try {
                 byte[] data = new byte[0];
-                dis.read(data);
-                durak = SerializationUtils.deserialize(data);
-                yourTurn = true;
+                if(dis.read(data)>0){
+                    dos.write(data);
+                    dos.flush();
+                }
+                //durak = SerializationUtils.deserialize(data);
             } catch (IOException e) {
                 e.printStackTrace();
                 errors++;
@@ -101,33 +105,4 @@ public class Server implements Runnable{
             e.printStackTrace();
         }
     }
-   /* private void ttt(){
-        if (accepted) {
-            if (yourTurn && !unableToCommunicateWithOpponent && !won && !enemyWon) {
-                int x = e.getX() / lengthOfSpace;
-                int y = e.getY() / lengthOfSpace;
-                y *= 3;
-                int position = x + y;
-
-                if (spaces[position] == null) {
-                    if (!circle) spaces[position] = "X";
-                    else spaces[position] = "O";
-                    yourTurn = false;
-                    repaint();
-                    Toolkit.getDefaultToolkit().sync();
-
-                    try {
-                        dos.writeInt(position);
-                        dos.flush();
-                    } catch (IOException e1) {
-                        errors++;
-                        e1.printStackTrace();
-                    }
-
-                    System.out.println("DATA WAS SENT");
-                    checkForWin();
-                    checkForTie();
-
-                }
-    }*/
 }

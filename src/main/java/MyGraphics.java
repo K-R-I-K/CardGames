@@ -38,7 +38,6 @@ public class MyGraphics extends JLayeredPane{
     private volatile int fieldIndex;
     private volatile boolean isTake;
     private volatile boolean isPass;
-
     public boolean isAttack() {
         return isAttack;
     }
