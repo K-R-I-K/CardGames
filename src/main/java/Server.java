@@ -19,18 +19,17 @@ public class Server implements Runnable{
     @Getter
     private DataInputStream dis;
     private ServerSocket serverSocket;
+    @Getter
     private boolean accepted;
     private boolean isHost;
     private boolean isClient;
     private boolean unableToCommunicateWithOpponent;
-    @Getter
-    private boolean areBothPlayersConnected;
     //private int userId=0;
     private Durak durak;
     public Server(Durak durak){
-        areBothPlayersConnected = false;
         this.durak = durak;
         ip = "26.255.53.80";
+        //ip = "26.3.1.128";
         port = 22222;
         errors = 0;
         accepted = false;
@@ -43,11 +42,11 @@ public class Server implements Runnable{
     @Override
     public void run() {
         while (true) {
-            tick();
             if (isHost && !accepted) {
                 listenForServerRequest();
+                continue;
             }
-
+            tick();
         }
     }
 
@@ -56,8 +55,7 @@ public class Server implements Runnable{
             socket = new Socket(ip, port);
             dos = new DataOutputStream(socket.getOutputStream());
             dis = new DataInputStream(socket.getInputStream());
-            areBothPlayersConnected = true;
-            System.out.println("dos and dis were created");
+            System.out.println("connect() dos and dis were created");
             //dos.writeInt(++userId);
             //dos.flush();
             accepted = true;
@@ -82,7 +80,7 @@ public class Server implements Runnable{
     private void tick() {
         if (errors >= 10) unableToCommunicateWithOpponent = true;
 
-        if (areBothPlayersConnected && !unableToCommunicateWithOpponent) {
+        if (!unableToCommunicateWithOpponent) {
             try {
                 byte[] data = new byte[0];
                 if(dis.read(data)>0){
@@ -103,7 +101,7 @@ public class Server implements Runnable{
             socket = serverSocket.accept();
             dos = new DataOutputStream(socket.getOutputStream());
             dis = new DataInputStream(socket.getInputStream());
-            System.out.println("dos and dis were created");
+            System.out.println("listenForServerRequest(): dos and dis were created");
 
             accepted = true;
             System.out.println("CLIENT HAS REQUESTED TO JOIN, AND WE HAVE ACCEPTED");

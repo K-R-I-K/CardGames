@@ -70,10 +70,10 @@ public class Menu extends JLayeredPane {
         host.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Server server = new Server(durak);
+                server = new Server(durak);
                 User.setUserId(0);
                 gameVsPlayer = true;
-                while(!server.isAreBothPlayersConnected()){}
+                while(!server.isAccepted()){}
                 byte[] data = new byte[0];
                 data = SerializationUtils.serialize(durak);
                 try {
@@ -89,10 +89,10 @@ public class Menu extends JLayeredPane {
         client.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Server server = new Server(durak);
+                server = new Server(durak);
                 User.setUserId(1);
                 gameVsPlayer = true;
-                while(!server.isAreBothPlayersConnected()){}
+                while(!server.isAccepted()){}
                 byte[] data = new byte[0];
                 try {
                     if(server.getDis().read(data)>0){
