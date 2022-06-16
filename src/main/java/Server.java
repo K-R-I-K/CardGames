@@ -23,12 +23,12 @@ public class Server implements Runnable{
     private boolean isHost;
     private boolean isClient;
     private boolean unableToCommunicateWithOpponent;
-
+    private boolean areBothPlayersConnected = false;
     //private int userId=0;
     private Durak durak;
     public Server(Durak durak){
         this.durak = durak;
-        ip = "26.248.220.2";
+        ip = "26.255.53.80";
         port = 22222;
         errors = 0;
         accepted = false;
@@ -54,6 +54,7 @@ public class Server implements Runnable{
             socket = new Socket(ip, port);
             dos = new DataOutputStream(socket.getOutputStream());
             dis = new DataInputStream(socket.getInputStream());
+            areBothPlayersConnected = true;
             //dos.writeInt(++userId);
             //dos.flush();
             accepted = true;
@@ -78,7 +79,7 @@ public class Server implements Runnable{
     private void tick() {
         if (errors >= 10) unableToCommunicateWithOpponent = true;
 
-        if (!unableToCommunicateWithOpponent) {
+        if (areBothPlayersConnected && !unableToCommunicateWithOpponent) {
             try {
                 byte[] data = new byte[0];
                 if(dis.read(data)>0){
