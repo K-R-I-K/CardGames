@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server implements Runnable{
-    private String ip;
+    private final String ip;
     private int port;
     private int errors;
     private Thread thread;
