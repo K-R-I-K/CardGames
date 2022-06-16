@@ -73,6 +73,7 @@ public class Menu extends JLayeredPane {
                 Server server = new Server(durak);
                 User.setUserId(0);
                 gameVsPlayer = true;
+                while(!server.isAreBothPlayersConnected()){}
                 byte[] data = new byte[0];
                 data = SerializationUtils.serialize(durak);
                 try {
@@ -91,6 +92,7 @@ public class Menu extends JLayeredPane {
                 Server server = new Server(durak);
                 User.setUserId(1);
                 gameVsPlayer = true;
+                while(!server.isAreBothPlayersConnected()){}
                 byte[] data = new byte[0];
                 try {
                     if(server.getDis().read(data)>0){

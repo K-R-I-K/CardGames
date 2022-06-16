@@ -23,10 +23,12 @@ public class Server implements Runnable{
     private boolean isHost;
     private boolean isClient;
     private boolean unableToCommunicateWithOpponent;
-    private boolean areBothPlayersConnected = false;
+    @Getter
+    private boolean areBothPlayersConnected;
     //private int userId=0;
     private Durak durak;
     public Server(Durak durak){
+        areBothPlayersConnected = false;
         this.durak = durak;
         ip = "26.255.53.80";
         port = 22222;
@@ -55,6 +57,7 @@ public class Server implements Runnable{
             dos = new DataOutputStream(socket.getOutputStream());
             dis = new DataInputStream(socket.getInputStream());
             areBothPlayersConnected = true;
+            System.out.println("dos and dis were created");
             //dos.writeInt(++userId);
             //dos.flush();
             accepted = true;
@@ -100,6 +103,8 @@ public class Server implements Runnable{
             socket = serverSocket.accept();
             dos = new DataOutputStream(socket.getOutputStream());
             dis = new DataInputStream(socket.getInputStream());
+            System.out.println("dos and dis were created");
+
             accepted = true;
             System.out.println("CLIENT HAS REQUESTED TO JOIN, AND WE HAVE ACCEPTED");
         } catch (IOException e) {
