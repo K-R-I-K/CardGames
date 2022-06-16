@@ -1,5 +1,6 @@
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.SerializationUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,6 +73,14 @@ public class Menu extends JLayeredPane {
                 Server server = new Server(durak);
                 User.setUserId(0);
                 gameVsPlayer = true;
+                byte[] data = new byte[0];
+                data = SerializationUtils.serialize(durak);
+                try {
+                    server.getDos().write(data);
+                    server.getDos().flush();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         this.add(host);
@@ -82,6 +91,20 @@ public class Menu extends JLayeredPane {
                 Server server = new Server(durak);
                 User.setUserId(1);
                 gameVsPlayer = true;
+                byte[] data = new byte[0];
+                try {
+                    if(server.getDis().read(data)>0){
+                        Durak buf = SerializationUtils.deserialize(data);
+                        durak.setPlayers(buf.getPlayers());
+                        durak.setField(buf.getField());
+                        durak.setDeck(buf.getDeck());
+                        durak.getPlayers().get(User.getUserId()).setPlayerTurn(true);
+                        durak.getPlayers().get(1-User.getUserId()).setPlayerTurn(false);
+                        System.out.println("Taken durak");
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         this.add(client);
