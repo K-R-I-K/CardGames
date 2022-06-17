@@ -322,6 +322,8 @@ public class MyGraphics extends JLayeredPane{
 
     public void drawDeck(Deck deck){
         int upDeck = 50;
+        deckPanel.removeAll();
+        deckPanel.repaint();
         deckLabels = new ArrayList<>();
         deckPanel.setLayout(null);
         JLabel label = new JLabel(new ImageIcon(new ImageIcon(pathFronts +  deck.getTrump().toString() + ".png")
