@@ -21,7 +21,13 @@ public class Field implements Serializable {
         attackListSize = 0;
         this.trump = trump;
     }
-
+    public boolean isEmpty(){
+        for(Card element:attackList){
+            if(element!=null)
+                return false;
+        }
+        return true;
+    }
     public boolean setList(Player player, int indexOfCard, int indexOfFieldEdge) {
         Card card = player.getCard(indexOfCard);
         if(indexOfFieldEdge <0 || indexOfFieldEdge > 5) {

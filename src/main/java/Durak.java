@@ -10,6 +10,12 @@ import java.util.*;
 @Getter
 public class Durak implements Serializable {
     private List<Player> players;
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+        Card.setTrump(deck.getTrump().getSuit());
+    }
+
     private Deck deck;
     private Field field;
     public Durak(){
@@ -23,7 +29,7 @@ public class Durak implements Serializable {
         swapPlayers();
     }
     private void swapPlayers(){
-        if(User.getUserId()==1){
+        if(User.getPlayer().equals(players.get(1))){
             Collections.swap(players,0,1);
         }
     }
@@ -74,8 +80,6 @@ public class Durak implements Serializable {
         window.drawDeck(this.deck);
         window.cardsDeal(this.players, this.field);
         window.drawActionButton(this.players.get(0));
-        this.players.get(1).setIsDefend(true);
-        this.players.get(0).setPlayerTurn(true);
         int player = -1;
         Card buf = null;
         List<Player> playerList = this.players;
@@ -83,22 +87,23 @@ public class Durak implements Serializable {
             Player pl = playerList.get(i);
             for (Card card : pl.getCards()) {
                if(card.isTrump()) {
-                    player = (card.compareTo(buf) > 0) ?i:player;
+                    player = (card.compareTo(buf) > 0) ?player:i;
                     buf = (card.compareTo(buf) > 0) ?buf:card;
                     break;
                 }
             }
         }
         if(player!=-1){
-            this.players.get(1).setIsDefend(false);
-            this.players.get(0).setPlayerTurn(false);
             this.players.get(player).setPlayerTurn(true);
             this.players.get(1-player).setIsDefend(true);
+        }else {
+            player =
+                    (this.getPlayers().get(0).getCard(0).compareTo(this.getPlayers().get(0).getCard(0))>0)
+                            ?0:1;
         }
     }
     private void writeToServer(Server server){
         byte[] data = new byte[0];
-        this.swapPlayers();
         data = SerializationUtils.serialize(this);
         try {
             server.getDos().write(data);
@@ -275,6 +280,15 @@ public class Durak implements Serializable {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    if(field.isEmpty()){
+                        window.clearField();
+                    }
+                    if (window.isTake()) {
+                        window.setTake(false);
+                    }
+                    if (window.isPass()){
+                        window.setPass(false);
+                    }
                 }
             } else {    //player defend case
                 window.setAttack(false);
@@ -307,6 +321,15 @@ public class Durak implements Serializable {
                         readFromServer(server,window);
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }
+                    if(field.isEmpty()){
+                        window.clearField();
+                    }
+                    if (window.isPass()){
+                        window.setPass(false);
+                    }
+                    if (window.isTake()) {
+                        window.setTake(false);
                     }
                 }
             }

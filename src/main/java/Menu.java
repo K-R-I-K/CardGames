@@ -72,6 +72,7 @@ public class Menu extends JLayeredPane {
             public void actionPerformed(ActionEvent e) {
                 server = new Server();
                 User.setUserId(0);
+                User.setPlayer(durak.getPlayers().get(User.getUserId()));
                 System.out.println("host1");
                 while(!server.isAccepted()){
                     System.out.println("host is waiting");
@@ -103,6 +104,7 @@ public class Menu extends JLayeredPane {
             public void actionPerformed(ActionEvent e) {
                 server = new Server();
                 User.setUserId(1);
+                User.setPlayer(durak.getPlayers().get(User.getUserId()));
                 while(!server.isAccepted()){
                     System.out.println("client is waiting");
 
@@ -127,7 +129,6 @@ public class Menu extends JLayeredPane {
                     }
                     int count = server.getDis().available();
                     data = new byte[count];
-
                     server.getDis().read(data);
                     Durak buf = SerializationUtils.deserialize(data);
                     durak.setPlayers(buf.getPlayers());

@@ -3,10 +3,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -25,6 +22,18 @@ public class Player implements Serializable {
 
     public boolean isEmpty(){return cards.size()==0;}
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return name.equals(player.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 
     public Player(String name){
         this.name = name;

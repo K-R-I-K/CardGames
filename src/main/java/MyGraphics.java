@@ -98,7 +98,7 @@ public class MyGraphics extends JLayeredPane{
         }
         for(int i = 0; i < field.getDefendList().size(); ++i){
             if(field.getDefendList().get(i) != null){
-                battleCard(false, field.getAttackList().get(i), i);
+                battleCard(false, field.getDefendList().get(i), i);
             }
         }
     }
