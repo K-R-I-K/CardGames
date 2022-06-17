@@ -4,9 +4,7 @@ import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 @Setter
 @Getter
@@ -20,7 +18,15 @@ public class Durak implements Serializable {
         field = new Field(deck.getTrump().getSuit());
         addPlayers();
     }
-
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+        swapPlayers();
+    }
+    private void swapPlayers(){
+        if(User.getUserId()==1){
+            Collections.swap(players,0,1);
+        }
+    }
     private void addPlayers(){
         players.add(new Player("Player1"));
         players.add(new Player("Player2"));
@@ -90,6 +96,31 @@ public class Durak implements Serializable {
             this.players.get(1-player).setIsDefend(true);
         }
     }
+    private void writeToServer(Server server){
+        byte[] data = new byte[0];
+        this.swapPlayers();
+        data = SerializationUtils.serialize(this);
+        try {
+            server.getDos().write(data);
+            server.getDos().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void readFromServer(Server server) throws IOException {
+        if(server.getDis().available()>0){
+            int count = server.getDis().available();
+            byte[] data = new byte[count];
+            server.getDis().read(data);
+            Durak buf = SerializationUtils.deserialize(data);
+            this.setPlayers(buf.getPlayers());
+            this.setField(buf.getField());
+            this.setDeck(buf.getDeck());
+            players.get(User.getUserId()).setPlayerTurn(true);
+            players.get(1 - User.getUserId()).setPlayerTurn(false);
+        }
+    }
+
     private int isGameOver(){
         if (this.deck.isEmpty()) {//win case
             List<Player> playerList = this.players;
@@ -197,20 +228,21 @@ public class Durak implements Serializable {
                 window.drawResult(players.get(isGameOver()).getName() + " has won!");
                 isOver = true;
             }
+            if(User.getUserId()==0)
+            {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             if (this.players.get(1-User.getUserId()).getIsDefend()) {//player attack case
                 window.setAttack(true);
                 if(this.players.get(User.getUserId()).isPlayerTurn()){
                     if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                         this.move(this.players.get(User.getUserId()), window.getCardIndex(), window.getFieldIndex());
 
-                        byte[] data = new byte[0];
-                        data = SerializationUtils.serialize(this);
-                        try {
-                            server.getDos().write(data);
-                            server.getDos().flush();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        this.writeToServer(server);
                         players.get(User.getUserId()).setPlayerTurn(false);
                         players.get(1-User.getUserId()).setPlayerTurn(true);
                         ////
@@ -228,25 +260,18 @@ public class Durak implements Serializable {
                             this.players.get(User.getUserId()).setIsDefend(true);
                             players.get(User.getUserId()).setPlayerTurn(false);
                             players.get(1-User.getUserId()).setPlayerTurn(true);
+                            this.writeToServer(server);
                         }
                         window.setPass(false);
                     }
                 }else {
-                    byte[] data = new byte[0];
                     try {
-                        if(server.getDis().read(data)>0){
-                            Durak buf = SerializationUtils.deserialize(data);
-                            this.players = buf.players;
-                            this.field = buf.field;
-                            this.deck = buf.deck;
-                            players.get(User.getUserId()).setPlayerTurn(true);
-                            players.get(1-User.getUserId()).setPlayerTurn(false);
-                        }
+                        readFromServer(server);
+                        window.cardsDeal(this.players, this.field);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-
             } else {    //player defend case
                 window.setAttack(false);
 
@@ -254,17 +279,7 @@ public class Durak implements Serializable {
                     if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                         this.move(this.players.get(User.getUserId()), window.getCardIndex(), window.getFieldIndex());
                         //bot
-                        byte[] data = new byte[0];
-                        try {
-                            if(server.getDis().read(data)>0){
-                                Durak buf = SerializationUtils.deserialize(data);
-                                this.players = buf.players;
-                                this.field = buf.field;
-                                this.deck = buf.deck;
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        this.writeToServer(server);
                         ////
                         window.cardsDeal(this.players, this.field);
                         window.setFieldIndex(-1);
@@ -279,18 +294,12 @@ public class Durak implements Serializable {
                         window.setTake(false);
                         players.get(User.getUserId()).setPlayerTurn(false);
                         players.get(1-User.getUserId()).setPlayerTurn(true);
+                        this.writeToServer(server);
                     }
                 }else {
-                    byte[] data = new byte[0];
                     try {
-                        if(server.getDis().read(data)>0){
-                            Durak buf = SerializationUtils.deserialize(data);
-                            this.players = buf.players;
-                            this.field = buf.field;
-                            this.deck = buf.deck;
-                            players.get(User.getUserId()).setPlayerTurn(true);
-                            players.get(1-User.getUserId()).setPlayerTurn(false);
-                        }
+                        readFromServer(server);
+                        window.cardsDeal(this.players, this.field);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

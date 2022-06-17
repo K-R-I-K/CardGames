@@ -1,4 +1,5 @@
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.DataInputStream;
@@ -21,13 +22,13 @@ public class Server implements Runnable{
     private ServerSocket serverSocket;
     @Getter
     private boolean accepted;
+    @Setter
+    private boolean isFirstExchange = true;
     private boolean isHost;
     private boolean isClient;
     private boolean unableToCommunicateWithOpponent;
     //private int userId=0;
-    private Durak durak;
-    public Server(Durak durak){
-        this.durak = durak;
+    public Server(){
         ip = "26.255.53.80";
         //ip = "26.3.1.128";
         port = 22222;
@@ -80,7 +81,7 @@ public class Server implements Runnable{
     private void tick() {
         if (errors >= 10) unableToCommunicateWithOpponent = true;
 
-        if (!unableToCommunicateWithOpponent) {
+        if (!isFirstExchange && !unableToCommunicateWithOpponent) {
             try {
                 byte[] data = new byte[0];
                 if(dis.read(data)>0){

@@ -70,15 +70,28 @@ public class Menu extends JLayeredPane {
         host.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                server = new Server(durak);
+                server = new Server();
                 User.setUserId(0);
                 gameVsPlayer = true;
-                while(!server.isAccepted()){}
+                System.out.println("host1");
+                while(!server.isAccepted()){
+                    System.out.println("host is waiting");
+                }
+                /*try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }*/
                 byte[] data = new byte[0];
                 data = SerializationUtils.serialize(durak);
+                System.out.println("host2");
+
                 try {
                     server.getDos().write(data);
+                    //server.getDos().writeInt(100);
                     server.getDos().flush();
+                    server.setFirstExchange(false);
+                    System.out.println("a:");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -89,21 +102,45 @@ public class Menu extends JLayeredPane {
         client.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                server = new Server(durak);
+                server = new Server();
                 User.setUserId(1);
                 gameVsPlayer = true;
-                while(!server.isAccepted()){}
+                while(!server.isAccepted()){
+                    System.out.println("client is waiting");
+
+                    /*try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }*/
+                }
+
+                /*try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }*/
                 byte[] data = new byte[0];
+                System.out.println("client");
                 try {
-                    if(server.getDis().read(data)>0){
-                        Durak buf = SerializationUtils.deserialize(data);
-                        durak.setPlayers(buf.getPlayers());
-                        durak.setField(buf.getField());
-                        durak.setDeck(buf.getDeck());
-                        durak.getPlayers().get(User.getUserId()).setPlayerTurn(true);
-                        durak.getPlayers().get(1-User.getUserId()).setPlayerTurn(false);
-                        System.out.println("Taken durak");
+                    while(server.getDis().available()<=0){
+                        System.out.println("client waiting for durak object");
+
                     }
+                    int count = server.getDis().available();
+                    data = new byte[count];
+
+                    server.getDis().read(data);
+                    Durak buf = SerializationUtils.deserialize(data);
+                    durak.setPlayers(buf.getPlayers());
+                    durak.setField(buf.getField());
+                    durak.setDeck(buf.getDeck());
+                    durak.getPlayers().get(User.getUserId()).setPlayerTurn(true);
+                    durak.getPlayers().get(1-User.getUserId()).setPlayerTurn(false);
+                    System.out.println("Taken durak");
+                    server.setFirstExchange(false);
+
+
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
