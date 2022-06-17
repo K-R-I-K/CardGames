@@ -18,10 +18,12 @@ public class Durak implements Serializable {
 
     private Deck deck;
     private Field field;
+    private int lastDiscarded;
     public Durak(){
         players = new ArrayList<>();
         deck = new Deck();
         field = new Field(deck.getTrump().getSuit());
+        lastDiscarded = 0;
         addPlayers();
     }
     public void setPlayers(List<Player> players) {
@@ -121,7 +123,9 @@ public class Durak implements Serializable {
             this.setPlayers(buf.getPlayers());
             this.setField(buf.getField());
             this.setDeck(buf.getDeck());
-
+            this.setLastDiscarded(buf.getLastDiscarded());
+            window.drawDiscarded(this.lastDiscarded);
+            this.lastDiscarded = 0;
             window.cardsDeal(this.players, this.field);
             window.drawDeck(this.deck);
             window.redrawField(field);
@@ -258,13 +262,15 @@ public class Durak implements Serializable {
                 }
                 if (window.isPass()) {
                     if (this.field.getAttackListSize() != 0) {
-                        window.drawDiscarded(this.field.clearField().size());
+                        this.lastDiscarded = this.field.clearField().size();
+                        window.drawDiscarded(this.lastDiscarded);
                         window.clearField();
                         window.getCardsFromDeck(this.giveCardsFromDeck());
                         window.cardsDeal(this.players, this.field);
                         this.players.get(1).setIsDefend(false);
                         this.players.get(0).setIsDefend(true);
                         this.writeToServer(server);
+                        this.lastDiscarded = 0;
                         ///?????
                     }
                     window.setPass(false);
