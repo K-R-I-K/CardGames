@@ -11,7 +11,7 @@ public class Player implements Serializable {
     private List<Card> cards;
     private String name;
     private boolean isDefend;
-    private boolean isPlayerTurn;
+    private boolean isPassTake;
     public boolean getIsDefend() {
         return isDefend;
     }
@@ -39,7 +39,7 @@ public class Player implements Serializable {
         this.name = name;
         this.cards = new ArrayList<>();
         this.isDefend = false;
-        this.isPlayerTurn =false;
+        this.isPassTake =false;
     }
 
     public void setCard(Card card){

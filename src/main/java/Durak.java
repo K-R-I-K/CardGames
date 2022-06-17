@@ -94,12 +94,12 @@ public class Durak implements Serializable {
             }
         }
         if(player!=-1){
-            this.players.get(player).setPlayerTurn(true);
             this.players.get(1-player).setIsDefend(true);
         }else {
             player =
                     (this.getPlayers().get(0).getCard(0).compareTo(this.getPlayers().get(0).getCard(0))>0)
                             ?0:1;
+            this.players.get(1-player).setIsDefend(true);
         }
     }
     private void writeToServer(Server server){
@@ -121,8 +121,7 @@ public class Durak implements Serializable {
             this.setPlayers(buf.getPlayers());
             this.setField(buf.getField());
             this.setDeck(buf.getDeck());
-            players.get(0).setPlayerTurn(true);
-            players.get(1).setPlayerTurn(false);
+
             window.cardsDeal(this.players, this.field);
             window.drawDeck(this.deck);
             window.redrawField(field);
@@ -246,91 +245,73 @@ public class Durak implements Serializable {
             }*/
             if (this.players.get(1).getIsDefend()) {//player attack case
                 window.setAttack(true);
-                if(this.players.get(0).isPlayerTurn()){
-                    if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
-                        this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
+                if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
+                    this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
 
 
 
-                        this.writeToServer(server);
-                        players.get(0).setPlayerTurn(false);
-                        players.get(1).setPlayerTurn(true);
-                        ////
-                        window.cardsDeal(this.players, this.field);
-                        window.setFieldIndex(-1);
-                        window.setCardIndex(-1);
-                    }
-                    if (window.isPass()) {
-                        if (this.field.getAttackListSize() != 0) {
-                            window.drawDiscarded(this.field.clearField().size());
-                            window.clearField();
-                            window.getCardsFromDeck(this.giveCardsFromDeck());
-                            window.cardsDeal(this.players, this.field);
-                            this.players.get(1).setIsDefend(false);
-                            this.players.get(0).setIsDefend(true);
-                            players.get(0).setPlayerTurn(false);
-                            players.get(1).setPlayerTurn(true);
-                            this.writeToServer(server);
-                        }
-                        window.setPass(false);
-                    }
-                }else {
-                    try {
-                        readFromServer(server,window);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if(field.isEmpty()){
+                    this.writeToServer(server);
+                    ////
+                    window.cardsDeal(this.players, this.field);
+                    window.setFieldIndex(-1);
+                    window.setCardIndex(-1);
+                }
+                if (window.isPass()) {
+                    if (this.field.getAttackListSize() != 0) {
+                        window.drawDiscarded(this.field.clearField().size());
                         window.clearField();
+                        window.getCardsFromDeck(this.giveCardsFromDeck());
+                        window.cardsDeal(this.players, this.field);
+                        this.players.get(1).setIsDefend(false);
+                        this.players.get(0).setIsDefend(true);
+                        this.writeToServer(server);
+                        ///?????
                     }
-                    if (window.isTake()) {
-                        window.setTake(false);
-                    }
-                    if (window.isPass()){
-                        window.setPass(false);
-                    }
+                    window.setPass(false);
+                }
+
+                try {
+                    readFromServer(server,window);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(field.isEmpty()){
+                    window.clearField();
                 }
             } else {    //player defend case
                 window.setAttack(false);
+                if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
+                    this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
 
-                if(this.players.get(0).isPlayerTurn()) {
-                    if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
-                        this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
-
-                        this.writeToServer(server);
-                        players.get(0).setPlayerTurn(false);
-                        players.get(1).setPlayerTurn(true);
-                        ////
-                        window.cardsDeal(this.players, this.field);
-                        window.setFieldIndex(-1);
-                        window.setCardIndex(-1);
-                    }
-                    if (window.isTake()) {
-                        this.players.get(0).setCard(this.field.clearField());
-                        window.getCardsFromDeck(this.giveCardsFromDeck());
-                        window.cardsDeal(this.players, this.field);
-                        window.clearField();
-                        this.players.get(0).setIsDefend(true);//the same
-                        window.setTake(false);
-                        players.get(0).setPlayerTurn(false);
-                        players.get(1).setPlayerTurn(true);
-                        this.writeToServer(server);
-                    }
-                }else {
+                    this.writeToServer(server);
+                    ////
+                    window.cardsDeal(this.players, this.field);
+                    window.setFieldIndex(-1);
+                    window.setCardIndex(-1);
+                }
+                if (window.isTake()) {
+                    this.players.get(0).setCard(this.field.clearField());
+                    window.getCardsFromDeck(this.giveCardsFromDeck());
+                    window.cardsDeal(this.players, this.field);
+                    window.clearField();
+                    this.players.get(0).setIsDefend(true);//the same
+                    window.setTake(false);
+                    this.writeToServer(server);
                     try {
-                        readFromServer(server,window);
+                        readFromServer(server, window);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if(field.isEmpty()){
+                    if (field.isEmpty()) {
                         window.clearField();
                     }
-                    if (window.isPass()){
+                    if (window.isPass()) {
                         window.setPass(false);
                     }
                     if (window.isTake()) {
                         window.setTake(false);
                     }
+
                 }
             }
         }
