@@ -107,7 +107,7 @@ public class Durak implements Serializable {
             e.printStackTrace();
         }
     }
-    private void readFromServer(Server server) throws IOException {
+    private void readFromServer(Server server, MyGraphics window) throws IOException {
         if(server.getDis().available()>0){
             int count = server.getDis().available();
             byte[] data = new byte[count];
@@ -116,8 +116,11 @@ public class Durak implements Serializable {
             this.setPlayers(buf.getPlayers());
             this.setField(buf.getField());
             this.setDeck(buf.getDeck());
-            players.get(User.getUserId()).setPlayerTurn(true);
-            players.get(1 - User.getUserId()).setPlayerTurn(false);
+            players.get(0).setPlayerTurn(true);
+            players.get(1).setPlayerTurn(false);
+            window.cardsDeal(this.players, this.field);
+            window.drawDeck(this.deck);
+            window.redrawField(field);
         }
     }
 
@@ -228,23 +231,25 @@ public class Durak implements Serializable {
                 window.drawResult(players.get(isGameOver()).getName() + " has won!");
                 isOver = true;
             }
-            if(User.getUserId()==0)
+/*            if(0==0)
             {
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
-            if (this.players.get(1-User.getUserId()).getIsDefend()) {//player attack case
+            }*/
+            if (this.players.get(1).getIsDefend()) {//player attack case
                 window.setAttack(true);
-                if(this.players.get(User.getUserId()).isPlayerTurn()){
+                if(this.players.get(0).isPlayerTurn()){
                     if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
-                        this.move(this.players.get(User.getUserId()), window.getCardIndex(), window.getFieldIndex());
+                        this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
+
+
 
                         this.writeToServer(server);
-                        players.get(User.getUserId()).setPlayerTurn(false);
-                        players.get(1-User.getUserId()).setPlayerTurn(true);
+                        players.get(0).setPlayerTurn(false);
+                        players.get(1).setPlayerTurn(true);
                         ////
                         window.cardsDeal(this.players, this.field);
                         window.setFieldIndex(-1);
@@ -256,18 +261,17 @@ public class Durak implements Serializable {
                             window.clearField();
                             window.getCardsFromDeck(this.giveCardsFromDeck());
                             window.cardsDeal(this.players, this.field);
-                            this.players.get(1-User.getUserId()).setIsDefend(false);
-                            this.players.get(User.getUserId()).setIsDefend(true);
-                            players.get(User.getUserId()).setPlayerTurn(false);
-                            players.get(1-User.getUserId()).setPlayerTurn(true);
+                            this.players.get(1).setIsDefend(false);
+                            this.players.get(0).setIsDefend(true);
+                            players.get(0).setPlayerTurn(false);
+                            players.get(1).setPlayerTurn(true);
                             this.writeToServer(server);
                         }
                         window.setPass(false);
                     }
                 }else {
                     try {
-                        readFromServer(server);
-                        window.cardsDeal(this.players, this.field);
+                        readFromServer(server,window);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -275,31 +279,32 @@ public class Durak implements Serializable {
             } else {    //player defend case
                 window.setAttack(false);
 
-                if(this.players.get(User.getUserId()).isPlayerTurn()) {
+                if(this.players.get(0).isPlayerTurn()) {
                     if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
-                        this.move(this.players.get(User.getUserId()), window.getCardIndex(), window.getFieldIndex());
-                        //bot
+                        this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
+
                         this.writeToServer(server);
+                        players.get(0).setPlayerTurn(false);
+                        players.get(1).setPlayerTurn(true);
                         ////
                         window.cardsDeal(this.players, this.field);
                         window.setFieldIndex(-1);
                         window.setCardIndex(-1);
                     }
                     if (window.isTake()) {
-                        this.players.get(User.getUserId()).setCard(this.field.clearField());
+                        this.players.get(0).setCard(this.field.clearField());
                         window.getCardsFromDeck(this.giveCardsFromDeck());
                         window.cardsDeal(this.players, this.field);
                         window.clearField();
-                        this.players.get(User.getUserId()).setIsDefend(true);//the same
+                        this.players.get(0).setIsDefend(true);//the same
                         window.setTake(false);
-                        players.get(User.getUserId()).setPlayerTurn(false);
-                        players.get(1-User.getUserId()).setPlayerTurn(true);
+                        players.get(0).setPlayerTurn(false);
+                        players.get(1).setPlayerTurn(true);
                         this.writeToServer(server);
                     }
                 }else {
                     try {
-                        readFromServer(server);
-                        window.cardsDeal(this.players, this.field);
+                        readFromServer(server,window);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

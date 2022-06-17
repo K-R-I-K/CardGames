@@ -72,7 +72,6 @@ public class Menu extends JLayeredPane {
             public void actionPerformed(ActionEvent e) {
                 server = new Server();
                 User.setUserId(0);
-                gameVsPlayer = true;
                 System.out.println("host1");
                 while(!server.isAccepted()){
                     System.out.println("host is waiting");
@@ -90,11 +89,11 @@ public class Menu extends JLayeredPane {
                     server.getDos().write(data);
                     //server.getDos().writeInt(100);
                     server.getDos().flush();
-                    server.setFirstExchange(false);
                     System.out.println("a:");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+                gameVsPlayer = true;
             }
         });
         this.add(host);
@@ -104,7 +103,6 @@ public class Menu extends JLayeredPane {
             public void actionPerformed(ActionEvent e) {
                 server = new Server();
                 User.setUserId(1);
-                gameVsPlayer = true;
                 while(!server.isAccepted()){
                     System.out.println("client is waiting");
 
@@ -135,15 +133,14 @@ public class Menu extends JLayeredPane {
                     durak.setPlayers(buf.getPlayers());
                     durak.setField(buf.getField());
                     durak.setDeck(buf.getDeck());
-                    durak.getPlayers().get(User.getUserId()).setPlayerTurn(true);
-                    durak.getPlayers().get(1-User.getUserId()).setPlayerTurn(false);
                     System.out.println("Taken durak");
-                    server.setFirstExchange(false);
+                    window.drawDeck(durak.getDeck());
 
 
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+                gameVsPlayer = true;
             }
         });
         this.add(client);

@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class Field implements Serializable {
+    @Getter
     private List<Card> attackList;
+    @Getter
     private List<Card> defendList;
     @Getter
     private int attackListSize;

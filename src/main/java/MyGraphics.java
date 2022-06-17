@@ -86,7 +86,7 @@ public class MyGraphics extends JLayeredPane{
         frame.setVisible(true);
     }
 
-    private void redrawField(Field field){
+    public void redrawField(Field field){
         for(int i = 0; i < 6; ++i){
             battlePanels.get(i).removeAll();
             battlePanels.get(i).repaint();
@@ -107,7 +107,7 @@ public class MyGraphics extends JLayeredPane{
         int y = isAttack?40:100;
         JLabel label = new JLabel(new ImageIcon(new ImageIcon(pathFronts + card.toString() + ".png")
                 .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
-        label.setLocation((battlePanels.get(battleFieldIndex).getWidth() - cardWidth) / 2, y);
+        label.setBounds((battlePanels.get(battleFieldIndex).getWidth() - cardWidth) / 2, y, cardWidth, cardHeight);
         if(y == 40) {
             battlePanels.get(battleFieldIndex).add(label, 0);
             battlePanels.get(battleFieldIndex).setLayer(label, 0);

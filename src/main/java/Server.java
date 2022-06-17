@@ -23,7 +23,6 @@ public class Server implements Runnable{
     @Getter
     private boolean accepted;
     @Setter
-    private boolean isFirstExchange = true;
     private boolean isHost;
     private boolean isClient;
     private boolean unableToCommunicateWithOpponent;
@@ -81,7 +80,7 @@ public class Server implements Runnable{
     private void tick() {
         if (errors >= 10) unableToCommunicateWithOpponent = true;
 
-        if (!isFirstExchange && !unableToCommunicateWithOpponent) {
+        if (!unableToCommunicateWithOpponent) {
             try {
                 byte[] data = new byte[0];
                 if(dis.read(data)>0){
