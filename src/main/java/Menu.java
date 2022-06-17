@@ -125,7 +125,6 @@ public class Menu extends JLayeredPane {
                 try {
                     while(server.getDis().available()<=0){
                         System.out.println("client waiting for durak object");
-
                     }
                     int count = server.getDis().available();
                     data = new byte[count];

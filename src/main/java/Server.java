@@ -30,6 +30,7 @@ public class Server implements Runnable{
     public Server(){
         ip = "26.255.53.80";
         //ip = "26.3.1.128";
+        //ip = "26.248.220.2";
         port = 22222;
         errors = 0;
         accepted = false;

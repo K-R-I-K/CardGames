@@ -248,7 +248,7 @@ public class Durak implements Serializable {
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
 
-
+                    window.redrawField(field);
 
                     this.writeToServer(server);
                     ////
@@ -297,21 +297,14 @@ public class Durak implements Serializable {
                     this.players.get(0).setIsDefend(true);//the same
                     window.setTake(false);
                     this.writeToServer(server);
-                    try {
-                        readFromServer(server, window);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (field.isEmpty()) {
-                        window.clearField();
-                    }
-                    if (window.isPass()) {
-                        window.setPass(false);
-                    }
-                    if (window.isTake()) {
-                        window.setTake(false);
-                    }
-
+                }
+                try {
+                    readFromServer(server, window);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (field.isEmpty()) {
+                    window.clearField();
                 }
             }
         }
