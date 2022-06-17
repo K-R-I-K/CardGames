@@ -1,5 +1,6 @@
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,6 +84,37 @@ public class MyGraphics extends JLayeredPane{
         frame.setVisible(false);
         frame.setBounds(0, 0, panelWidth, panelHeight);
         frame.setVisible(true);
+    }
+
+    private void redrawField(Field field){
+        for(int i = 0; i < 6; ++i){
+            battlePanels.get(i).removeAll();
+            battlePanels.get(i).repaint();
+        }
+        for(int i = 0; i < field.getAttackList().size(); ++i){
+            if(field.getAttackList().get(i) != null){
+                battleCard(true, field.getAttackList().get(i), i);
+            }
+        }
+        for(int i = 0; i < field.getDefendList().size(); ++i){
+            if(field.getDefendList().get(i) != null){
+                battleCard(false, field.getAttackList().get(i), i);
+            }
+        }
+    }
+
+    private void battleCard(boolean isAttack, Card card, int battleFieldIndex){
+        int y = isAttack?40:100;
+        JLabel label = new JLabel(new ImageIcon(new ImageIcon(pathFronts + card.toString() + ".png")
+                .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
+        label.setLocation((battlePanels.get(battleFieldIndex).getWidth() - cardWidth) / 2, y);
+        if(y == 40) {
+            battlePanels.get(battleFieldIndex).add(label, 0);
+            battlePanels.get(battleFieldIndex).setLayer(label, 0);
+        }else {
+            battlePanels.get(battleFieldIndex).add(label, 1);
+            battlePanels.get(battleFieldIndex).setLayer(label, 1);
+        }
     }
 
     public boolean isTake() {
@@ -290,6 +322,8 @@ public class MyGraphics extends JLayeredPane{
 
     public void drawDeck(Deck deck){
         int upDeck = 50;
+        deckPanel.removeAll();
+        deckPanel.repaint();
         deckLabels = new ArrayList<>();
         deckPanel.setLayout(null);
         JLabel label = new JLabel(new ImageIcon(new ImageIcon(pathFronts +  deck.getTrump().toString() + ".png")
