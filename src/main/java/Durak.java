@@ -169,7 +169,12 @@ public class Durak implements Serializable {
                 window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
-
+                    window.redrawField(field);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     //bot
                     int card = this.moveBot(this.players.get(1), window.getFieldIndex());
                     if (card == -1) {
@@ -182,6 +187,7 @@ public class Durak implements Serializable {
                         window.drawCard(this.players.get(1), 1, card, window.getFieldIndex());
                         this.players.get(1).removeCard(card);
                     }
+                    window.redrawField(field);
                     ////
                     window.cardsDeal(this.players, this.field);
                     window.setFieldIndex(-1);
@@ -212,6 +218,12 @@ public class Durak implements Serializable {
 
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
+                    window.redrawField(field);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     //bot
                     int card = this.moveBot(this.players.get(1), window.getFieldIndex() + 1);
                     if (card == -1) {
@@ -226,6 +238,7 @@ public class Durak implements Serializable {
                         window.drawCard(this.players.get(1), 1, card, window.getFieldIndex() + 1);
                         this.players.get(1).removeCard(card);
                     }
+                    window.redrawField(field);
                     ////
                     window.cardsDeal(this.players, this.field);
                     window.setFieldIndex(-1);
@@ -255,7 +268,7 @@ public class Durak implements Serializable {
                 window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
-
+                    window.redrawField(field);
                     window.redrawField(field);
 
                     this.writeToServer(server);
@@ -280,6 +293,7 @@ public class Durak implements Serializable {
                             players.get(1).setPassTake(false);
                         }
                         else if(players.get(1).isPassTake()){
+                            window.drawText("");
                             this.players.get(1).setCard(this.field.clearField());
                             window.getCardsFromDeck(this.giveCardsFromDeck());
                             window.cardsDeal(this.players, this.field);
@@ -297,6 +311,7 @@ public class Durak implements Serializable {
                 window.setAttack(false);
                 if (!players.get(0).isPassTake() && window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
+                    window.redrawField(field);
 
                     this.writeToServer(server);
                     ////
@@ -320,6 +335,9 @@ public class Durak implements Serializable {
             }
             if(field.isEmpty()){
                 window.clearField();
+            }
+            if(players.get(1).isPassTake() && players.get(1).isDefend()){
+                window.drawText("Has taken cards");
             }
         }
     }

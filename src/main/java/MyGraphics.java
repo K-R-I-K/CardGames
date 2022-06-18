@@ -40,7 +40,7 @@ public class MyGraphics extends JLayeredPane{
     private volatile boolean isPass;
     private int offsetY1 = 20;
     private int offsetY2 = 80;
-
+    private JLabel info;
     public void setAttack(boolean attack) {
         isAttack = attack;
         if(isAttack)
@@ -73,6 +73,11 @@ public class MyGraphics extends JLayeredPane{
         drawExitButton();
         this.setBounds(0, 0, panelWidth, panelHeight);
         this.setBackground(new Color(204, 204, 204));
+        info = new JLabel();
+        info.setBounds(20, panelHeight * 3 / 18, panelWidth * 9 / 32, panelHeight * 5 / 18);
+        this.setLayer(info,100);
+
+        this.add(info);
         frame = new JFrame();
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
@@ -85,10 +90,7 @@ public class MyGraphics extends JLayeredPane{
     }
 
     public void redrawField(Field field){
-        for(int i = 0; i < 6; ++i){
-            battlePanels.get(i).removeAll();
-            battlePanels.get(i).repaint();
-        }
+        clearField();
         for(int i = 0; i < field.getAttackList().size(); ++i){
             if(field.getAttackList().get(i) != null){
                 battleCard(true, field.getAttackList().get(i), i);
@@ -245,22 +247,7 @@ public class MyGraphics extends JLayeredPane{
 
             @Override
             public void mousePressed(MouseEvent e) {
-                for (int i = 0; i < playerChoose.size(); ++i) {
-                    if(playerChoose.get(i) && !isCardOnField.get(battlePanels.indexOf(panel))){
-                        isCardOnField.set(battlePanels.indexOf(panel), true);
-                        JLabel label= labelsLists.get(0).get(i);
-                        label.setLocation((panel.getWidth() - cardWidth) / 2, 0);
-                        label.removeMouseListener(playerMouseListeners.get(i));
-                        //panel.removeMouseListener(this);
-                        playersPanelList.get(0).setLayer(label, 0);
-                        playerChoose.set(i, false);
-                        int y = (isAttack)?offsetY1:offsetY2;
-                        label.setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + y);
-                        panel.setLayer(label, isAttack?0:1);
-                        panel.add(label);
-                        fieldIndex = battleFieldIndex;
-                    }
-                }
+                fieldIndex = battleFieldIndex;
             }
 
             @Override
@@ -276,7 +263,24 @@ public class MyGraphics extends JLayeredPane{
         panel.setOpaque(true);
         return panel;
     }
+   /* private void drawCardOnField(JLayeredPane panel){
+        for (int i = 0; i < playerChoose.size(); ++i) {
+            if(playerChoose.get(i) && !isCardOnField.get(battlePanels.indexOf(panel))){
+                isCardOnField.set(battlePanels.indexOf(panel), true);
+                JLabel label= labelsLists.get(0).get(i);
+                label.setLocation((panel.getWidth() - cardWidth) / 2, 0);
+                label.removeMouseListener(playerMouseListeners.get(i));
+                //panel.removeMouseListener(this);
+                playersPanelList.get(0).setLayer(label, 0);
+                playerChoose.set(i, false);
+                int y = (isAttack)?offsetY1:offsetY2;
+                label.setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + y);
+                panel.setLayer(label, isAttack?0:1);
+                panel.add(label);
 
+            }
+        }
+    }*/
     public void setLayout(){
         this.setLayout(null);
         playersPanelList = new ArrayList<>();
@@ -422,9 +426,10 @@ public class MyGraphics extends JLayeredPane{
     public void drawResult(String text){
         this.removeAll();
         resultPanel.setLayout(null);
-        int x = text.length() * 9;
-        JLabel label = new JLabel("<html><h3><font color=\"blue\">" + text);
-        label.setBounds((panelWidth - x) / 2, (panelHeight - 13) / 2 - buttonHeight, x, 13);
+        int x = text.length() * 18;
+        JLabel label = new JLabel("<html><h3><font color=\"blue\"><font size = 24>" + text);
+
+        label.setBounds((panelWidth - x) / 2, (panelHeight - 100) / 2 - buttonHeight, 2*x, 50);
         resultPanel.add(label);
         JButton button = createButton("Close", "blue", (resultPanel.getWidth() - buttonWidth) / 2,
                 (resultPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
@@ -441,5 +446,10 @@ public class MyGraphics extends JLayeredPane{
     public void hideTrump(int playerIndex, int cardIndex){
         labelsLists.get(playerIndex).get(cardIndex).setIcon(new ImageIcon(new ImageIcon(pathBacks + backName + ".png")
                 .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
+    }
+    public void drawText(String text){
+        String textColor = "black";
+        int fontSize = 24;
+        info.setText("<html><h3><font color=\"" + textColor + "\"><font size =" + fontSize + ">" + text);
     }
 }
