@@ -428,4 +428,13 @@ public class MyGraphics extends JLayeredPane{
         this.add(resultPanel);
         this.repaint();
     }
+    public void showTrump(Card card, int playerIndex, int cardIndex){
+        labelsLists.get(playerIndex).get(cardIndex).setIcon(new ImageIcon(new ImageIcon(pathFronts + card.toString() + ".png")
+                .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
+    }
+
+    public void hideTrump(int playerIndex, int cardIndex){
+        labelsLists.get(playerIndex).get(cardIndex).setIcon(new ImageIcon(new ImageIcon(pathBacks + backName + ".png")
+                .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
+    }
 }

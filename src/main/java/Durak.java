@@ -87,10 +87,21 @@ public class Durak implements Serializable {
         List<Player> playerList = this.players;
         for (int i = 0; i < playerList.size(); i++) {
             Player pl = playerList.get(i);
-            for (Card card : pl.getCards()) {
-               if(card.isTrump()) {
-                    player = (card.compareTo(buf) > 0) ?player:i;
-                    buf = (card.compareTo(buf) > 0) ?buf:card;
+            List<Card> cards = pl.getCards();
+            for (int j = 0; j < cards.size(); j++) {
+                Card card = cards.get(j);
+                if (card.isTrump()) {
+                    if(i==1){
+                        window.showTrump(card, 1, j);
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        window.hideTrump(1, j);
+                    }
+                    player = (card.compareTo(buf) > 0) ? player : i;
+                    buf = (card.compareTo(buf) > 0) ? buf : card;
                     break;
                 }
             }
@@ -99,10 +110,11 @@ public class Durak implements Serializable {
             this.players.get(1-player).setIsDefend(true);
         }else {
             player =
-                    (this.getPlayers().get(0).getCard(0).compareTo(this.getPlayers().get(0).getCard(0))>0)
+                    (this.getPlayers().get(0).getCard(0).compareTo(this.getPlayers().get(1).getCard(0))>0)
                             ?0:1;
             this.players.get(1-player).setIsDefend(true);
         }
+
     }
     private void writeToServer(Server server){
         byte[] data;

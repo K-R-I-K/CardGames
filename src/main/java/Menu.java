@@ -23,7 +23,7 @@ public class Menu extends JLayeredPane {
         gameVsBot = false;
         gameVsPlayer = false;
         durak = new Durak();
-        window = new MyGraphics();
+        //window = new MyGraphics();
         int panelWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         int panelHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         int buttonWidth = 300;
@@ -50,8 +50,10 @@ public class Menu extends JLayeredPane {
     private void setButtons() {
         JButton newGameVsBot = createButton("Player vs Bot", "blue");
         newGameVsBot.addActionListener(e -> {
-            frame.setVisible(false);
-            MyGraphics.frame.setVisible(true);
+            //frame.setVisible(false);
+            frame.dispose();
+            //MyGraphics.frame.setVisible(true);
+            window = new MyGraphics();
             //durak = new Durak();
             gameVsBot = true;
         });
@@ -70,6 +72,7 @@ public class Menu extends JLayeredPane {
             System.out.println("host2");
 
             try {
+                window = new MyGraphics();
                 server.getDos().write(data);
                 //server.getDos().writeInt(100);
                 server.getDos().flush();
@@ -78,12 +81,15 @@ public class Menu extends JLayeredPane {
                 ex.printStackTrace();
             }
             gameVsPlayer = true;
+            frame.dispose();
+            //MyGraphics.frame.setVisible(true);
         });
         this.add(host);
         JButton client = createButton("Client Player", "blue");
         client.addActionListener(e -> {
             server = new Server();
             User.setUserId(1);
+
             User.setPlayer(durak.getPlayers().get(User.getUserId()));
             while(!server.isAccepted()){
                 System.out.println("client is waiting");
@@ -104,6 +110,9 @@ public class Menu extends JLayeredPane {
                 durak.setField(buf.getField());
                 durak.setDeck(buf.getDeck());
                 System.out.println("Taken durak");
+                frame.dispose();
+                //MyGraphics.frame.setVisible(true);
+                window = new MyGraphics();
                 window.drawDeck(durak.getDeck());
 
 
