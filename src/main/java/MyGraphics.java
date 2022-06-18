@@ -2,6 +2,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -37,6 +38,8 @@ public class MyGraphics extends JLayeredPane{
     private volatile int fieldIndex;
     private volatile boolean isTake;
     private volatile boolean isPass;
+    private int offsetY1 = 20;
+    private int offsetY2 = 80;
 
     public void setAttack(boolean attack) {
         isAttack = attack;
@@ -99,11 +102,11 @@ public class MyGraphics extends JLayeredPane{
     }
 
     private void battleCard(boolean isAttack, Card card, int battleFieldIndex){
-        int y = isAttack?40:100;
+        int y = isAttack?offsetY1:offsetY2;
         JLabel label = new JLabel(new ImageIcon(new ImageIcon(pathFronts + card.toString() + ".png")
                 .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
         label.setBounds((battlePanels.get(battleFieldIndex).getWidth() - cardWidth) / 2, y, cardWidth, cardHeight);
-        if(y == 40) {
+        if(y == offsetY1) {
             battlePanels.get(battleFieldIndex).add(label, 0);
             battlePanels.get(battleFieldIndex).setLayer(label, 0);
         }else {
@@ -187,7 +190,7 @@ public class MyGraphics extends JLayeredPane{
 
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        if(!players.get(0).isPassTake() && field.moveCheck(players.get(0).getIsDefend(),players.get(0).getCard(getLayer(label)))) {
+                        if(!players.get(0).isPassTake() && field.moveCheck(players.get(0).isDefend(),players.get(0).getCard(getLayer(label)))) {
                             mousePress(getLayer(label), field, players.get(0));
                             cardIndex = getLayer(label);
                         }
@@ -199,14 +202,14 @@ public class MyGraphics extends JLayeredPane{
                     @Override
                     public void mouseEntered(MouseEvent e) {
                         if(!players.get(0).isPassTake() && !playerChoose.get(getLayer(label)) &&
-                                field.moveCheck(players.get(0).getIsDefend(), players.get(0).getCard(getLayer(label))))
+                                field.moveCheck(players.get(0).isDefend(), players.get(0).getCard(getLayer(label))))
                             label.setLocation(label.getX(), label.getY() - 40);
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
                         if(!players.get(0).isPassTake() && !playerChoose.get(getLayer(label))&&
-                                field.moveCheck(players.get(0).getIsDefend(), players.get(0).getCard(getLayer(label))))
+                                field.moveCheck(players.get(0).isDefend(), players.get(0).getCard(getLayer(label))))
                             label.setLocation(label.getX(), label.getY() + 40);
                     }
                 });
@@ -220,7 +223,7 @@ public class MyGraphics extends JLayeredPane{
         for (int i = 0; i < playerChoose.size(); ++i) {
             if(playerChoose.get(i) && i != index){
                 playerChoose.set(i, false);
-                if(field.moveCheck(player.getIsDefend(),player.getCard(i)))
+                if(field.moveCheck(player.isDefend(),player.getCard(i)))
                     labelsLists.get(0).get(i).setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + 40);
             }
         }
@@ -251,7 +254,7 @@ public class MyGraphics extends JLayeredPane{
                         //panel.removeMouseListener(this);
                         playersPanelList.get(0).setLayer(label, 0);
                         playerChoose.set(i, false);
-                        int y = (isAttack)?40:100;
+                        int y = (isAttack)?offsetY1:offsetY2;
                         label.setLocation(labelsLists.get(0).get(i).getX(), labelsLists.get(0).get(i).getY() + y);
                         panel.setLayer(label, isAttack?0:1);
                         panel.add(label);
@@ -290,13 +293,15 @@ public class MyGraphics extends JLayeredPane{
 
         isCardOnField = new ArrayList<>(Collections.nCopies(6, false));
         battlePanels = new ArrayList<>();
+        Border border = BorderFactory.createLineBorder(Color.GREEN, 1);
         battlePanels.add(createPanel(panelWidth * 27 / 32 / 3, panelHeight * 4 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 0));
         battlePanels.add(createPanel(panelWidth * 41 / 32 / 3, panelHeight * 4 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 1));
         battlePanels.add(createPanel(panelWidth * 55 / 32 / 3, panelHeight * 4 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 2));
         battlePanels.add(createPanel(panelWidth * 27 / 32 / 3, panelHeight * 9 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 3));
         battlePanels.add(createPanel(panelWidth * 41 / 32 / 3, panelHeight * 9 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 4));
         battlePanels.add(createPanel(panelWidth * 55 / 32 / 3, panelHeight * 9 / 18, panelWidth * 14 / 32 / 3, panelHeight * 5 / 18, 5));
-
+        for (JLayeredPane panel : battlePanels)
+            panel.setBorder(border);
         resultPanel = createPanel(0, 0, panelWidth, panelHeight, -1);
 
         this.add(deckPanel);
@@ -350,12 +355,12 @@ public class MyGraphics extends JLayeredPane{
     }
 
     public void drawCard(Player player, int PlayerIndex, int cardIndex, int battleFieldIndex){
-        int y = player.getIsDefend()?100:40;
+        int y = player.isDefend()?offsetY2:offsetY1;
         JLabel label = labelsLists.get(PlayerIndex).get(cardIndex);
         label.setIcon(new ImageIcon(new ImageIcon(pathFronts + player.getCard(cardIndex).toString() + ".png")
                 .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
         label.setLocation((battlePanels.get(battleFieldIndex).getWidth() - cardWidth) / 2, y);
-        if(y == 40) {
+        if(y == offsetY1) {
             battlePanels.get(battleFieldIndex).add(label, 0);
             battlePanels.get(battleFieldIndex).setLayer(label, 0);
         }else {

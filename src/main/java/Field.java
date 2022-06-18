@@ -36,7 +36,7 @@ public class Field implements Serializable {
             System.out.println("incorrect index");
             return false;
         }
-        if(player.getIsDefend()){
+        if(player.isDefend()){
             if(defendList.get(indexOfFieldEdge) != null){
                 System.out.println("card was beaten");
                 return false;
@@ -56,11 +56,11 @@ public class Field implements Serializable {
                 System.out.println("card was already there");
                 return false;
             }
-            if(moveCheck(player.getIsDefend(), card)) {
+            if(moveCheck(player.isDefend(), card)) {
                 attackList.set(attackListSize, card);
                 ++attackListSize;
             }
-            return moveCheck(player.getIsDefend(), card);
+            return moveCheck(player.isDefend(), card);
         }
     }
     public boolean moveCheck(boolean isDefend, Card card){

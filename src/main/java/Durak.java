@@ -107,12 +107,12 @@ public class Durak implements Serializable {
             }
         }
         if(player!=-1){
-            this.players.get(1-player).setIsDefend(true);
+            this.players.get(1-player).setDefend(true);
         }else {
             player =
                     (this.getPlayers().get(0).getCard(0).compareTo(this.getPlayers().get(1).getCard(0))>0)
                             ?0:1;
-            this.players.get(1-player).setIsDefend(true);
+            this.players.get(1-player).setDefend(true);
         }
 
     }
@@ -165,7 +165,7 @@ public class Durak implements Serializable {
                 window.drawResult(players.get(isGameOver()).getName() + " has won!");
                 isOver = true;
             }
-            if (this.players.get(1).getIsDefend()) {//player attack case
+            if (this.players.get(1).isDefend()) {//player attack case
                 window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
@@ -176,7 +176,7 @@ public class Durak implements Serializable {
                         this.players.get(1).setCard(this.field.clearField());
                         window.getCardsFromDeck(this.giveCardsFromDeck());
                         window.clearField();
-                        this.players.get(1).setIsDefend(true);//the same
+                        this.players.get(1).setDefend(true);//the same
                         isBotMoved = false;
                     } else {
                         window.drawCard(this.players.get(1), 1, card, window.getFieldIndex());
@@ -193,8 +193,8 @@ public class Durak implements Serializable {
                         window.clearField();
                         window.getCardsFromDeck(this.giveCardsFromDeck());
                         window.cardsDeal(this.players, this.field);
-                        this.players.get(1).setIsDefend(false);
-                        this.players.get(0).setIsDefend(true);
+                        this.players.get(1).setDefend(false);
+                        this.players.get(0).setDefend(true);
                         isBotMoved = false;
                     }
                     window.setPass(false);
@@ -218,8 +218,8 @@ public class Durak implements Serializable {
                         window.drawDiscarded(this.field.clearField().size());
                         window.clearField();
                         window.getCardsFromDeck(this.giveCardsFromDeck());
-                        this.players.get(1).setIsDefend(true);
-                        this.players.get(0).setIsDefend(false);
+                        this.players.get(1).setDefend(true);
+                        this.players.get(0).setDefend(false);
                         window.setTake(false);
                         isBotMoved = false;
                     } else {
@@ -236,7 +236,7 @@ public class Durak implements Serializable {
                     window.getCardsFromDeck(this.giveCardsFromDeck());
                     window.cardsDeal(this.players, this.field);
                     window.clearField();
-                    this.players.get(0).setIsDefend(true);//the same
+                    this.players.get(0).setDefend(true);//the same
                     window.setTake(false);
                     isBotMoved = false;
                 }
@@ -251,7 +251,7 @@ public class Durak implements Serializable {
                 window.drawResult(players.get(isGameOver()).getName() + " has won!");
                 isOver = true;
             }
-            if (this.players.get(1).getIsDefend()) {//player attack case
+            if (this.players.get(1).isDefend()) {//player attack case
                 window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
@@ -272,8 +272,8 @@ public class Durak implements Serializable {
                             window.clearField();
                             window.getCardsFromDeck(this.giveCardsFromDeck());
                             window.cardsDeal(this.players, this.field);
-                            this.players.get(1).setIsDefend(false);
-                            this.players.get(0).setIsDefend(true);
+                            this.players.get(1).setDefend(false);
+                            this.players.get(0).setDefend(true);
                             this.writeToServer(server);
                             this.lastDiscarded = 0;
                             players.get(0).setPassTake(false);
@@ -284,7 +284,7 @@ public class Durak implements Serializable {
                             window.getCardsFromDeck(this.giveCardsFromDeck());
                             window.cardsDeal(this.players, this.field);
                             window.clearField();
-                            this.players.get(1).setIsDefend(true);//the same
+                            this.players.get(1).setDefend(true);//the same
                             window.setTake(false);
                             this.writeToServer(server);
                             players.get(0).setPassTake(false);

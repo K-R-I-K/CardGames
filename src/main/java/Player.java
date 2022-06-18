@@ -14,14 +14,6 @@ public class Player implements Serializable {
     private String name;
     private boolean isDefend;
     private boolean isPassTake;
-    public boolean getIsDefend() {
-        return isDefend;
-    }
-
-    public void setIsDefend(boolean defend) {
-        isDefend = defend;
-    }
-
     public boolean isEmpty(){return cards.size()==0;}
 
     @Override
