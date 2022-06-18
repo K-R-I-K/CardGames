@@ -1,10 +1,8 @@
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.Locale;
 
 @Getter
@@ -17,10 +15,6 @@ public class Card implements Comparable<Card>, Serializable {
     Card(Rank rank, Suit suit){
         this.rank = rank;
         this.suit = suit;
-    }
-
-    public static Suit getTrump() {
-        return trump;
     }
 
     public static void setTrump(Suit trump) {

@@ -4,19 +4,12 @@ import org.apache.commons.lang3.SerializationUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class Menu extends JLayeredPane {
     public static JFrame frame;
-    private int panelWidth;
-    private int panelHeight;
-    private int buttonWidth;
-    private int buttonHeight;
     private Color buttonColor;
     private int fontSize;
-    private int buttonNumber;
     private Durak durak;
     private MyGraphics window;
     private Server server;
@@ -31,13 +24,13 @@ public class Menu extends JLayeredPane {
         gameVsPlayer = false;
         durak = new Durak();
         window = new MyGraphics();
-        panelWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-        panelHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-        buttonWidth = 300;
-        buttonHeight = 100;
+        int panelWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+        int panelHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+        int buttonWidth = 300;
+        int buttonHeight = 100;
         buttonColor = new Color(0, 255, 255);
         fontSize = 24;
-        buttonNumber = 4;
+        int buttonNumber = 4;
         this.setBounds(0, 0, panelWidth, panelHeight);
         this.setBackground(new Color(204, 204, 204));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -56,101 +49,72 @@ public class Menu extends JLayeredPane {
 
     private void setButtons() {
         JButton newGameVsBot = createButton("Player vs Bot", "blue");
-        newGameVsBot.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.setVisible(false);
-                MyGraphics.frame.setVisible(true);
-                //durak = new Durak();
-                gameVsBot = true;
-            }
+        newGameVsBot.addActionListener(e -> {
+            frame.setVisible(false);
+            MyGraphics.frame.setVisible(true);
+            //durak = new Durak();
+            gameVsBot = true;
         });
         this.add(newGameVsBot);
         JButton host = createButton("Host Player", "blue");
-        host.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                server = new Server();
-                User.setUserId(0);
-                User.setPlayer(durak.getPlayers().get(User.getUserId()));
-                System.out.println("host1");
-                while(!server.isAccepted()){
-                    System.out.println("host is waiting");
-                }
-                /*try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }*/
-                byte[] data = new byte[0];
-                data = SerializationUtils.serialize(durak);
-                System.out.println("host2");
-
-                try {
-                    server.getDos().write(data);
-                    //server.getDos().writeInt(100);
-                    server.getDos().flush();
-                    System.out.println("a:");
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                gameVsPlayer = true;
+        host.addActionListener(e -> {
+            server = new Server();
+            User.setUserId(0);
+            User.setPlayer(durak.getPlayers().get(User.getUserId()));
+            System.out.println("host1");
+            while(!server.isAccepted()){
+                System.out.println("host is waiting");
             }
+            byte[] data;
+            data = SerializationUtils.serialize(durak);
+            System.out.println("host2");
+
+            try {
+                server.getDos().write(data);
+                //server.getDos().writeInt(100);
+                server.getDos().flush();
+                System.out.println("a:");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            gameVsPlayer = true;
         });
         this.add(host);
         JButton client = createButton("Client Player", "blue");
-        client.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                server = new Server();
-                User.setUserId(1);
-                User.setPlayer(durak.getPlayers().get(User.getUserId()));
-                while(!server.isAccepted()){
-                    System.out.println("client is waiting");
+        client.addActionListener(e -> {
+            server = new Server();
+            User.setUserId(1);
+            User.setPlayer(durak.getPlayers().get(User.getUserId()));
+            while(!server.isAccepted()){
+                System.out.println("client is waiting");
 
-                    /*try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }*/
-                }
-
-                /*try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }*/
-                byte[] data = new byte[0];
-                System.out.println("client");
-                try {
-                    while(server.getDis().available()<=0){
-                        System.out.println("client waiting for durak object");
-                    }
-                    int count = server.getDis().available();
-                    data = new byte[count];
-                    server.getDis().read(data);
-                    Durak buf = SerializationUtils.deserialize(data);
-                    durak.setPlayers(buf.getPlayers());
-                    durak.setField(buf.getField());
-                    durak.setDeck(buf.getDeck());
-                    System.out.println("Taken durak");
-                    window.drawDeck(durak.getDeck());
-
-
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                gameVsPlayer = true;
             }
+
+            byte[] data;
+            System.out.println("client");
+            try {
+                while(server.getDis().available()<=0){
+                    System.out.println("client waiting for durak object");
+                }
+                int count = server.getDis().available();
+                data = new byte[count];
+                server.getDis().read(data);
+                Durak buf = SerializationUtils.deserialize(data);
+                durak.setPlayers(buf.getPlayers());
+                durak.setField(buf.getField());
+                durak.setDeck(buf.getDeck());
+                System.out.println("Taken durak");
+                window.drawDeck(durak.getDeck());
+
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            gameVsPlayer = true;
         });
         this.add(client);
         JButton exit = createButton("Exit", "blue");
-        exit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        exit.addActionListener(e -> System.exit(0));
         this.add(exit);
     }
 

@@ -1,6 +1,5 @@
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +20,6 @@ public class MyGraphics extends JLayeredPane{
     private int panelHeight;
     private int buttonWidth;
     private int buttonHeight;
-    private Color bgColor = Color.red;
     private List<JLayeredPane> playersPanelList;
     private List<JLayeredPane> battlePanels;
     private JLayeredPane deckPanel;
@@ -39,9 +37,6 @@ public class MyGraphics extends JLayeredPane{
     private volatile int fieldIndex;
     private volatile boolean isTake;
     private volatile boolean isPass;
-    public boolean isAttack() {
-        return isAttack;
-    }
 
     public void setAttack(boolean attack) {
         isAttack = attack;
@@ -192,9 +187,9 @@ public class MyGraphics extends JLayeredPane{
 
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        if(!players.get(0).isPassTake() && field.moveCheck(players.get(0).getIsDefend(),players.get(0).getCard(playersPanelList.get(0).getLayer(label)))) {
-                            mousePress(playersPanelList.get(0).getLayer(label), field, players.get(0));
-                            cardIndex = playersPanelList.get(0).getLayer(label);
+                        if(!players.get(0).isPassTake() && field.moveCheck(players.get(0).getIsDefend(),players.get(0).getCard(getLayer(label)))) {
+                            mousePress(getLayer(label), field, players.get(0));
+                            cardIndex = getLayer(label);
                         }
                     }
 
@@ -203,15 +198,15 @@ public class MyGraphics extends JLayeredPane{
 
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        if(!players.get(0).isPassTake() && !playerChoose.get(playersPanelList.get(0).getLayer(label)) &&
-                                field.moveCheck(players.get(0).getIsDefend(), players.get(0).getCard(playersPanelList.get(0).getLayer(label))))
+                        if(!players.get(0).isPassTake() && !playerChoose.get(getLayer(label)) &&
+                                field.moveCheck(players.get(0).getIsDefend(), players.get(0).getCard(getLayer(label))))
                             label.setLocation(label.getX(), label.getY() - 40);
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        if(!players.get(0).isPassTake() && !playerChoose.get(playersPanelList.get(0).getLayer(label))&&
-                                field.moveCheck(players.get(0).getIsDefend(), players.get(0).getCard(playersPanelList.get(0).getLayer(label))))
+                        if(!players.get(0).isPassTake() && !playerChoose.get(getLayer(label))&&
+                                field.moveCheck(players.get(0).getIsDefend(), players.get(0).getCard(getLayer(label))))
                             label.setLocation(label.getX(), label.getY() + 40);
                     }
                 });
@@ -314,8 +309,8 @@ public class MyGraphics extends JLayeredPane{
         this.add(exitPanel);
         this.add(playersPanelList.get(0));
         this.add(buttonPanel);
-        for(int i = 0; i < battlePanels.size(); ++i){
-            this.add(battlePanels.get(i));
+        for (JLayeredPane battlePanel : battlePanels) {
+            this.add(battlePanel);
         }
         this.revalidate();
     }
@@ -372,13 +367,11 @@ public class MyGraphics extends JLayeredPane{
     private void drawExitButton(){
         JButton exitButton = createButton("Close", "blue", (exitPanel.getWidth() - buttonWidth) / 2,
         (exitPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
-        exitButton.addActionListener(e -> {
-            System.exit(0);
-        });
+        exitButton.addActionListener(e -> System.exit(0));
         exitPanel.add(exitButton);
     }
 
-    public void drawActionButton(Player player){
+    public void drawActionButton(){
         String name = isAttack?"Pass":"Take";
         actionButton = createButton(name, "blue", (buttonPanel.getWidth() - buttonWidth) / 2,
                 (buttonPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
@@ -430,9 +423,7 @@ public class MyGraphics extends JLayeredPane{
         resultPanel.add(label);
         JButton button = createButton("Close", "blue", (resultPanel.getWidth() - buttonWidth) / 2,
                 (resultPanel.getHeight() - buttonHeight) / 2, buttonWidth, buttonHeight, 0, 255, 255);
-        button.addActionListener(e -> {
-            System.exit(0);
-        });
+        button.addActionListener(e -> System.exit(0));
         resultPanel.add(button);
         this.add(resultPanel);
         this.repaint();

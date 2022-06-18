@@ -7,5 +7,5 @@ public enum Rank implements Comparable<Rank> {
     JACK,
     QUEEN,
     KING,
-    ACE;
+    ACE
 }

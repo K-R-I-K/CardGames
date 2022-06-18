@@ -81,7 +81,7 @@ public class Durak implements Serializable {
     public void startGame(MyGraphics window){
         window.drawDeck(this.deck);
         window.cardsDeal(this.players, this.field);
-        window.drawActionButton(this.players.get(0));
+        window.drawActionButton();
         int player = -1;
         Card buf = null;
         List<Player> playerList = this.players;
@@ -105,7 +105,7 @@ public class Durak implements Serializable {
         }
     }
     private void writeToServer(Server server){
-        byte[] data = new byte[0];
+        byte[] data;
         data = SerializationUtils.serialize(this);
         try {
             server.getDos().write(data);

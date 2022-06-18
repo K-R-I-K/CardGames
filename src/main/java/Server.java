@@ -1,6 +1,5 @@
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -11,10 +10,8 @@ import java.net.Socket;
 
 public class Server implements Runnable{
     private final String ip;
-    private int port;
+    private final int port;
     private int errors;
-    private Thread thread;
-    private Socket socket;
     @Getter
     private DataOutputStream dos;
     @Getter
@@ -24,7 +21,6 @@ public class Server implements Runnable{
     private boolean accepted;
     @Setter
     private boolean isHost;
-    private boolean isClient;
     private boolean unableToCommunicateWithOpponent;
     //private int userId=0;
     public Server(){
@@ -36,7 +32,7 @@ public class Server implements Runnable{
         accepted = false;
         unableToCommunicateWithOpponent = false;
         if (!connect()) initializeServer();
-        thread = new Thread(this, "Durak");
+        Thread thread = new Thread(this, "Durak");
         thread.start();
     }
 
@@ -53,12 +49,10 @@ public class Server implements Runnable{
 
     private boolean connect() {
         try {
-            socket = new Socket(ip, port);
+            Socket socket = new Socket(ip, port);
             dos = new DataOutputStream(socket.getOutputStream());
             dis = new DataInputStream(socket.getInputStream());
             System.out.println("connect() dos and dis were created");
-            //dos.writeInt(++userId);
-            //dos.flush();
             accepted = true;
         } catch (IOException e) {
             System.out.println("Unable to connect to the address: " + ip + ":" + port + " | Starting a server");
@@ -75,7 +69,6 @@ public class Server implements Runnable{
             e.printStackTrace();
         }
         isHost = true;
-        isClient = false;
     }
 
     private void tick() {
@@ -97,7 +90,7 @@ public class Server implements Runnable{
     }
 
     private void listenForServerRequest() {
-        Socket socket = null;
+        Socket socket;
         try {
             socket = serverSocket.accept();
             dos = new DataOutputStream(socket.getOutputStream());
