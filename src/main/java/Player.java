@@ -39,7 +39,7 @@ public class Player implements Serializable {
         this.name = name;
         this.cards = new ArrayList<>();
         this.isDefend = false;
-        this.isPassTake =false;
+        this.isPassTake = false;
     }
 
     public void setCard(Card card){

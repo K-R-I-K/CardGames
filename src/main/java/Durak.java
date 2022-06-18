@@ -239,14 +239,6 @@ public class Durak implements Serializable {
                 window.drawResult(players.get(isGameOver()).getName() + " has won!");
                 isOver = true;
             }
-/*            if(0==0)
-            {
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }*/
             if (this.players.get(1).getIsDefend()) {//player attack case
                 window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
@@ -262,31 +254,36 @@ public class Durak implements Serializable {
                 }
                 if (window.isPass()) {
                     if (this.field.getAttackListSize() != 0) {
-                        this.lastDiscarded = this.field.clearField().size();
-                        window.drawDiscarded(this.lastDiscarded);
-                        window.clearField();
-                        window.getCardsFromDeck(this.giveCardsFromDeck());
-                        window.cardsDeal(this.players, this.field);
-                        this.players.get(1).setIsDefend(false);
-                        this.players.get(0).setIsDefend(true);
-                        this.writeToServer(server);
-                        this.lastDiscarded = 0;
-                        ///?????
+                        if(!players.get(1).isPassTake() && this.field.getAttackListSize() == this.field.getDefendListSize()){
+                            this.lastDiscarded = this.field.clearField().size();
+                            window.drawDiscarded(this.lastDiscarded);
+                            window.clearField();
+                            window.getCardsFromDeck(this.giveCardsFromDeck());
+                            window.cardsDeal(this.players, this.field);
+                            this.players.get(1).setIsDefend(false);
+                            this.players.get(0).setIsDefend(true);
+                            this.writeToServer(server);
+                            this.lastDiscarded = 0;
+                            players.get(0).setPassTake(false);
+                            players.get(1).setPassTake(false);
+                        }
+                        else if(players.get(1).isPassTake()){
+                            this.players.get(1).setCard(this.field.clearField());
+                            window.getCardsFromDeck(this.giveCardsFromDeck());
+                            window.cardsDeal(this.players, this.field);
+                            window.clearField();
+                            this.players.get(1).setIsDefend(true);//the same
+                            window.setTake(false);
+                            this.writeToServer(server);
+                            players.get(0).setPassTake(false);
+                            players.get(1).setPassTake(false);
+                        }
                     }
                     window.setPass(false);
                 }
-
-                try {
-                    readFromServer(server,window);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(field.isEmpty()){
-                    window.clearField();
-                }
             } else {    //player defend case
                 window.setAttack(false);
-                if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
+                if (!players.get(0).isPassTake() && window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
 
                     this.writeToServer(server);
@@ -296,22 +293,21 @@ public class Durak implements Serializable {
                     window.setCardIndex(-1);
                 }
                 if (window.isTake()) {
-                    this.players.get(0).setCard(this.field.clearField());
-                    window.getCardsFromDeck(this.giveCardsFromDeck());
-                    window.cardsDeal(this.players, this.field);
-                    window.clearField();
-                    this.players.get(0).setIsDefend(true);//the same
                     window.setTake(false);
-                    this.writeToServer(server);
+                    if(!players.get(0).isPassTake() && this.field.getAttackListSize() != 0
+                            && this.field.getAttackListSize() != this.field.getDefendListSize()){
+                        players.get(0).setPassTake(true);
+                        this.writeToServer(server);
+                    }
                 }
-                try {
-                    readFromServer(server, window);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (field.isEmpty()) {
-                    window.clearField();
-                }
+            }
+            try {
+                readFromServer(server, window);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(field.isEmpty()){
+                window.clearField();
             }
         }
     }

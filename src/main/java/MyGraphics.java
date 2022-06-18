@@ -192,7 +192,7 @@ public class MyGraphics extends JLayeredPane{
 
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        if(field.moveCheck(players.get(0).getIsDefend(),players.get(0).getCard(playersPanelList.get(0).getLayer(label)))) {
+                        if(!players.get(0).isPassTake() && field.moveCheck(players.get(0).getIsDefend(),players.get(0).getCard(playersPanelList.get(0).getLayer(label)))) {
                             mousePress(playersPanelList.get(0).getLayer(label), field, players.get(0));
                             cardIndex = playersPanelList.get(0).getLayer(label);
                         }
@@ -203,14 +203,14 @@ public class MyGraphics extends JLayeredPane{
 
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        if(!playerChoose.get(playersPanelList.get(0).getLayer(label)) &&
+                        if(!players.get(0).isPassTake() && !playerChoose.get(playersPanelList.get(0).getLayer(label)) &&
                                 field.moveCheck(players.get(0).getIsDefend(), players.get(0).getCard(playersPanelList.get(0).getLayer(label))))
                             label.setLocation(label.getX(), label.getY() - 40);
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        if(!playerChoose.get(playersPanelList.get(0).getLayer(label))&&
+                        if(!players.get(0).isPassTake() && !playerChoose.get(playersPanelList.get(0).getLayer(label))&&
                                 field.moveCheck(players.get(0).getIsDefend(), players.get(0).getCard(playersPanelList.get(0).getLayer(label))))
                             label.setLocation(label.getX(), label.getY() + 40);
                     }

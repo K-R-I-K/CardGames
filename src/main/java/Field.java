@@ -13,12 +13,15 @@ public class Field implements Serializable {
     private List<Card> defendList;
     @Getter
     private int attackListSize;
+    @Getter
+    private int defendListSize;
     private final Suit trump;
 
     public Field(Suit trump){
-        attackList = new ArrayList<>(Collections.nCopies(6, (Card) null));
-        defendList = new ArrayList<>(Collections.nCopies(6, (Card) null));
+        attackList = new ArrayList<>(Collections.nCopies(6, null));
+        defendList = new ArrayList<>(Collections.nCopies(6, null));
         attackListSize = 0;
+        defendListSize = 0;
         this.trump = trump;
     }
     public boolean isEmpty(){
@@ -45,6 +48,7 @@ public class Field implements Serializable {
             }
             if(defendCheck(attackList.get(indexOfFieldEdge),card)){
                 defendList.set(indexOfFieldEdge, card);
+                ++defendListSize;
                 return true;
             }
             return false;
@@ -111,9 +115,10 @@ public class Field implements Serializable {
         for(Card card:defendList)
             if(card!=null)
                 res.add(card);
-        attackList = new ArrayList<>(Collections.nCopies(6, (Card) null));
-        defendList = new ArrayList<>(Collections.nCopies(6, (Card) null));
-        attackListSize=0;
+        attackList = new ArrayList<>(Collections.nCopies(6, null));
+        defendList = new ArrayList<>(Collections.nCopies(6, null));
+        attackListSize = 0;
+        defendListSize = 0;
         return res;
     }
 }
