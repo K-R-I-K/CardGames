@@ -89,6 +89,9 @@ public class Durak implements Serializable {
         return res;
     }
     private int moveBot(Player player, int indexOfCardField){
+        if(field.getAttackList().get(indexOfCardField)!=null && field.getDefendList().get(indexOfCardField)!=null){
+            return -2;
+        }
         for(int i=0;i<player.getCards().size();++i){
             if(field.setList(player, i, indexOfCardField))
                 return i;
@@ -168,6 +171,10 @@ public class Durak implements Serializable {
             List<Player> playerList = this.players;
             for (int i = 0; i < playerList.size(); i++) {
                 Player pl = playerList.get(i);
+                System.out.println(playerList.get(i).getCards().size());
+                for(int j = 0; j < playerList.get(i).getCards().size(); ++j){
+                    System.out.println(playerList.get(i).getCards().get(j).toString());
+                }
                 if (pl.isEmpty()) {
                     return i;
                 }
@@ -207,7 +214,7 @@ public class Durak implements Serializable {
                         window.clearField();
                         this.players.get(1).setDefend(true);//the same
                         isBotMoved = false;
-                    } else {
+                    } else if(card >= 0){
                         window.drawCard(this.players.get(1), 1, card, window.getFieldIndex());
                         this.players.get(1).removeCard(card);
                     }
@@ -217,6 +224,8 @@ public class Durak implements Serializable {
                     window.setFieldIndex(-1);
                     window.setCardIndex(-1);
                 }
+                if(window.getFieldIndex() >= 0)
+                    window.setFieldIndex(-1);
                 if (window.isPass()) {
                     if (this.field.getAttackListSize() != 0) {
                         window.drawDiscarded(this.field.clearField().size());
@@ -307,6 +316,8 @@ public class Durak implements Serializable {
                     window.setFieldIndex(-1);
                     window.setCardIndex(-1);
                 }
+                if(window.getFieldIndex() >= 0)
+                    window.setFieldIndex(-1);
                 if (window.isPass()) {
                     if (this.field.getAttackListSize() != 0) {
                         if(!players.get(1).isPassTake() && this.field.getAttackListSize() == this.field.getDefendListSize()){
@@ -359,6 +370,8 @@ public class Durak implements Serializable {
                     window.setFieldIndex(-1);
                     window.setCardIndex(-1);
                 }
+                if(window.getFieldIndex() >= 0)
+                    window.setFieldIndex(-1);
                 if (window.isTake()) {
                     window.setTake(false);
                     if(!players.get(0).isPassTake() && this.field.getAttackListSize() != 0
