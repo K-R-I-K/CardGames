@@ -1,5 +1,6 @@
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -22,6 +23,8 @@ public class Server implements Runnable{
     @Setter
     private boolean isHost;
     private boolean unableToCommunicateWithOpponent;
+    @Setter
+    private boolean isClientConnected = false;
     //private int userId=0;
     public Server(){
         ip = "26.255.53.80";
@@ -42,8 +45,8 @@ public class Server implements Runnable{
             if (isHost && !accepted) {
                 listenForServerRequest();
                 continue;
-            }
-            tick();
+            }//else if(isClientConnected)
+            //tick();
         }
     }
 
@@ -76,15 +79,18 @@ public class Server implements Runnable{
 
         if (!unableToCommunicateWithOpponent) {
             try {
-                byte[] data = new byte[0];
                 if(dis.available()>0){
-                    //int count = dis.readInt();
-                    //data = new byte[count];
-                    dis.read(data);
-                    //dos.writeInt(count);
-                    dos.write(data);
+                    //int count = server.getDis().available();
+                    int count = dis.readInt();
+                    byte[] data = new byte[count];
+                    dis.read(data, 0, count);
+                    Durak buf = SerializationUtils.deserialize(data);
+                    data = SerializationUtils.serialize(buf);
+                    dos.writeInt(data.length);
+                    dos.write(data, 0, data.length);
                     dos.flush();
                 }
+
                 //durak = SerializationUtils.deserialize(data);
             } catch (IOException e) {
                 e.printStackTrace();

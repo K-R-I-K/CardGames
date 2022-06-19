@@ -74,7 +74,7 @@ public class Menu extends JLayeredPane {
             try {
                 window = new MyGraphics();
                 server.getDos().writeInt(data.length);
-                server.getDos().write(data);
+                server.getDos().write(data, 0, data.length);
                 //server.getDos().writeInt(100);
                 server.getDos().flush();
                 System.out.println("a:");
@@ -106,7 +106,7 @@ public class Menu extends JLayeredPane {
                 //int count = server.getDis().available();
                 int count = server.getDis().readInt();
                 data = new byte[count];
-                server.getDis().read(data);
+                server.getDis().read(data,0, count);
                 Durak buf = SerializationUtils.deserialize(data);
                 durak.setPlayers(buf.getPlayers());
                 durak.setField(buf.getField());
@@ -116,7 +116,7 @@ public class Menu extends JLayeredPane {
                 //MyGraphics.frame.setVisible(true);
                 window = new MyGraphics();
                 window.drawDeck(durak.getDeck());
-
+                server.setClientConnected(true);
 
             } catch (IOException ex) {
                 ex.printStackTrace();

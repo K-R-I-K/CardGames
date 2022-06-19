@@ -145,7 +145,7 @@ public class Durak implements Serializable {
         data = SerializationUtils.serialize(this);
         try {
             server.getDos().writeInt(data.length);
-            server.getDos().write(data);
+            server.getDos().write(data, 0, data.length);
             server.getDos().flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -156,7 +156,7 @@ public class Durak implements Serializable {
             //int count = server.getDis().available();
             int count = server.getDis().readInt();
             byte[] data = new byte[count];
-            server.getDis().read(data);
+            server.getDis().read(data, 0, count);
             Durak buf = SerializationUtils.deserialize(data);
             this.setPlayers(buf.getPlayers());
             this.setField(buf.getField());
@@ -307,7 +307,6 @@ public class Durak implements Serializable {
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
                     window.redrawField(field);
-                    window.redrawField(field);
 
                     this.writeToServer(server);
                     ////
@@ -347,18 +346,9 @@ public class Durak implements Serializable {
                     }
                     window.setPass(false);
                 }
-                try {
-                    readFromServer(server, window);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             } else {    //player defend case
                 window.setAttack(false);
-                try {
-                    readFromServer(server, window);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
                 if (!players.get(0).isPassTake() && window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
                     window.redrawField(field);
@@ -385,6 +375,11 @@ public class Durak implements Serializable {
             }
             if(players.get(1).isPassTake() && players.get(1).isDefend()){
                 window.drawText("Has taken cards");
+            }
+            try {
+                readFromServer(server, window);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         List<Player> playerList = this.players;
