@@ -143,6 +143,14 @@ public class Durak implements Serializable {
     private void writeToServer(Server server, Durak obj){
         byte[] data;
         data = SerializationUtils.serialize(obj);
+        while(true) {
+            try {
+                if (server.getDis().available() > 0)
+                    break;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         try {
             server.getDos().writeInt(User.getUserId());
             server.getDos().writeInt(data.length);

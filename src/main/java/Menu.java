@@ -97,16 +97,21 @@ public class Menu extends JLayeredPane {
             User.setUserId(1);
 
             User.setPlayer(durak.getPlayers().get(User.getUserId()));
+            int i1=0;
             while(!server.isAccepted()){
+                i1=(i1+1)%10;
+                if(i1==0)
                 System.out.println("client is waiting");
-
             }
 
             byte[] data;
             System.out.println("client");
             try {
+                int i2=0;
                 while(server.getDis().available()<=0){
-                    System.out.println("client waiting for durak object");
+                    i2=(i2+1)%10;
+                    if(i2==0)
+                        System.out.println("client waiting for durak object");
                 }
                 //int count = server.getDis().available();
                 int count = server.getDis().readInt();
