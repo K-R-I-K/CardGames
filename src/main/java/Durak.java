@@ -391,6 +391,11 @@ public class Durak implements Serializable {
                 e.printStackTrace();
             }
         }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         List<Player> playerList = this.players;
         for (Player pl : playerList) {
             if(pl.isEmpty()){
