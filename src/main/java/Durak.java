@@ -140,10 +140,11 @@ public class Durak implements Serializable {
         }
 
     }
-    private void writeToServer(Server server){
+    private void writeToServer(Server server, Durak obj){
         byte[] data;
-        data = SerializationUtils.serialize(this);
+        data = SerializationUtils.serialize(obj);
         try {
+            server.getDos().writeInt(User.getUserId());
             server.getDos().writeInt(data.length);
             server.getDos().write(data, 0, data.length);
             server.getDos().flush();
@@ -154,19 +155,24 @@ public class Durak implements Serializable {
     private void readFromServer(Server server, MyGraphics window) throws IOException {
         if(server.getDis().available()>0){
             //int count = server.getDis().available();
+            int id = server.getDis().readInt();
             int count = server.getDis().readInt();
             byte[] data = new byte[count];
             server.getDis().read(data, 0, count);
             Durak buf = SerializationUtils.deserialize(data);
-            this.setPlayers(buf.getPlayers());
-            this.setField(buf.getField());
-            this.setDeck(buf.getDeck());
-            this.setLastDiscarded(buf.getLastDiscarded());
-            window.drawDiscarded(this.lastDiscarded);
-            this.lastDiscarded = 0;
-            window.cardsDeal(this.players, this.field);
-            window.drawDeck(this.deck);
-            window.redrawField(field);
+            if(id!=User.getUserId()){
+                this.setPlayers(buf.getPlayers());
+                this.setField(buf.getField());
+                this.setDeck(buf.getDeck());
+                this.setLastDiscarded(buf.getLastDiscarded());
+                window.drawDiscarded(this.lastDiscarded);
+                this.lastDiscarded = 0;
+                window.cardsDeal(this.players, this.field);
+                window.drawDeck(this.deck);
+                window.redrawField(field);
+            }else {
+                writeToServer(server, buf);
+            }
         }
     }
 
@@ -308,7 +314,7 @@ public class Durak implements Serializable {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
                     window.redrawField(field);
 
-                    this.writeToServer(server);
+                    this.writeToServer(server, this);
                     ////
                     window.cardsDeal(this.players, this.field);
                     window.setFieldIndex(-1);
@@ -326,7 +332,7 @@ public class Durak implements Serializable {
                             window.cardsDeal(this.players, this.field);
                             this.players.get(1).setDefend(false);
                             this.players.get(0).setDefend(true);
-                            this.writeToServer(server);
+                            this.writeToServer(server, this);
                             this.lastDiscarded = 0;
                             players.get(0).setPassTake(false);
                             players.get(1).setPassTake(false);
@@ -339,7 +345,7 @@ public class Durak implements Serializable {
                             window.clearField();
                             this.players.get(1).setDefend(true);//the same
                             window.setTake(false);
-                            this.writeToServer(server);
+                            this.writeToServer(server, this);
                             players.get(0).setPassTake(false);
                             players.get(1).setPassTake(false);
                         }
@@ -353,7 +359,7 @@ public class Durak implements Serializable {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
                     window.redrawField(field);
 
-                    this.writeToServer(server);
+                    this.writeToServer(server, this);
                     ////
                     window.cardsDeal(this.players, this.field);
                     window.setFieldIndex(-1);
@@ -366,7 +372,7 @@ public class Durak implements Serializable {
                     if(!players.get(0).isPassTake() && this.field.getAttackListSize() != 0
                             && this.field.getAttackListSize() != this.field.getDefendListSize()){
                         players.get(0).setPassTake(true);
-                        this.writeToServer(server);
+                        this.writeToServer(server, this);
                     }
                 }
             }
