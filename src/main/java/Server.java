@@ -53,7 +53,7 @@ public class Server implements Runnable{
     private boolean connect() {
         try {
             Socket socket = new Socket(ip, port);
-            dos = new DataOutputStream(socket.getOutputStream());
+            dos = new MyObjectOutputStream(socket.getOutputStream());
             dis = new DataInputStream(socket.getInputStream());
             System.out.println("connect() dos and dis were created");
             accepted = true;
@@ -103,7 +103,7 @@ public class Server implements Runnable{
         Socket socket;
         try {
             socket = serverSocket.accept();
-            dos = new DataOutputStream(socket.getOutputStream());
+            dos = new MyObjectOutputStream(socket.getOutputStream());
             dis = new DataInputStream(socket.getInputStream());
             System.out.println("listenForServerRequest(): dos and dis were created");
 
