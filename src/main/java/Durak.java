@@ -142,17 +142,32 @@ public class Durak implements Serializable {
     }
     private void writeToServer(Server server, Durak obj){
 
-/*        try {
-            if (server.getDis().available() > 0){
-
+        while (true){
+            try {
+                if (!(server.getDis().available()>0)) break;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            int id = server.getDis().readInt();
-            int count = server.getDis().readInt();
+            try {
+                int id = server.getDis().readInt();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            int count = 0;
+            try {
+                count = server.getDis().readInt();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             byte[] data = new byte[count];
-            server.getDis().read(data, 0, count);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+            try {
+                server.getDis().read(data, 0, count);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Durak buf = SerializationUtils.deserialize(data);
+        }
+
         byte[] data;
         data = SerializationUtils.serialize(obj);
         try {
