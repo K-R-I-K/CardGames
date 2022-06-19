@@ -73,6 +73,7 @@ public class Menu extends JLayeredPane {
 
             try {
                 window = new MyGraphics();
+                server.getDos().writeInt(data.length);
                 server.getDos().write(data);
                 //server.getDos().writeInt(100);
                 server.getDos().flush();
@@ -102,7 +103,8 @@ public class Menu extends JLayeredPane {
                 while(server.getDis().available()<=0){
                     System.out.println("client waiting for durak object");
                 }
-                int count = server.getDis().available();
+                //int count = server.getDis().available();
+                int count = server.getDis().readInt();
                 data = new byte[count];
                 server.getDis().read(data);
                 Durak buf = SerializationUtils.deserialize(data);

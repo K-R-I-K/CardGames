@@ -137,6 +137,7 @@ public class Durak implements Serializable {
         byte[] data;
         data = SerializationUtils.serialize(this);
         try {
+            server.getDos().writeInt(data.length);
             server.getDos().write(data);
             server.getDos().flush();
         } catch (IOException e) {
@@ -145,7 +146,8 @@ public class Durak implements Serializable {
     }
     private void readFromServer(Server server, MyGraphics window) throws IOException {
         if(server.getDis().available()>0){
-            int count = server.getDis().available();
+            //int count = server.getDis().available();
+            int count = server.getDis().readInt();
             byte[] data = new byte[count];
             server.getDis().read(data);
             Durak buf = SerializationUtils.deserialize(data);
