@@ -11,6 +11,10 @@ import java.util.*;
 public class Durak implements Serializable {
     private List<Player> players;
 
+    /**
+     * Setter for deck
+     * @param deck Our deck of cards
+     */
     public void setDeck(Deck deck) {
         this.deck = deck;
         Card.setTrump(deck.getTrump().getSuit());
@@ -19,6 +23,10 @@ public class Durak implements Serializable {
     private Deck deck;
     private Field field;
     private int lastDiscarded;
+
+    /**
+     * Default constructor
+     */
     public Durak(){
         players = new ArrayList<>();
         deck = new Deck();
@@ -26,6 +34,12 @@ public class Durak implements Serializable {
         lastDiscarded = 0;
         addPlayers();
     }
+
+    /**
+     * Setter for players.
+     * Set client player object to index 0.
+     * @param players list of players
+     */
     public void setPlayers(List<Player> players) {
         this.players = players;
         swapPlayers();
@@ -78,7 +92,7 @@ public class Durak implements Serializable {
         }
         return -1;
     }
-    public void startGame(MyGraphics window){
+    private void startGame(MyGraphics window){
         window.drawDeck(this.deck);
         window.cardsDeal(this.players, this.field);
         window.drawActionButton();
@@ -156,6 +170,11 @@ public class Durak implements Serializable {
         }
         return -1;
     }
+
+    /**
+     * Module for playing with simple bot
+     * @param window MyGraphics object for drawing
+     */
     public void gameVsBot(MyGraphics window){
         startGame(window);
         boolean isBotMoved = false;
@@ -256,6 +275,12 @@ public class Durak implements Serializable {
             }
         }
     }
+
+    /**
+     * Module for playing with another player
+     * @param window MyGraphics object for drawing
+     * @param server Server object
+     */
     public void gameVsPlayer(MyGraphics window, Server server){
         startGame(window);
         boolean isOver=false;

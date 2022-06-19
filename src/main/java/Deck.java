@@ -22,9 +22,23 @@ public class Deck implements Serializable {
         Card.setTrump(trump.getSuit());
     }
 
+    /**
+     * Getter for Card from Deck
+     * @return Card which giving deck
+     */
     public Card getCard(){
         return cards.pop();
     }
+
+    /**
+     * Getter for size of deck
+     * @return Size of deck
+     */
     public int getSize(){return cards.size();}
+
+    /**
+     * The method to find out if the deck is empty
+     * @return True if deck is empty, and false if not
+     */
     public boolean isEmpty(){return cards.size()==0;}
 }
