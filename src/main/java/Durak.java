@@ -319,12 +319,13 @@ public class Durak implements Serializable {
             if (this.players.get(1).isDefend()) {//player attack case
                 window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
-                    this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
-                    window.redrawField(field);
+                    if(this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex())){
+                        window.redrawField(field);
+                        this.writeToServer(server, this);
+                        ////
+                        window.cardsDeal(this.players, this.field);
+                    }
 
-                    this.writeToServer(server, this);
-                    ////
-                    window.cardsDeal(this.players, this.field);
                     window.setFieldIndex(-1);
                     window.setCardIndex(-1);
                 }
@@ -364,12 +365,12 @@ public class Durak implements Serializable {
                 window.setAttack(false);
 
                 if (!players.get(0).isPassTake() && window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
-                    this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
-                    window.redrawField(field);
-
-                    this.writeToServer(server, this);
-                    ////
-                    window.cardsDeal(this.players, this.field);
+                    if(this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex())){
+                        window.redrawField(field);
+                        this.writeToServer(server, this);
+                        ////
+                        window.cardsDeal(this.players, this.field);
+                    }
                     window.setFieldIndex(-1);
                     window.setCardIndex(-1);
                 }
