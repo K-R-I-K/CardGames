@@ -60,7 +60,7 @@ public class Field implements Serializable {
                 return false;
             }
             if(moveCheck(player.isDefend(), card)) {
-                attackList.set(attackListSize, card);
+                attackList.set(indexOfFieldEdge, card);
                 ++attackListSize;
             }
             return moveCheck(player.isDefend(), card);
