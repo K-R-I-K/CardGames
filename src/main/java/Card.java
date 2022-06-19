@@ -2,6 +2,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -9,6 +10,8 @@ import java.util.Locale;
 @Setter
 @NoArgsConstructor
 public class Card implements Comparable<Card>, Serializable {
+    @Serial
+    private static final long serialVersionUID = 6529575087167757690L;
     private Rank rank;
     private Suit suit;
     private static Suit trump;//field for client and sorting card list

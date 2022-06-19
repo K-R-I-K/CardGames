@@ -15,10 +15,10 @@ public class Menu extends JLayeredPane {
     private Server server;
     @Getter
     @Setter
-    private boolean gameVsBot;
+    private volatile boolean gameVsBot;
     @Getter
     @Setter
-    private boolean gameVsPlayer;
+    private volatile boolean gameVsPlayer;
     Menu() {
         gameVsBot = false;
         gameVsPlayer = false;

@@ -1,11 +1,14 @@
 import lombok.Getter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Field implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 6529575098267757690L;
     @Getter
     private List<Card> attackList;
     @Getter

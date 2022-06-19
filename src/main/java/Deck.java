@@ -1,6 +1,7 @@
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Stack;
@@ -8,6 +9,8 @@ import java.util.Stack;
 @Getter
 @Setter
 public class Deck implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 6518685098267757690L;
     private Stack<Card> cards;
     private Card trump;
     {

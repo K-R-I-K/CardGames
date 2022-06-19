@@ -3,12 +3,15 @@ import lombok.Setter;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
 @Setter
 @Getter
 public class Durak implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 6529685098267757690L;
     private List<Player> players;
 
     /**

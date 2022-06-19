@@ -1,6 +1,7 @@
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -10,6 +11,8 @@ import java.util.Objects;
 @Getter
 @Setter
 public class Player implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 5429685098267757690L;
     private List<Card> cards;
     private String name;
     private boolean isDefend;
