@@ -327,7 +327,7 @@ public class Durak implements Serializable {
                     }
 
                     window.setFieldIndex(-1);
-                    window.setCardIndex(-1);
+                    //window.setCardIndex(-1);
                 }
                 if(window.getFieldIndex() >= 0)
                     window.setFieldIndex(-1);
@@ -372,7 +372,7 @@ public class Durak implements Serializable {
                         window.cardsDeal(this.players, this.field);
                     }
                     window.setFieldIndex(-1);
-                    window.setCardIndex(-1);
+                    //window.setCardIndex(-1);
                 }
                 if(window.getFieldIndex() >= 0)
                     window.setFieldIndex(-1);
