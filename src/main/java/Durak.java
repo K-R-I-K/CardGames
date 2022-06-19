@@ -166,21 +166,16 @@ public class Durak implements Serializable {
         }
     }
 
-    private int isGameOver(){
+    private boolean isGameOver(){
         if (this.deck.isEmpty()) {//win case
             List<Player> playerList = this.players;
-            for (int i = 0; i < playerList.size(); i++) {
-                Player pl = playerList.get(i);
-                System.out.println(playerList.get(i).getCards().size());
-                for(int j = 0; j < playerList.get(i).getCards().size(); ++j){
-                    System.out.println(playerList.get(i).getCards().get(j).toString());
-                }
-                if (pl.isEmpty()) {
-                    return i;
+            for (Player pl : playerList) {
+                if(pl.isEmpty()){
+                    return true;
                 }
             }
         }
-        return -1;
+        return false;
     }
 
     /**
@@ -192,10 +187,7 @@ public class Durak implements Serializable {
         boolean isBotMoved = false;
         boolean isOver=false;
         while(!isOver) {
-            if(isGameOver()>0){
-                window.drawResult(players.get(isGameOver()).getName() + " has won!");
-                isOver = true;
-            }
+            isOver = isGameOver();
             if (this.players.get(1).isDefend()) {//player attack case
                 window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
@@ -288,6 +280,12 @@ public class Durak implements Serializable {
                 }
             }
         }
+        List<Player> playerList = this.players;
+        for (Player pl : playerList) {
+            if(pl.isEmpty()){
+                window.drawResult(pl.getName() + " has won!");
+            }
+        }
     }
 
     /**
@@ -299,10 +297,7 @@ public class Durak implements Serializable {
         startGame(window);
         boolean isOver=false;
         while(!isOver) {
-            if(isGameOver()>0){
-                window.drawResult(players.get(isGameOver()).getName() + " has won!");
-                isOver = true;
-            }
+            isOver = isGameOver();
             if (this.players.get(1).isDefend()) {//player attack case
                 window.setAttack(true);
                 if (window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
@@ -335,7 +330,7 @@ public class Durak implements Serializable {
                         }
                         else if(players.get(1).isPassTake()){
                             window.drawText("");
-                            this.players.get(1).setCard(this.field.clearField());
+                            this.players.get(1).    setCard(this.field.clearField());
                             window.getCardsFromDeck(this.giveCardsFromDeck());
                             window.cardsDeal(this.players, this.field);
                             window.clearField();
@@ -386,6 +381,12 @@ public class Durak implements Serializable {
             }
             if(players.get(1).isPassTake() && players.get(1).isDefend()){
                 window.drawText("Has taken cards");
+            }
+        }
+        List<Player> playerList = this.players;
+        for (Player pl : playerList) {
+            if(pl.isEmpty()){
+                window.drawResult(pl.getName() + " has won!");
             }
         }
     }

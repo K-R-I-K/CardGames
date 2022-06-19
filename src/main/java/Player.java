@@ -17,7 +17,7 @@ public class Player implements Serializable {
     private String name;
     private boolean isDefend;
     private boolean isPassTake;
-    public boolean isEmpty(){return cards.size()==0;}
+    public boolean isEmpty(){return cards.isEmpty();}
 
     @Override
     public boolean equals(Object o) {
