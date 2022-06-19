@@ -81,6 +81,11 @@ public class Menu extends JLayeredPane {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
             gameVsPlayer = true;
             frame.dispose();
             //MyGraphics.frame.setVisible(true);
