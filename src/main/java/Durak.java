@@ -292,12 +292,7 @@ public class Durak implements Serializable {
                 }
             }
         }
-        List<Player> playerList = this.players;
-        for (Player pl : playerList) {
-            if(pl.isEmpty()){
-                window.drawResult(pl.getName() + " has won!");
-            }
-        }
+        endOfTheGame(window);
     }
 
     /**
@@ -390,6 +385,14 @@ public class Durak implements Serializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        endOfTheGame(window);
+    }
+    private void endOfTheGame(MyGraphics window){
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         List<Player> playerList = this.players;
         for (Player pl : playerList) {
