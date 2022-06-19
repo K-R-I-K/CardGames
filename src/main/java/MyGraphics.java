@@ -444,8 +444,12 @@ public class MyGraphics extends JLayeredPane{
     }
 
     public void hideTrump(int playerIndex, int cardIndex){
-        labelsLists.get(playerIndex).get(cardIndex).setIcon(new ImageIcon(new ImageIcon(pathBacks + backName + ".png")
-                .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
+        try{
+            labelsLists.get(playerIndex).get(cardIndex).setIcon(new ImageIcon(new ImageIcon(pathBacks + backName + ".png")
+                    .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
+        }catch (IndexOutOfBoundsException ignored){
+        }
+
     }
     public void drawText(String text){
         String textColor = "black";

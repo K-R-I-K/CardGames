@@ -112,13 +112,17 @@ public class Durak implements Serializable {
                 Card card = cards.get(j);
                 if (card.isTrump()) {
                     if(i==1){
-                        window.showTrump(card, 1, j);
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        window.hideTrump(1, j);
+                        int finalJ = j;
+                        Thread t = new Thread(() -> {
+                            window.showTrump(card, 1, finalJ);
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            window.hideTrump(1, finalJ);
+                        });
+                        t.start();
                     }
                     player = (card.compareTo(buf) > 0) ? player : i;
                     buf = (card.compareTo(buf) > 0) ? buf : card;
