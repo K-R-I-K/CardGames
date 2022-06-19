@@ -141,16 +141,20 @@ public class Durak implements Serializable {
 
     }
     private void writeToServer(Server server, Durak obj){
+
+/*        try {
+            if (server.getDis().available() > 0){
+
+            }
+            int id = server.getDis().readInt();
+            int count = server.getDis().readInt();
+            byte[] data = new byte[count];
+            server.getDis().read(data, 0, count);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
         byte[] data;
         data = SerializationUtils.serialize(obj);
-        while(true) {
-            try {
-                if (server.getDis().available() > 0)
-                    break;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         try {
             server.getDos().writeInt(User.getUserId());
             server.getDos().writeInt(data.length);
@@ -161,26 +165,22 @@ public class Durak implements Serializable {
         }
     }
     private void readFromServer(Server server, MyGraphics window) throws IOException {
-        if(server.getDis().available()>0){
+        while (server.getDis().available()>0){
             //int count = server.getDis().available();
             int id = server.getDis().readInt();
             int count = server.getDis().readInt();
             byte[] data = new byte[count];
             server.getDis().read(data, 0, count);
             Durak buf = SerializationUtils.deserialize(data);
-            if(id!=User.getUserId()){
-                this.setPlayers(buf.getPlayers());
-                this.setField(buf.getField());
-                this.setDeck(buf.getDeck());
-                this.setLastDiscarded(buf.getLastDiscarded());
-                window.drawDiscarded(this.lastDiscarded);
-                this.lastDiscarded = 0;
-                window.cardsDeal(this.players, this.field);
-                window.drawDeck(this.deck);
-                window.redrawField(field);
-            }else {
-                writeToServer(server, buf);
-            }
+            this.setPlayers(buf.getPlayers());
+            this.setField(buf.getField());
+            this.setDeck(buf.getDeck());
+            this.setLastDiscarded(buf.getLastDiscarded());
+            window.drawDiscarded(this.lastDiscarded);
+            this.lastDiscarded = 0;
+            window.cardsDeal(this.players, this.field);
+            window.drawDeck(this.deck);
+            window.redrawField(field);
         }
     }
 
