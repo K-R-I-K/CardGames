@@ -77,7 +77,11 @@ public class Server implements Runnable{
         if (!unableToCommunicateWithOpponent) {
             try {
                 byte[] data = new byte[0];
-                if(dis.read(data)>0){
+                if(dis.available()>0){
+                    //int count = dis.readInt();
+                    //data = new byte[count];
+                    dis.read(data);
+                    //dos.writeInt(count);
                     dos.write(data);
                     dos.flush();
                 }

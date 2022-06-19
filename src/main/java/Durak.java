@@ -337,8 +337,18 @@ public class Durak implements Serializable {
                     }
                     window.setPass(false);
                 }
+                try {
+                    readFromServer(server, window);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else {    //player defend case
                 window.setAttack(false);
+                try {
+                    readFromServer(server, window);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 if (!players.get(0).isPassTake() && window.getCardIndex() != -1 && window.getFieldIndex() != -1) {
                     this.move(this.players.get(0), window.getCardIndex(), window.getFieldIndex());
                     window.redrawField(field);
@@ -357,11 +367,6 @@ public class Durak implements Serializable {
                         this.writeToServer(server);
                     }
                 }
-            }
-            try {
-                readFromServer(server, window);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
             if(field.isEmpty()){
                 window.clearField();
