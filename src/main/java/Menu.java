@@ -4,6 +4,7 @@ import org.apache.commons.lang3.SerializationUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 /**
@@ -70,8 +71,9 @@ public class Menu extends JLayeredPane {
         this.add(newGameVsBot);
         JButton host = createButton("Host Player", "blue");
         host.addActionListener(e -> {
-            server = new Server();
             User.setUserId(0);
+            server = new Server();
+
             User.setPlayer(durak.getPlayers().get(User.getUserId()));
             System.out.println("host1");
             while(!server.isAccepted()){
@@ -103,8 +105,9 @@ public class Menu extends JLayeredPane {
         this.add(host);
         JButton client = createButton("Client Player", "blue");
         client.addActionListener(e -> {
-            server = new Server();
             User.setUserId(1);
+            server = new Server();
+
 
             User.setPlayer(durak.getPlayers().get(User.getUserId()));
             int i1=0;
@@ -145,7 +148,11 @@ public class Menu extends JLayeredPane {
         });
         this.add(client);
         JButton exit = createButton("Exit", "blue");
-        exit.addActionListener(e -> System.exit(0));
+        exit.addActionListener(e -> {
+            if(server.getPrintWriter()!=null)
+                server.getPrintWriter().close();
+            System.exit(0);
+        });
         this.add(exit);
     }
 

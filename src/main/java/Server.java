@@ -2,12 +2,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.SerializationUtils;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Timestamp;
 
 /**
  * Server class for our card game
@@ -28,6 +27,8 @@ public class Server implements Runnable{
     private boolean unableToCommunicateWithOpponent;
     @Setter
     private boolean isClientConnected = false;
+    @Getter
+    private PrintWriter printWriter=null;
     //private int userId=0;
 
     /**
@@ -37,6 +38,12 @@ public class Server implements Runnable{
         ip = "26.255.53.80";
         //ip = "26.3.1.128";
         //ip = "26.248.220.2";
+        try {
+            FileWriter fileWriter = new FileWriter("log_"+User.getUserId()+".txt");
+            printWriter = new PrintWriter(fileWriter);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         port = 22222;
         errors = 0;
         accepted = false;

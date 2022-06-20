@@ -2,9 +2,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.SerializationUtils;
 
-import java.io.IOException;
-import java.io.Serial;
-import java.io.Serializable;
+import java.io.*;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -155,11 +154,51 @@ public class Durak implements Serializable {
             server.getDos().writeInt(User.getUserId());
             server.getDos().writeInt(data.length);
             server.getDos().write(data, 0, data.length);
+
+            //timestamp
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            data = SerializationUtils.serialize(timestamp);
+            server.getDos().writeInt(data.length);
+            server.getDos().write(data);
+
             server.getDos().flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    /*
+        private void writeTimeStamp(Server server){
+        //timestamp
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        byte[] data = SerializationUtils.serialize(timestamp);
+        try {
+            server.getDos().writeInt(data.length);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            server.getDos().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            server.getDos().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void readTimeStamp(Server server){
+        int count = 0;
+        try {
+            count = server.getDis().readInt();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        byte[] data = new byte[count];
+        Timestamp time = SerializationUtils.deserialize(data);
+        System.out.println(System.currentTimeMillis()-time.getTime());
+    }
+     */
     private void readFromServer(Server server, MyGraphics window) throws IOException {
         while (server.getDis().available()>0){
             //int count = server.getDis().available();
@@ -168,6 +207,18 @@ public class Durak implements Serializable {
             byte[] data = new byte[count];
             server.getDis().read(data, 0, count);
             Durak buf = SerializationUtils.deserialize(data);
+
+
+            count = server.getDis().readInt();
+            data = new byte[count];
+
+
+            server.getDis().read(data, 0, count);
+            Timestamp time = SerializationUtils.deserialize(data);
+            //System.out.println(System.currentTimeMillis()-time.getTime() + "ms");
+            server.getPrintWriter().println(String.valueOf(System.currentTimeMillis() - time.getTime())+("ms"));
+            server.getPrintWriter().flush();
+
             this.setPlayers(buf.getPlayers());
             this.setField(buf.getField());
             this.setDeck(buf.getDeck());
@@ -179,7 +230,6 @@ public class Durak implements Serializable {
             window.redrawField(field);
         }
     }
-
     private boolean isGameOver(){
         if (this.deck.isEmpty()) {//win case
             List<Player> playerList = this.players;
