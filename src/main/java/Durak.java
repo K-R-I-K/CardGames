@@ -157,12 +157,21 @@ public class Durak implements Serializable {
             server.getDos().writeInt(data.length);
             server.getDos().write(data, 0, data.length);
 
-            //timestamp
-            //Timestamp timestamp = new Timestamp(Instant.now());
-            data = SerializationUtils.serialize(Instant.now());
+            if(User.getUserId()==0){
+                data = SerializationUtils.serialize(Instant.now());
+            }else {
+                if(User.getTime()==null)
+                    data = SerializationUtils.serialize(User.getTime());
+                else {
+                    data = SerializationUtils.serialize(
+                            User.getTime()
+                                    .plus(
+                                    Duration.between(User.getLocalTime(),Instant.now())));
+                }
+
+            }
             server.getDos().writeInt(data.length);
             server.getDos().write(data);
-
             server.getDos().flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -218,11 +227,17 @@ public class Durak implements Serializable {
             server.getDis().read(data, 0, count);
             //Timestamp time = SerializationUtils.deserialize(data);
             Instant time = SerializationUtils.deserialize(data);
+            if(User.getUserId()==0 && time!=null){
+                server.getPrintWriter().println(Duration.between(time, Instant.now()).toMillis() / 2 +("ms"));
+                server.getPrintWriter().flush();
+            }else {
+                User.setLocalTime(Instant.now());
+                User.setTime(time);
+            }
             //System.out.println(System.currentTimeMillis()-time.getTime() + "ms");
             //System.out.println(System.currentTimeMillis());
             //System.out.println(time.getTime());
-            server.getPrintWriter().println(String.valueOf(Duration.between(time,Instant.now()).toMillis())+("ms"));
-            server.getPrintWriter().flush();
+
 
             this.setPlayers(buf.getPlayers());
             this.setField(buf.getField());
