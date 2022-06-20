@@ -4,6 +4,8 @@ import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.*;
 import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -156,8 +158,8 @@ public class Durak implements Serializable {
             server.getDos().write(data, 0, data.length);
 
             //timestamp
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            data = SerializationUtils.serialize(timestamp);
+            //Timestamp timestamp = new Timestamp(Instant.now());
+            data = SerializationUtils.serialize(Instant.now());
             server.getDos().writeInt(data.length);
             server.getDos().write(data);
 
@@ -214,9 +216,12 @@ public class Durak implements Serializable {
 
 
             server.getDis().read(data, 0, count);
-            Timestamp time = SerializationUtils.deserialize(data);
+            //Timestamp time = SerializationUtils.deserialize(data);
+            Instant time = SerializationUtils.deserialize(data);
             //System.out.println(System.currentTimeMillis()-time.getTime() + "ms");
-            server.getPrintWriter().println(String.valueOf(System.currentTimeMillis() - time.getTime())+("ms"));
+            //System.out.println(System.currentTimeMillis());
+            //System.out.println(time.getTime());
+            server.getPrintWriter().println(String.valueOf(Duration.between(time,Instant.now()).toMillis())+("ms"));
             server.getPrintWriter().flush();
 
             this.setPlayers(buf.getPlayers());
