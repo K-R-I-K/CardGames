@@ -10,7 +10,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Graphics class for our card game
+ */
 public class MyGraphics extends JLayeredPane{
+    /**
+     * Current game frame
+     */
     public static JFrame frame;
     private String pathFronts;
     private String pathBacks;
@@ -34,13 +40,26 @@ public class MyGraphics extends JLayeredPane{
     private List<MouseListener> playerMouseListeners;
     private List<JLabel> deckLabels;
     private int discardedCount;
+    @Getter
+    @Setter
     private volatile int cardIndex;
+    @Getter
+    @Setter
     private volatile int fieldIndex;
+    @Getter
+    @Setter
     private volatile boolean isTake;
+    @Getter
+    @Setter
     private volatile boolean isPass;
     private int offsetY1 = 20;
     private int offsetY2 = 80;
     private JLabel info;
+
+    /**
+     * Setter for isAttack variable, which mean if now player is attacker
+     * @param attack Boolean variable to set
+     */
     public void setAttack(boolean attack) {
         isAttack = attack;
         if(isAttack)
@@ -53,6 +72,10 @@ public class MyGraphics extends JLayeredPane{
     @Getter
     @Setter
     private List<Boolean> isCardOnField;
+
+    /**
+     * Constructor
+     */
     MyGraphics(){
         isAttack = false;
         pathFronts = "src/main/resources/png/fronts/";
@@ -89,6 +112,10 @@ public class MyGraphics extends JLayeredPane{
         frame.setVisible(true);
     }
 
+    /**
+     * Draw method for field
+     * @param field Field to draw
+     */
     public void redrawField(Field field){
         clearField();
         for(int i = 0; i < field.getAttackList().size(); ++i){
@@ -115,38 +142,6 @@ public class MyGraphics extends JLayeredPane{
             battlePanels.get(battleFieldIndex).add(label, 1);
             battlePanels.get(battleFieldIndex).setLayer(label, 1);
         }
-    }
-
-    public boolean isTake() {
-        return isTake;
-    }
-
-    public void setTake(boolean take) {
-        isTake = take;
-    }
-
-    public boolean isPass() {
-        return isPass;
-    }
-
-    public void setPass(boolean pass) {
-        isPass = pass;
-    }
-
-    public int getCardIndex() {
-        return cardIndex;
-    }
-
-    public int getFieldIndex() {
-        return fieldIndex;
-    }
-
-    public void setFieldIndex(int fieldIndex) {
-        this.fieldIndex = fieldIndex;
-    }
-
-    public void setCardIndex(int cardIndex){
-        this.cardIndex = cardIndex;
     }
 
     public void cardsDeal(List<Player> players, Field field){
@@ -407,6 +402,10 @@ public class MyGraphics extends JLayeredPane{
         return button;
     }
 
+    /**
+     * Method to redraw deck
+     * @param number Number of cards which we pop from deck
+     */
     public void getCardsFromDeck(int number){
         for(int i = 0; i < number; ++i){
             deckPanel.remove(deckLabels.get(deckLabels.size() - 1));
@@ -415,6 +414,9 @@ public class MyGraphics extends JLayeredPane{
         }
     }
 
+    /**
+     * Method to clear field
+     */
     public void clearField(){
         for(int i = 0; i < battlePanels.size(); ++i){
             battlePanels.get(i).removeAll();
@@ -423,6 +425,10 @@ public class MyGraphics extends JLayeredPane{
         }
     }
 
+    /**
+     * Method to draw results of game
+     * @param text Text of result
+     */
     public void drawResult(String text){
         this.removeAll();
         resultPanel.setLayout(null);
@@ -438,11 +444,23 @@ public class MyGraphics extends JLayeredPane{
         this.add(resultPanel);
         this.repaint();
     }
+
+    /**
+     * Method to show one card of player
+     * @param card Card to show
+     * @param playerIndex Index of player
+     * @param cardIndex Index of card to show in player list of cards
+     */
     public void showTrump(Card card, int playerIndex, int cardIndex){
         labelsLists.get(playerIndex).get(cardIndex).setIcon(new ImageIcon(new ImageIcon(pathFronts + card.toString() + ".png")
                 .getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH)));
     }
 
+    /**
+     * method to hide one card of player
+     * @param playerIndex Index of player
+     * @param cardIndex Index of card to hide in player list of cards
+     */
     public void hideTrump(int playerIndex, int cardIndex){
         try{
             labelsLists.get(playerIndex).get(cardIndex).setIcon(new ImageIcon(new ImageIcon(pathBacks + backName + ".png")
@@ -451,6 +469,11 @@ public class MyGraphics extends JLayeredPane{
         }
 
     }
+
+    /**
+     * Method to draw text
+     * @param text Text to draw
+     */
     public void drawText(String text){
         String textColor = "black";
         int fontSize = 24;

@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Stack;
 
+/**
+ * Class which represents deck in our card game
+ */
 @Getter
 @Setter
 public class Deck implements Serializable {

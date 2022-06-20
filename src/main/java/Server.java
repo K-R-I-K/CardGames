@@ -9,6 +9,9 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Server class for our card game
+ */
 public class Server implements Runnable{
     private final String ip;
     private final int port;
@@ -26,6 +29,10 @@ public class Server implements Runnable{
     @Setter
     private boolean isClientConnected = false;
     //private int userId=0;
+
+    /**
+     * Constructor for server
+     */
     public Server(){
         ip = "26.255.53.80";
         //ip = "26.3.1.128";
@@ -39,6 +46,9 @@ public class Server implements Runnable{
         thread.start();
     }
 
+    /**
+     * Run method for Runnable
+     */
     @Override
     public void run() {
         while (true) {

@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class which represents field in our card game
+ */
 public class Field implements Serializable {
     @Serial
     private static final long serialVersionUID = 6529575098267757690L;
@@ -19,6 +22,10 @@ public class Field implements Serializable {
     private int defendListSize;
     private final Suit trump;
 
+    /**
+     * Constructor for field
+     * @param trump Trump in this game
+     */
     public Field(Suit trump){
         attackList = new ArrayList<>(Collections.nCopies(6, null));
         defendList = new ArrayList<>(Collections.nCopies(6, null));
@@ -26,6 +33,11 @@ public class Field implements Serializable {
         defendListSize = 0;
         this.trump = trump;
     }
+
+    /**
+     * Method to know if field is empty
+     * @return True if field is empty
+     */
     public boolean isEmpty(){
         for(Card element:attackList){
             if(element!=null)
@@ -33,6 +45,14 @@ public class Field implements Serializable {
         }
         return true;
     }
+
+    /**
+     * Setter for field
+     * @param player Player which set card
+     * @param indexOfCard Index of card in hand of player
+     * @param indexOfFieldEdge Index of field to set
+     * @return True if card was successfully set in field
+     */
     public boolean setList(Player player, int indexOfCard, int indexOfFieldEdge) {
         Card card = player.getCard(indexOfCard);
         if(indexOfFieldEdge <0 || indexOfFieldEdge > 5) {
@@ -66,6 +86,13 @@ public class Field implements Serializable {
             return moveCheck(player.isDefend(), card);
         }
     }
+
+    /**
+     * Checker if we can move with this card
+     * @param isDefend Boolean variable if this is defending move or not.
+     * @param card
+     * @return
+     */
     public boolean moveCheck(boolean isDefend, Card card){
         if(isDefend){
             for (int i = 0; i < attackList.size(); i++) {
@@ -109,6 +136,10 @@ public class Field implements Serializable {
                 && defendCard.getSuit().equals(trump);
     }
 
+    /**
+     * Method to clear field
+     * @return All cards from field
+     */
     public List<Card> clearField(){
         List<Card> res = new ArrayList<>();
         for(Card card:attackList)

@@ -1,6 +1,9 @@
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Class which help identify user in list of players
+ */
 public class User {
     @Getter
     @Setter

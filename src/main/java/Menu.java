@@ -6,7 +6,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * Class which represents menu for our card game
+ */
 public class Menu extends JLayeredPane {
+    /**
+     * Current menu frame
+     */
     public static JFrame frame;
     private Color buttonColor;
     private int fontSize;
@@ -19,6 +25,10 @@ public class Menu extends JLayeredPane {
     @Getter
     @Setter
     private volatile boolean gameVsPlayer;
+
+    /**
+     * Constructor for menu object
+     */
     Menu() {
         gameVsBot = false;
         gameVsPlayer = false;

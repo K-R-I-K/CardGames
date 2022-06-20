@@ -3,6 +3,9 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * Custom DataOutputStream class
+ */
 class MyObjectOutputStream extends DataOutputStream {
 
     /**

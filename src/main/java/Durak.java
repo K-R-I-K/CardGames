@@ -7,6 +7,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * Class which represents our Durak game
+ */
 @Setter
 @Getter
 public class Durak implements Serializable {
@@ -81,7 +84,6 @@ public class Durak implements Serializable {
         }
         return res;
     }
-
     private boolean move(Player player, int indexOfCardPlayer, int indexOfCardField){
         boolean res = field.setList(player, indexOfCardPlayer, indexOfCardField);
         if(res)

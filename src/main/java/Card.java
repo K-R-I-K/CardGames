@@ -6,6 +6,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Locale;
 
+/**
+ * Class which represents card in our card game
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,18 +23,37 @@ public class Card implements Comparable<Card>, Serializable {
         this.suit = suit;
     }
 
+    /**
+     * Setter for trump
+     * @param trump Trump for all cards
+     */
     public static void setTrump(Suit trump) {
         if(trump!=null)
             Card.trump = trump;
     }
+
+    /**
+     * Check if card is trump
+     * @return True if card is trump and false if not
+     */
     public boolean isTrump(){
         return suit==trump;
     }
+
+    /**
+     * toString method
+     * @return String in format (suit_rank)
+     */
     @Override
     public String toString() {
         return suit.toString().toLowerCase(Locale.ROOT) + "_" + rank.toString().toLowerCase(Locale.ROOT);
     }
 
+    /**
+     * Method to compare cards
+     * @param o Card to compare
+     * @return a>0 if this card is more than o, a<0 if this card is less than o, a=0 if they are equal.
+     */
     @Override
     public int compareTo(Card o) {
         if(o == null)
